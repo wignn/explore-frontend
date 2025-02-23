@@ -16,8 +16,10 @@ export default async function Home() {
     try {
         const session = await getServerSession(authOptions);
 
+        console.log(session)
         if (session?.id && session?.backendTokens?.accessToken) {
             const profile = await getProfile(session.id, session.backendTokens.accessToken);
+            console.log(profile)
             user = profile !== "unauthorized" ? profile : null;
         }
 
@@ -45,3 +47,4 @@ export default async function Home() {
         </div>
     );
 }
+

@@ -7,6 +7,7 @@ import Link from "next/link"
 import { Menu, X, Home, Book, Info, Bookmark, User, Settings, LogOut } from "lucide-react"
 import { usePathname } from "next/navigation"
 import type { NavbarProps } from "@/types/user"
+import { signOut } from "next-auth/react"
 
 const navLinks = [
   { href: "/", label: "Home", icon: Home },
@@ -92,7 +93,7 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
                         <Settings className="mr-3 h-5 w-5" />
                         Admin
                       </Link>
-                      <button
+                      <button onClick={() => void signOut()}
                         className="flex w-full items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-teal-400"
                         role="menuitem"
                       >

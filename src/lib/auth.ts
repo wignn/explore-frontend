@@ -1,49 +1,73 @@
-
 import axios from "axios";
 import { API_URL } from "./API";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { jwtDecode } from "jwt-decode";
+
+
+
+async function refreshAccessToken(token: any) {
+  try {
+    // console.log(token)
+    const response = await axios.post(`${API_URL}/api/auth/refresh`, {
+      username: token.username,
+      isAdmin: token.isAdmin,
+      sub: token.name 
+  },
+  {
+    headers: {
+      Authorization: `Refresh ${token.backendTokens.refreshToken}`
+    }
+  }
+);
+
+    const newTokens = response.data.data.backendTokens; 
+    const decodedToken = newTokens?.accessToken ? jwtDecode(newTokens.accessToken) : null;
+    
+    return {
+      ...token,
+      backendTokens:{
+        ...newTokens
+      },
+      accessTokenExpires: decodedToken?.exp ? decodedToken.exp * 1000 : Date.now()
+    };
+  } catch (error) {
+    console.error("Error refreshing access token:", error);
+    return { ...token, error: "RefreshTokenError" };
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
-
       credentials: {
         username: { label: "username", type: "text", placeholder: "wignn" },
         password: { label: "password", type: "password" },
       },
-      
-      async authorize(credentials, req) {
-        console.log("Credentials:", credentials);
 
+      async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) {
-          console.log("Missing username or password");
           return null;
         }
-
-        const { username, password } = credentials;
 
         const response = await axios.patch(`${API_URL}/api/auth/login`, {
-          username,
-          password,
+          username: credentials.username,
+          password: credentials.password,
         });
-        console.log("Response:", response);
 
-        
-        if (response.status === 401) {
-          console.log("Unauthorized:", response.statusText);
+        if (response.status !== 200 || !response?.data) {
           return null;
         }
 
-  
-        console.log("User:", response.data.data);
-
-        if (!response || !response.data) {
-          console.log("User not found or data is missing");
-          return null;
-        }
-        return response.data.data ;
+        const user = response.data.data;
+        const newTokens = response.data.data.backendTokens;
+        const decodedToken = newTokens?.accessToken ? jwtDecode(newTokens.accessToken) : null;
+    
+        return {
+         ...user,
+         accessTokenExpires: decodedToken?.exp ? decodedToken.exp * 1000 : Date.now(),
+        };
       },
     }),
   ],
@@ -53,13 +77,21 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        // console.log("ada user", user)
         return { ...token, ...user };
       }
-      return token;
+
+      if (Date.now() < token.accessTokenExpires) {
+        // console.log("tidak refresh", token)
+        return token; 
+      }
+      // console.log("aku refresg", token)
+      return await refreshAccessToken(token);
     },
+
     async session({ session, token }) {
-      return { ...session, ...token };
+      return {...session, ...token};
     },
   },
-  secret: process.env.NEXTAUTH_SECRET, 
+  secret: process.env.NEXTAUTH_SECRET,
 };
