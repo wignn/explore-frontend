@@ -2,12 +2,10 @@
 
 import axios from "axios"
 import { API_URL } from "../API"
-import { useId } from "react"
 
 
 export const createBookmark = async (userId:string, bookId: string, accessToken: string) => {
     try {
-        console.log(userId, bookId, accessToken)
     const res = await axios.post(`${API_URL}/api/bookmark`, {
         userId,
         bookId
@@ -30,7 +28,6 @@ export const getBookmarkList = async (accessToken: string) => {
 
 export const deleteBookmark = async (id: string, accessToken?: string) => {
     try {
-        console.log(id, accessToken)
     const res = await axios.delete(`${API_URL}/api/bookmark/${id}`, {
         headers: {
             Authorization: `Bearer ${accessToken}`
@@ -54,8 +51,12 @@ export const getBookmarkById= async (bookId: string, accessToken: string) => {
                 Authorization: `Bearer ${accessToken}`
             }
         })
-        console.log(result.data.data, "hitammmmmmmmmmmmmmmmmmmm")
-        result.data.data
+
+        const dataFilter = result.data.data.map((data: any) => {
+            return data.book
+        })
+
+        return dataFilter
     } catch (error) {
         console.log(error)
     }

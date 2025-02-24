@@ -20,7 +20,7 @@ export const bookList = async ( ) => {
 
 export const bookSearch = async (query: string, page: number, limit: number): Promise<bookInterface[]> => {
     try {
-        const response = await axios.get(`${API_URL}/api/book/LIST`);
+        const response = await axios.get(`${API_URL}/api/book/list`);
         const allBooks: bookInterface[] = response.data.data;
 
         if (!Array.isArray(allBooks)) {
@@ -73,16 +73,15 @@ export const createBook = async(book: Book, accessToken: string) => {
 
                 for (const genre of book.genre) {
                     const genreName = genre.title.toLowerCase();
-                    const getGenre = await axios.get(`${API_URL}/api/genre/${genreName}`)
-                   
-                       const genreR = await axios.post(`${API_URL}/api/genre/book`,{
-                            bookId,
-                            genreId: getGenre.data.data.id
-                        },{
-                            headers:{
-                                Authorization: `Bearer ${accessToken}`
-                            }
-                        });
+                    const getGenre = await axios.get(`${API_URL}/api/genre/${genreName}`) 
+                        await axios.post(`${API_URL}/api/genre/book`,{
+                                bookId,
+                                genreId: getGenre.data.data.id
+                            },{
+                                headers:{
+                                    Authorization: `Bearer ${accessToken}`
+                                }
+                            });
                 }
 
                 return bookResponse.status;
@@ -96,7 +95,6 @@ export const createBook = async(book: Book, accessToken: string) => {
 export const getBookDetail = async (id: string) => {
     try{
     const response = await axios.get(`${API_URL}/api/book/${id}`);
-    console.log(response.data.data)
     return response.data.data;
     } catch (err: any) {
         console.error(" Error :", err.response?.status, err.message);
