@@ -8,6 +8,7 @@ import { Menu, X, Home, Book, Info, Bookmark, User, Settings, LogOut } from "luc
 import { usePathname } from "next/navigation"
 import type { NavbarProps } from "@/types/user"
 import { signOut } from "next-auth/react"
+import { logout } from "@/lib/action/auth"
 
 const navLinks = [
   { href: "/", label: "Home", icon: Home },
@@ -24,6 +25,12 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const toggleProfileModal = () => setIsProfileModalOpen(!isProfileModalOpen)
+  const handleSignOut = async ()=>{
+     const res = await logout(user?.username as string, user?.token as string)
+      if (res === 200) {
+        signOut()
+      }
+    }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -86,14 +93,14 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
                         Profile
                       </Link>
                       <Link
-                        href="/admin"
+                        href="/dashboard"
                         className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-teal-400"
                         role="menuitem"
                       >
                         <Settings className="mr-3 h-5 w-5" />
                         Admin
                       </Link>
-                      <button onClick={() => void signOut()}
+                      <button onClick={handleSignOut}
                         className="flex w-full items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-teal-400"
                         role="menuitem"
                       >

@@ -1,4 +1,4 @@
-import CreateBook from '@/components/CreateBook'
+import CreateBook from '@/components/book/CreateBook'
 import Navbar from '@/components/Navbar'
 import React from 'react'
 import { getServerSession } from "next-auth";

@@ -109,8 +109,10 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
   }
 
   return (
-    <div className="max-w-lg mx-auto md:my-8 bg-[#393E46] dark:bg-gray-800 md:rounded-lg shadow-lg p-6">
-      <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Create New Book</h2>
+    <div className="bbackdrop-blur-sm bg-gradient-to-b max-w-lg mx-auto md:my-8 rounded-2xl border border-gray-800 from-gray-900/90 to-black/90 md:rounded-lg shadow-lg p-6">
+     <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+        Add 
+          </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Title</label>
@@ -119,9 +121,10 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
             value={formData.title}
             onChange={(e) => handleChange(e, "title")}
             placeholder="Enter book title"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md 
-                     bg-white dark:bg-gray-700 text-gray-900 dark:text-white
-                     focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+            className="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl 
+                         text-gray-100 placeholder-gray-500
+                         focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500
+                         transition-all duration-300 ease-in-out"
           />
         </div>
 
@@ -140,7 +143,7 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
                               rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
               >
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <ImagePlus className="w-8 h-8 mb-2 text-gray-500 dark:text-gray-400" />
+                  <ImagePlus className="w-8 h-8 mb-2 text-gray-500 bg-gray-900/50 border border-gray-700  dark:text-gray-400" />
                   <p className="text-sm text-gray-500 dark:text-gray-400">Click to upload book cover</p>
                 </div>
                 <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
@@ -156,9 +159,10 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
             onChange={(e) => handleChange(e, "description")}
             placeholder="Enter book description"
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md 
-                     bg-white dark:bg-gray-700 text-gray-900 dark:text-white
-                     focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+            className="w-full px-3 py-2 bg-gray-900/50 border border-gray-700 dark:border-gray-600 rounded-md 
+                      dark:bg-gray-700 text-gray-900 dark:text-white
+                    focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500
+                         transition-all duration-300 ease-in-out"
           />
         </div>
 
@@ -169,9 +173,10 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
             value={formData.author}
             onChange={(e) => handleChange(e, "author")}
             placeholder="Enter author's name"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md 
-                     bg-white dark:bg-gray-700 text-gray-900 dark:text-white
-                     focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+            className="w-full px-3 py-2 dark:border-gray-600 rounded-md 
+                     bg-gray-900/50 border border-gray-700 dark:bg-gray-700 text-gray-900 dark:text-white
+                    focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500
+                         transition-all duration-300 ease-in-out"
           />
         </div>
 
@@ -182,7 +187,7 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
             isMulti
             onChange={handleGenreChange}
             placeholder="Select genres"
-            className="w-full"
+            className="w-full text-black  bg-gray-900/50 border border-gray-700"
             classNamePrefix="select"
             theme={(theme) => ({
               ...theme,

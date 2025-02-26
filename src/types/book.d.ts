@@ -6,7 +6,14 @@ export type bookInterface = {
   description: string;
   author: string;
   updatedAt: string;
-  chapter: number;
   popular: boolean;
   genre: Genre[];
+  Chapter: Chapter[];
+  createdAt: string;
 };
+
+
+interface Genre {
+  id: string;
+  title: string;
+}

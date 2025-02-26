@@ -26,18 +26,20 @@
     "fs": "^0.0.1-security",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.475.0",
-    "next": "15.1.7",
+    "next": "^15.1.7",
     "next-auth": "^4.24.11",
     "next-themes": "^0.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-easy-crop": "^5.2.0",
     "react-icons": "^5.5.0",
+    "react-quill": "^2.0.0",
     "react-select": "^5.10.0",
     "sonner": "^2.0.1",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
-    "use-debounce": "^10.0.4"
+    "use-debounce": "^10.0.4",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -3,7 +3,7 @@
 
 import { bookList, getBookDetail } from "@/lib/action/book";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import NovelDetails from "@/components/book/NovelDetails";
 import { useSession } from "next-auth/react";
@@ -59,13 +59,12 @@ interface PopularProps {
 function Page() {
   const [book, setBook] = useState<BookProps | null>(null);
   const pathname = usePathname();
+  const bookName = pathname.split("/")[2].replaceAll("-", " ");
   const [user, setUser] = useState<NavbarProps['user'] | undefined>(undefined);
   const [popular, setPopular] = useState<PopularProps[]>([]);
   const [isBooksLoading, setIsBooksLoading] = useState(true);
   const [bookmark, setBookmark] = useState<any>()
   const session = useSession();
-  const bookName = useMemo(() => pathname.split("/")[2].replaceAll("-", " "), [pathname]);
-
   useEffect(() => {
     if (!session.data?.user) {
       console.warn("Session belum tersedia!");
@@ -103,13 +102,13 @@ function Page() {
     };
   
     fetchData();
-  }, [session.data?.id, bookName]);
+  }, []);
   
   return (
     <div className="bg-gray-900">
       {isBooksLoading ? <SkeletonNavbar /> : <Navbar user={user} />}
       <div className="bg-gray-900 w-full min-h-screen">
-      {!isBooksLoading && <NovelDetails book={book as BookProps} Popular={popular} userId={session?.data?.id as string} accessToken={session?.data?.backendTokens.accessToken as string} Bookmark={bookmark} />}
+      {!isBooksLoading && book && user && session.data?.backendTokens?.accessToken && <NovelDetails book={book} Popular={popular} userId={session.data.id} accessToken={session.data.backendTokens.accessToken} Bookmark={bookmark} />}
       </div>
     </div>
   );

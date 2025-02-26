@@ -16,3 +16,7 @@ export interface UserInterface {
   export interface NavbarProps {
     user: UserInterface | undefined;
   }
+
+  export interface UserGetResponse {
+    user: UserInterface
+  }

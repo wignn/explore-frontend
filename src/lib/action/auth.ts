@@ -19,3 +19,18 @@ export const register = async (data: registerData) => {
         return null;
     }
 }
+
+export const logout = async(username:string, token: string)=>{
+    try {
+
+        const response = await axios.patch(`${API_URL}/api/auth/logout`,{
+           username,
+           token
+        });
+        console.log(response.status)
+        return response.status
+    } catch (err: any) {
+        console.error(" Error :", err.response?.status, err.message);
+        return null;
+    }
+}

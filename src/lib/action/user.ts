@@ -11,9 +11,6 @@ export const getProfile = async (id: string, accessToken: string) => {
             return null;
         }
 
-        // console.log("Access Token:", accessToken);
-        // console.log("User ID:", id);
-
         const response = await axios.get(`${API_URL}/api/user/${id}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -25,7 +22,6 @@ export const getProfile = async (id: string, accessToken: string) => {
             return redirect("/logout");
         }
 
-        console.log("Response Status:", response.status);
 
         return response.data.data;
     } catch (err: any) {

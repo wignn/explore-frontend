@@ -10,23 +10,25 @@ import { getToken } from "next-auth/jwt";
 
 export const middleware = async (req: NextRequest, res: NextResponse) => {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-    console.log(token)
     const isAuthenticated = !!token;
-  console.log(token)
-  console.log(isAuthenticated)
-    const isLoginPage = req.nextUrl.pathname.startsWith("/Login");
-    if (isLoginPage && isAuthenticated) {
+    const isAdmin = token?.isAdmin;
+
+    const isLoginPage = req.nextUrl.pathname.startsWith("/login");
+    if (isLoginPage && isAuthenticated && isAdmin) {
       return NextResponse.redirect(new URL("/profile", req.url));
     }
 
-    const isCreateBook = req.nextUrl.pathname.startsWith("/book/create")
-    if(isCreateBook && isAuthenticated){
+    const isDashboard = req.nextUrl.pathname.startsWith("dashboard")
+    if(isDashboard && isAuthenticated){
         return NextResponse.redirect(new URL("/login"))
     }
+
     const regis = req.nextUrl.pathname.startsWith("/register");
     if (regis && isAuthenticated) {
       return NextResponse.redirect(new URL("/", req.url));
     }
-  
-    return NextResponse.next();
+    const headers = new Headers(req.headers);
+  headers.set("x-current-path", req.nextUrl.pathname);
+
+    return NextResponse.next({headers});
 }
