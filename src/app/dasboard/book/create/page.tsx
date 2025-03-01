@@ -4,7 +4,7 @@ import { getGenre } from "@/lib/action/genre"
 import CreateBook from "@/components/book/CreateBook"
 
 async function CreateBookPage() {
-  let genre, err
+  let genre;
   const session = await getServerSession(authOptions)
 
   try {
@@ -13,18 +13,8 @@ async function CreateBookPage() {
     }
 
     genre = await getGenre()
-  } catch (e: any) {
+  } catch (e) {
     console.log("Error in CreateBookPage:", e)
-    err = true
-  }
-
-  if (err) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    }
   }
 
   return (

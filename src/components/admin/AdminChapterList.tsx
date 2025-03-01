@@ -6,7 +6,6 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { deleteChapter } from "@/lib/action/chapter"
 import { useSession } from "next-auth/react"
-import { usePathname } from "next/navigation"
 import { bookInterface } from "@/types/book"
 
 type ChapterInterface = {
@@ -30,8 +29,6 @@ export default function ChapterManagement({ book, chapters }: Props) {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
   const [filteredChapters, setFilteredChapters] = useState<ChapterInterface[]>(chapters)
-  const [successMessage, setSuccessMessage] = useState("")
-  const [errorMessage, setErrorMessage] = useState("")
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [chapterToDelete, setChapterToDelete] = useState<string | null>(null)
 
@@ -58,15 +55,9 @@ export default function ChapterManagement({ book, chapters }: Props) {
       const res = await deleteChapter(chapterToDelete, accessToken)
       if (res === 200) {
         setFilteredChapters((prev) => prev.filter((chapter) => chapter.id !== chapterToDelete))
-        setSuccessMessage("Chapter successfully deleted")
-        setTimeout(() => setSuccessMessage(""), 3000)
-      } else {
-        setErrorMessage("Failed to delete chapter")
-        setTimeout(() => setErrorMessage(""), 3000)
       }
     } catch (error) {
-      setErrorMessage("An error occurred while deleting the chapter")
-      setTimeout(() => setErrorMessage(""), 3000)
+      console.error("Failed to delete chapter:", error)
     }
     setShowConfirmation(false)
     setChapterToDelete(null)

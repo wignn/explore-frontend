@@ -1,9 +1,6 @@
 import { getServerSession } from "next-auth"
-import { redirect } from "next/navigation"
-import axios from "axios"
 import { authOptions } from "@/lib/auth"
 import Dashboard from "../../components/admin/AdminDasboard"
-import { API_URL } from "@/lib/API"
 import { users, chapters, genres, userSessions, bookmarks, books } from "@/lib/action/admin"
 
 

@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import { Skeleton } from "@/components/loading/skletonBook"
 import { bookInterface } from "@/types/book"
 import Link from "next/link"
+import Image from "next/image"
 import { normalizeTitle } from "../lib/utils"
 
 interface ListProps {
@@ -27,9 +28,11 @@ function List({ books, text }: { books: ListProps["books"]; text: string }) {
               className="group relative overflow-hidden rounded-lg border border-gray-700 bg-gray-800 shadow-sm transition-all hover:shadow-lg hover:shadow-teal-500/10"
             >
               <div className="aspect-[3/4] overflow-hidden">
-                <img
+                <Image
                   src={book.cover || "/placeholder.svg"}
                   alt={book.title}
+                  width={300}
+                  height={450}
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
                 />

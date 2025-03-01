@@ -2,12 +2,23 @@ import ChapterManagement from '@/components/admin/AdminChapterList'
 import { getBookDetail } from '@/lib/action/book'
 import React from 'react'
 
+interface Chapter {
+    id: string
+    title: string
+    bookId: string
+    content: string
+    updatedAt: string
+    description: string
+    chapterNum: number
+    createdAt: string
+}
+
 const page = async ({params}: {params: {id: string}}) => {
     let book
     let chapter
     try {
         book = await getBookDetail(params.id)
-        chapter = book.Chapter?.map((chapter: any) => ({
+        chapter = book.Chapter?.map((chapter: Chapter) => ({
             id: chapter.id,
             title: chapter.title,
             description: chapter.description,

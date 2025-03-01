@@ -4,10 +4,9 @@ import { UserInterface } from "@/types/user"
 import type React from "react"
 import Image from "next/image"
 import { useEdgeStore } from "@/lib/edgeStore"
-
 import { useState, useEffect } from "react"
 import { updateProfile } from "@/lib/action/user"
-import { set } from "zod"
+
 
 interface profileProps {
     users: UserInterface
@@ -57,7 +56,8 @@ export default function ProfileCard({users,accessToken}:profileProps) {
       }
     }
     }catch(error){
-      console.error("error in handleSave")
+      console.log("error in handleSave")
+      console.log(error)
     }
   }
 

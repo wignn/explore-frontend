@@ -1,6 +1,5 @@
 "use client"
 
-import { register } from "@/lib/action/auth"
 import Link from "next/link"
 import type React from "react"
 import { useState } from "react"

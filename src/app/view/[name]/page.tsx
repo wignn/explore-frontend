@@ -58,8 +58,8 @@ async function page({ params }: { params: { name?: string } }) {
 
     if (booklist?.length) {
       popular = booklist
-        .sort((a: any, b: any) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-        .slice(0, 5);
+        .sort((a: PopularProps, b: PopularProps) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+        .slice(0, 5) as PopularProps[];
     }
   } catch (error) {
     console.log("Error fetching data:", error);

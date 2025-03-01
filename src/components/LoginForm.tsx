@@ -40,6 +40,7 @@ function LoginForm() {
             }
         } catch (err) {
             setError('An error occurred. Please try again later.');
+            console.log(err);
         } finally {
             setIsLoading(false);
         }
