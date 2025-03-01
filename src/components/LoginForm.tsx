@@ -20,7 +20,7 @@ function LoginForm() {
             setError('Please fill in both username and password fields');
             return;
         }
-        
+
         try {
             setIsLoading(true);
             const res = await signIn('credentials', {
@@ -59,51 +59,51 @@ function LoginForm() {
                             <FaUser className='text-white text-2xl sm:text-3xl' />
                         </div>
                     </div>
-                    
+
                     <h1 className='text-white text-2xl sm:text-3xl font-bold mb-6 text-center'>Welcome Back</h1>
-                    
+
                     {error && (
                         <div className='bg-red-900/30 border border-red-800 text-red-300 px-4 py-3 rounded-lg mb-6 animate-fadeIn'>
                             <p className='text-center text-sm sm:text-base'>{error}</p>
                         </div>
                     )}
-                    
+
                     {success && (
                         <div className='bg-green-900/30 border border-green-800 text-green-300 px-4 py-3 rounded-lg mb-6 flex items-center justify-center animate-fadeIn'>
                             <FaCheckCircle className="mr-2" />
                             <p className='text-center text-sm sm:text-base'>{success}</p>
                         </div>
                     )}
-                    
+
                     <div className='space-y-5'>
                         <div>
                             <label className='block text-gray-300 font-medium mb-2 text-sm sm:text-base'>Username</label>
                             <div className='flex items-center border border-gray-600 p-3 rounded-lg bg-gray-700/50 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all duration-200'>
                                 <FaUser className='text-gray-400 mr-3' />
-                                <input 
-                                    type='text' 
-                                    className='w-full bg-transparent outline-none text-white placeholder-gray-500 text-sm sm:text-base' 
+                                <input
+                                    type='text'
+                                    className='w-full bg-transparent outline-none text-white placeholder-gray-500 text-sm sm:text-base'
                                     placeholder='Enter your username'
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
                                 />
                             </div>
                         </div>
-                        
+
                         <div>
                             <label className='block text-gray-300 font-medium mb-2 text-sm sm:text-base'>Password</label>
                             <div className='flex items-center border border-gray-600 p-3 rounded-lg bg-gray-700/50 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all duration-200'>
                                 <FaLock className='text-gray-400 mr-3' />
-                                <input 
-                                    type={showPassword ? 'text' : 'password'} 
-                                    className='w-full bg-transparent outline-none text-white placeholder-gray-500 text-sm sm:text-base' 
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    className='w-full bg-transparent outline-none text-white placeholder-gray-500 text-sm sm:text-base'
                                     placeholder='Enter your password'
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
-                                <button 
-                                    type="button" 
-                                    onClick={togglePasswordVisibility} 
+                                <button
+                                    type="button"
+                                    onClick={togglePasswordVisibility}
                                     className="text-gray-400 hover:text-gray-300 focus:outline-none"
                                 >
                                     {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -111,7 +111,7 @@ function LoginForm() {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className='flex items-center justify-between text-xs sm:text-sm text-gray-400 my-6'>
                         <div className='flex items-center'>
                             <input type='checkbox' id='remember' className='mr-2 h-4 w-4 rounded border-gray-600 bg-gray-700 focus:ring-blue-500' />
@@ -119,19 +119,20 @@ function LoginForm() {
                         </div>
                         <Link href='/forgot-password' className='text-blue-400 hover:text-blue-300 hover:underline transition-colors'>Forgot Password?</Link>
                     </div>
-                    
-                    <button 
-                        type='submit' 
+
+                    <button
+                        type='submit'
                         className='w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg text-sm sm:text-base font-semibold transition duration-300 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-blue-600/30 hover:shadow-blue-500/40'
                         disabled={isLoading}
                     >
                         {isLoading ? 'Logging in...' : 'Login'}
                     </button>
-                    
-                    
-                    <p className='text-gray-400 text-center text-xs sm:text-sm'>
-                        Don't have an account? <Link href='/register' className='text-blue-400 hover:text-blue-300 hover:underline transition-colors font-medium'>Sign up</Link>
+
+
+                    <p className="text-gray-400 text-center text-xs sm:text-sm">
+                        Don&apos;t have an account? <Link href="/register" className="text-blue-400 hover:text-blue-300 hover:underline transition-colors font-medium">Sign up</Link>
                     </p>
+
                 </form>
             </div>
         </div>

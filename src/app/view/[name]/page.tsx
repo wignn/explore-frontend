@@ -5,6 +5,7 @@ import { isBookmark } from '@/lib/action/bookmark';
 import { getProfile } from '@/lib/action/user';
 import { authOptions } from '@/lib/auth';
 import { denormalizeTitle } from '@/lib/utils';
+import { Bookmark } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import React from 'react';
 
@@ -35,12 +36,17 @@ interface PopularProps {
   Chapter: Chapter[];
   createdAt: string;
 }
+interface Bookmark {
+  id: string;
+  bookId: string;
+  userId: string;
+}
 
 async function page({ params }: { params: { name?: string } }) {
   let user = null;
   let book = null;
   let popular: PopularProps[] = [];
-  let bookmark = null;
+  let bookmark: Bookmark | null = null;
   let session = null;
   
 
@@ -52,8 +58,8 @@ async function page({ params }: { params: { name?: string } }) {
   const booklist = await bookList();
   
   if (session?.id && session?.backendTokens?.accessToken) {
-    user = await getProfile(session.id, session.backendTokens.accessToken);
-    bookmark = await isBookmark(session.id, book.id, session.backendTokens.accessToken);
+    user = await getProfile(session.id, session.backendTokens.accessToken); 
+    bookmark = await isBookmark(session.id, book.id, session.backendTokens.accessToken) as Bookmark
   }
 
     if (booklist?.length) {

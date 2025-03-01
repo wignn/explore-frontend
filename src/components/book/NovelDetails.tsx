@@ -82,7 +82,11 @@ interface NovelDetailsProps {
   Popular: BookPopular[]
   userId: string
   accessToken: string
-  Bookmark: any
+  Bookmark: {
+    id: string;
+    bookId:string;
+    userId: string;
+  } | null
 }
 
 const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, accessToken, Bookmark }) => {

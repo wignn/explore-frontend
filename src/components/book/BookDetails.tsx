@@ -39,7 +39,17 @@ interface BookProps {
   popular: boolean
   genre: Genre[]
   Chapter: Chapter[]
+  bookMark:[]
   createdAt: string
+  status: string
+  realaseDate: number
+  language: string
+}
+
+interface Bookmark {
+    id: string
+    bookId: string
+    userId: string
 }
 
 interface PopularProps {
@@ -56,7 +66,6 @@ interface PopularProps {
   }[]
   Chapter: Chapter[]
   createdAt: string
-  bookmark: boolean
 }
 
 function Page() {
@@ -66,20 +75,19 @@ function Page() {
   const [user, setUser] = useState<NavbarProps["user"] | undefined>(undefined)
   const [popular, setPopular] = useState<PopularProps[]>([])
   const [isBooksLoading, setIsBooksLoading] = useState(true)
-  const [bookmark, setBookmark] = useState<any>()
-  const session = useSession()
+  const [bookmark, setBookmark] = useState<Bookmark>()
+  const {data: session} = useSession()
 
   useEffect(() => {
-    if (!session?.data?.user) {
+    if (!session?.user) {
       console.warn("Session belum tersedia!")
       return
     }
 
-    console.log("Fetching data dengan session:", session.data)
 
     const fetchData = async () => {
       try {
-        const { id, backendTokens } = session.data
+        const { id, backendTokens } = session
         const token = backendTokens?.accessToken
 
         const [userData, bookData, bookListData] = await Promise.all([
@@ -89,14 +97,14 @@ function Page() {
         ])
 
         const bookmark = await isBookmark(id, bookData.id, token)
-        setBookmark(bookmark)
+        setBookmark(bookmark as Bookmark)
         setUser(userData)
         setBook(bookData)
 
         if (bookListData?.length) {
-          const sortedBooks = bookListData
-            .sort((a: any, b: any) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-            .slice(0, 5)
+          const sortedBooks: PopularProps[] = bookListData
+                .sort((a: PopularProps, b: PopularProps) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+                .slice(0, 5)
           setPopular(sortedBooks)
         }
       } catch (error) {
@@ -107,7 +115,7 @@ function Page() {
     }
 
     fetchData()
-  }, [bookName, session?.data])
+  }, [bookName, session])
 
   return (
     <div className="bg-gray-900 min-h-screen">
@@ -118,13 +126,13 @@ function Page() {
         ) : (
           book &&
           user &&
-          session.data?.backendTokens?.accessToken && (
+          session?.backendTokens?.accessToken && (
             <NovelDetails
               book={book}
               Popular={popular}
-              userId={session.data.id}
-              accessToken={session.data.backendTokens.accessToken}
-              Bookmark={bookmark}
+              userId={session.id}
+              accessToken={session.backendTokens.accessToken}
+              Bookmark={bookmark || { id: '', bookId: '', userId: '' }}
             />
           )
         )}

@@ -27,7 +27,7 @@ async function page() {
     <div className="min-h-screen flex flex-col bg-[#222831] text-white">
       <Navbar user={user} />
       <main className=" ">
-        <CreateBook accessToken={session?.backendTokens.accessToken} genre={genre} />
+        <CreateBook accessToken={session?.backendTokens.accessToken as string} genre={genre} />
       </main>
       <Footer />
     </div>

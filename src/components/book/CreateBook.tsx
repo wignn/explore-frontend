@@ -14,6 +14,20 @@ type Genre = {
   id: string
   title: string
 }
+interface GenreSelection {
+  value: string;
+  label: string;
+}
+
+interface LanguageOption {
+  value: Language;
+  label: string;
+}
+
+interface StatusOption {
+  value: BookStatus;
+  label: string;
+}
 
 interface Book {
   title: string
@@ -27,11 +41,14 @@ interface Book {
 }
 
 interface CreateBookProps {
-  accessToken: any
+  accessToken: string
   genre: Genre[]
 }
 
-
+interface GenreOption {
+  value: string;
+  label: string;
+}
 enum Language {
   English = "English",
   Japanese = "Japanese",
@@ -59,7 +76,6 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
   const [preview, setPreview] = useState<string>("")
   const [isLoading, setIsLoading] = useState(false)
   const { edgestore } = useEdgeStore()
-  const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: keyof Book) => {
@@ -81,8 +97,10 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
     }
   }
 
-  const handleGenreChange = (selectedGenres: any) => {
-    const genres = selectedGenres.map((genre: any) => ({
+
+  const handleGenreChange = (newValue: unknown) => {
+    const selectedGenres = newValue as readonly GenreSelection[]
+    const genres = selectedGenres.map((genre: GenreOption) => ({
       id: genre.value,
       title: genre.label,
     }))
@@ -94,17 +112,21 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
   const statusOptions = Object.values(BookStatus).map((status) => ({ value: status, label: status }))
   const languageOptions = Object.values(Language).map((language) => ({ value: language, label: language }))
 
-  const handleStatusChange = (selectedStatus: any) => {
+
+  const handleStatusChange = (newValue: unknown) => {
+    const selectedStatus = newValue as StatusOption | null;
     setFormData((prevState) => ({
       ...prevState,
-      status: selectedStatus.value,
+      status: selectedStatus?.value ?? BookStatus.Ongoing,
     }))
   }
 
-  const handleLanguageChange = (selectedLanguage: any) => {
+
+  const handleLanguageChange = (newValue: unknown) => {
+    const selectedLanguage = newValue as LanguageOption | null;
     setFormData((prevState) => ({
       ...prevState,
-      language: selectedLanguage.value,
+      language: selectedLanguage?.value ?? Language.Korean,
     }))
   }
 
@@ -129,10 +151,8 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
             realaseDate: 0,
           })
           setPreview("")
-          setError("")
           setSuccess("success creating book")
-        }else {     
-          setError("Failed to create book")
+        }else {    
           throw new Error("Failed to create book")
      
         }

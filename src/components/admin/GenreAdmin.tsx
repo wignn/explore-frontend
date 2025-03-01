@@ -34,7 +34,6 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
   const [editGenreId, setEditGenreId] = useState<string | null>(null)
   const [editGenreName, setEditGenreName] = useState("")
   const [editGenreDescription, setEditGenreDescription] = useState("")
-  const router = useRouter()
   
   useEffect(() => {
     const results = genreList.filter(
@@ -65,6 +64,7 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
         setTimeout(() => setSuccess(""), 3000)
       } catch (err) {
         setError("Gagal menghapus genre")
+        console.log(err)
         setTimeout(() => setError(""), 3000)
       } finally {
         setShowConfirmation(false)
@@ -110,6 +110,7 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
     setTimeout(() => setSuccess(""), 3000)
     } catch (err) {
       setError("Gagal menambahkan genre")
+      console.log(err)
       setTimeout(() => setError(""), 3000)
     }
   }
@@ -143,6 +144,7 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
       setTimeout(() => setSuccess(""), 3000)
     } catch (err) {
       setError("Gagal memperbarui genre")
+      console.log(err)
       setTimeout(() => setError(""), 3000)
     }
   }

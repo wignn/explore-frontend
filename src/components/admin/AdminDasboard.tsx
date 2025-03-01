@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChartIcon, Users, DollarSign, Book, Link2Icon, PaperclipIcon, Bookmark } from "lucide-react";
+import { BarChartIcon, Users, DollarSign, Book, Link2Icon, Bookmark } from "lucide-react";
 import { IoPaperPlaneSharp } from "react-icons/io5";
 import {
   PieChart,
@@ -19,7 +19,7 @@ interface DashboardProps {
   userData: { id: string; username: string; email: string; role?: string }[];
   chapterData: { id: string; title: string; bookId: string; createdAt: string }[];
   genreData: { id: string; title: string }[];
-  sessionData: any[];
+  sessionData: [];
   bookmarkData: { bookId: string }[];
   bookData: { id: string; title: string; genreId: number; genre: { id: string }[] }[];
 }

@@ -4,14 +4,11 @@ import { useState, useEffect } from "react";
 import { User, Search, ArrowLeft, Plus } from 'lucide-react';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { UserInterface } from "@/types/user";
 
 
 
-export default function UserManagement({ users }: any) {
-
-  const { data: session } = useSession();
+export default function UserManagement({ users }: { users: UserInterface[] }) {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<UserInterface[]>(users);
