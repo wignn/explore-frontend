@@ -83,16 +83,12 @@ export const isBookmark = async (userId: string, bookId: string, accessToken: st
         }
         
         return {
-            id: matchedBookmark.id,
-            bookId: matchedBookmark.bookId,
-            userId: matchedBookmark.userId,
+            id: matchedBookmark.id as string,
+            bookId: matchedBookmark.bookId as string,
+            userId: matchedBookmark.userId as string,
         }
     } catch (error) {
         console.log(error)
-        return {
-            bookmark: null,
-            isBookmark: false,
-            status: 500
-        }
+      
     }
 }

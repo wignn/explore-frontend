@@ -120,7 +120,7 @@ function Page() {
     }
 
     fetchData()
-  }, [bookName, session?.user])
+  }, [bookName])
 
   return (
     <div className="bg-gray-900 min-h-screen">

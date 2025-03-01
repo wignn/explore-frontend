@@ -62,8 +62,12 @@ interface PopularProps {
   Chapter: Chapter[];
   createdAt: string;
   bookmark: boolean;
-}
-
+} 
+type Bookmark = {
+  id: string;
+  bookId:string;
+  userId: string;
+} | null;
 
 function BookDetails() {
   const [book, setBook] = useState<BookProps | null>(null);
@@ -71,7 +75,7 @@ function BookDetails() {
   const [user, setUser] = useState<NavbarProps['user'] | undefined>(undefined);
   const [popular, setPopular] = useState<PopularProps[]>([]);
   const [isBooksLoading, setIsBooksLoading] = useState(true);
-  const [bookmark, setBookmark] = useState<any>()
+  const [bookmark, setBookmark] = useState<Bookmark| null>(null)
   const session = useSession();
   const bookName = useMemo(() => pathname.split("/")[2].replaceAll("-", " "), [pathname]);
 
@@ -94,14 +98,16 @@ function BookDetails() {
         ]);
   
         const bookmark = await isBookmark(id, bookData.id, token)
-        setBookmark(bookmark)
+        if (bookmark !== undefined) {
+          setBookmark(bookmark)
+        }
         setUser(userData);
         setBook(bookData);
   
         if (bookListData?.length) {
           const sortedBooks = bookListData
-            .sort((a: any, b: any) => b.updatedAt - a.updatedAt)
-            .slice(0, 5);
+                .sort((a: PopularProps, b: PopularProps) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+                .slice(0, 5);
           setPopular(sortedBooks);
         }
       } catch (error) {
@@ -112,7 +118,7 @@ function BookDetails() {
     };
   
     fetchData();
-  }, [session.data?.id, bookName]);
+  }, [bookName]);
   
   return (
     <div className="bg-gray-900">
