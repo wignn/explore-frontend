@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { Tag, Edit, Trash2, Search, Plus } from 'lucide-react'
-import { useRouter } from "next/navigation"
 import { formatDate } from "@/lib/dateFormat"
 import { createGenre, updateGenre } from "@/lib/action/genre"
 

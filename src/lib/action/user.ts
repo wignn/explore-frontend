@@ -24,7 +24,7 @@ export const getProfile = async (id: string, accessToken: string) => {
         }
 
         return response.data.data;
-    } catch (err: any) {
+    } catch (err) {
         console.error("Error getting profile:", err);
         return null;
     }

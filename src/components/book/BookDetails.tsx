@@ -1,4 +1,3 @@
-
 "use client"
 
 import { bookList, getBookDetail } from "@/lib/action/book"
@@ -46,10 +45,11 @@ interface BookProps {
   language: string
 }
 
+
 interface Bookmark {
-    id: string
-    bookId: string
-    userId: string
+  id: string
+  bookId: string
+  userId: string
 }
 
 interface PopularProps {
@@ -75,15 +75,14 @@ function Page() {
   const [user, setUser] = useState<NavbarProps["user"] | undefined>(undefined)
   const [popular, setPopular] = useState<PopularProps[]>([])
   const [isBooksLoading, setIsBooksLoading] = useState(true)
-  const [bookmark, setBookmark] = useState<Bookmark>()
-  const {data: session} = useSession()
+  const [bookmark, setBookmark] = useState<Bookmark | null>(null)
+  const { data: session } = useSession()
 
   useEffect(() => {
     if (!session?.user) {
       console.warn("Session belum tersedia!")
       return
     }
-
 
     const fetchData = async () => {
       try {
@@ -96,15 +95,21 @@ function Page() {
           bookList() || [],
         ])
 
-        const bookmark = await isBookmark(id, bookData.id, token)
-        setBookmark(bookmark as Bookmark)
+        if (bookData?.id) {
+          const bookmarkData = await isBookmark(id, bookData.id, token)
+          setBookmark(bookmarkData as Bookmark)
+        }
+
         setUser(userData)
         setBook(bookData)
 
         if (bookListData?.length) {
           const sortedBooks: PopularProps[] = bookListData
-                .sort((a: PopularProps, b: PopularProps) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-                .slice(0, 5)
+            .sort(
+              (a: PopularProps, b: PopularProps) =>
+                new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+            )
+            .slice(0, 5)
           setPopular(sortedBooks)
         }
       } catch (error) {
@@ -115,7 +120,7 @@ function Page() {
     }
 
     fetchData()
-  }, [bookName, session])
+  }, [bookName, session?.user])
 
   return (
     <div className="bg-gray-900 min-h-screen">
@@ -132,7 +137,7 @@ function Page() {
               Popular={popular}
               userId={session.id}
               accessToken={session.backendTokens.accessToken}
-              Bookmark={bookmark || { id: '', bookId: '', userId: '' }}
+              Bookmark={bookmark || { id: "", bookId: "", userId: "" }}
             />
           )
         )}
@@ -142,4 +147,3 @@ function Page() {
 }
 
 export default Page
-

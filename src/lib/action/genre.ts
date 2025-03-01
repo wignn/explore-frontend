@@ -13,7 +13,7 @@ export const getGenre =async() =>{
          })
         return res.data.data
     } catch (error) {
-        
+        console.log(error)
     }
 
 }

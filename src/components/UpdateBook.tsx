@@ -175,7 +175,14 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => 
       const updatedBook = {
         ...formData,
         cover: coverUrl,
-        genre: formData.genre.map((g) => g.genreId),
+        genre: formData.genre.map((g) => ({
+          bookId: bookId,
+          genreId: g.genreId,
+          Genre: {
+            id: g.genreId,
+            title: g.Genre.title
+          }
+        })),
       }
 
       const res = await updateBook(updatedBook, accessToken)

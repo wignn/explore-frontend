@@ -1,8 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { Facebook, Twitter, Share2, Settings } from "lucide-react"
 import { formatDate } from "@/lib/dateFormat"
+import { bookInterface } from "@/types/book"
 
 type Chapter = {
   id: string
@@ -13,7 +13,7 @@ type Chapter = {
   chapterNum: number
   createdAt: string
   updatedAt: string
-    Book:any
+    Book:bookInterface
 }
 
 

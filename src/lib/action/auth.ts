@@ -1,8 +1,6 @@
 "use server"
 import axios from "axios";
 import { API_URL } from "../API";
-import { headers } from "next/headers";
-
 
 interface registerData {
     email: string;
@@ -23,8 +21,8 @@ export const register = async (data: registerData) => {
         );
     
         return response.data.data
-    } catch (err: any) {
-        console.error(" Error :", err.response?.status, err.message);
+    } catch (err) {
+        console.log(" Error :", err);
         return null;
     }
 }
@@ -42,8 +40,8 @@ export const logout = async(username:string, token: string)=>{
         });
         
         return response.status
-    } catch (err: any) {
-        console.error(" Error :", err.response?.status, err.message);
+    } catch (err) {
+        console.log(" Error :", err);
         return null;
     }
 }

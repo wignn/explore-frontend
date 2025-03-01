@@ -2,8 +2,6 @@
 
 import axios from "axios";
 import { API_URL } from "../API";
-import { bookInterface } from "@/types/book";
-
 type Genre = {
     id: string;
     title: string;
@@ -46,8 +44,8 @@ export const bookList = async () => {
        
 
         return response.data.data;
-    } catch (err: any) {
-        console.error(" Error :", err.response?.status, err.message);
+    } catch (err) {
+        console.log(" Error :", err);
         return null;
     }
 }
@@ -63,8 +61,8 @@ export const bookSearch = async () => {
         });
 
         return response.data.data || [];
-    } catch (err: any) {
-        console.error("❌ Error :", err.response?.status, err.message);
+    } catch (err) {
+        console.log("❌ Error :", err);
         return { books: [], isLastPage: true };
     }
 };
@@ -105,9 +103,9 @@ export const createBook = async (book: Book, accessToken: string) => {
             });
         }
         return bookResponse.data.data;
-    } catch (err: any) {
+    } catch (err) {
       console.log(err)
-        console.error(" Error :", err.response?.status, err.message);
+        console.log(" Error :", err);
         return null;
     }
 }
@@ -123,13 +121,36 @@ export const getBookDetail = async (id: string) => {
           }
         });
         return response.data.data;
-    } catch (err: any) {
-        console.error(" Error :", err.response?.status, err.message);
+    } catch (err) {
+        console.log(" Error :", err);
         return null;
     }
 }
 
-export const updateBook = async (book: any, accessToken: string) => {
+
+
+
+type BookGenre = {
+  bookId: string
+  genreId: string
+  Genre: {
+    id: string
+    title: string
+  }
+}
+interface BookDetails {
+  id: string
+  title: string
+  cover: string
+  description: string
+  author: string
+  status: BookStatus
+  language: Language
+  realaseDate: number
+  genre: BookGenre[]
+}
+
+export const updateBook = async (book:BookDetails , accessToken: string) => {
   try {
 
     const response = await axios.post(`${API_URL}/api/book/${book.id}`, {
@@ -165,14 +186,14 @@ export const updateBook = async (book: any, accessToken: string) => {
 
     const existingGenresData = existingGenresResponse.data.data;
     const existingGenres = existingGenresData.genre.map((g: any) => g.genreId);
-    const newGenres = book.genre.filter((g: string) => !existingGenres.includes(g));
-    const removedGenres = existingGenres.filter((g: string) => !book.genre.includes(g));
+    const newGenres = book.genre.filter((g: BookGenre) => !existingGenres.includes(g.genreId));
+    const removedGenres = existingGenres.filter((g: string) => !book.genre.some(genre => genre.genreId === g));
 
     await Promise.all(
-      newGenres.map(async (genreId: string) => {
+      newGenres.map(async (genre: BookGenre) => {
         const genreResponse = await axios.post(
           `${API_URL}/api/genre/book`,
-          { bookId, genreId },
+          { bookId, genreId: genre.genreId },
           {
             headers: {
               'x-api-key': process.env.API_KEY,
