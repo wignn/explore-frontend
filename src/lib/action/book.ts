@@ -8,19 +8,38 @@ type Genre = {
     id: string;
     title: string;
 };
+
+
+
+enum Language {
+  English = "English",
+  Japanese = "Japanese",
+  Korean = "Korean",
+}
+
+enum BookStatus {
+  Completed = "Completed",
+  Drop = "Drop",
+  Ongoing = "Ongoing",
+}
+
 interface Book {
     title: string;
     cover: string;
     description: string;
     author: string;
     genre: Genre[];
+    status: BookStatus;
+    realaseDate: number;
+    language: Language;
 }
 
 
 export const bookList = async () => {
     try {
-        const response = await axios.get(`${API_URL}/api/book/LIST`
+        const response = await axios.get(`${API_URL}/api/book/list`
         );
+       
 
         return response.data.data;
     } catch (err: any) {
@@ -29,9 +48,7 @@ export const bookList = async () => {
     }
 }
 
-
-
-export const bookSearch = async (query: string, page: number, limit: number): Promise<bookInterface[]> => {
+const bookPage = async (page: number, limit: number) => {
     try {
         const response = await axios.get(`${API_URL}/api/book/list`);
         const allBooks: bookInterface[] = response.data.data;
@@ -40,17 +57,25 @@ export const bookSearch = async (query: string, page: number, limit: number): Pr
             console.error("❌ Data buku tidak valid:", allBooks);
             return [];
         }
-        const filteredBooks = query
-            ? allBooks.filter(book => book.title.toLowerCase().includes(query.toLowerCase()))
-            : allBooks;
 
         const startIndex = (page - 1) * limit;
-        const paginatedBooks = filteredBooks.slice(startIndex, startIndex + limit);
+        const paginatedBooks = allBooks.slice(startIndex, startIndex + limit);
 
         return paginatedBooks;
     } catch (err: any) {
         console.error(" Error :", err.response?.status, err.message);
         return [];
+    }
+}
+
+export const bookSearch = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/api/book/list/`);
+
+        return response.data.data || [];
+    } catch (err: any) {
+        console.error("❌ Error :", err.response?.status, err.message);
+        return { books: [], isLastPage: true };
     }
 };
 
@@ -59,12 +84,14 @@ export const bookSearch = async (query: string, page: number, limit: number): Pr
 
 export const createBook = async (book: Book, accessToken: string) => {
     try {
-        console.log(accessToken)
         const bookResponse = await axios.post(`${API_URL}/api/book`, {
             title: book.title,
             cover: book.cover,
             description: book.description,
-            author: book.author
+            author: book.author,
+            status: book.status,
+            realaseDate: book.realaseDate,
+            language: book.language
         }, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -72,7 +99,6 @@ export const createBook = async (book: Book, accessToken: string) => {
         });
 
         const bookId = bookResponse.data.data.id;
-
 
         for (const genre of book.genre) {
             const genreName = genre.title.toLowerCase();
@@ -86,9 +112,9 @@ export const createBook = async (book: Book, accessToken: string) => {
                 }
             });
         }
-
-        return bookResponse.status;
+        return bookResponse.data.data;
     } catch (err: any) {
+      console.log(err)
         console.error(" Error :", err.response?.status, err.message);
         return null;
     }
@@ -98,6 +124,7 @@ export const createBook = async (book: Book, accessToken: string) => {
 export const getBookDetail = async (id: string) => {
     try {
         const response = await axios.get(`${API_URL}/api/book/${id}`);
+       console.log(response.data.data)
         return response.data.data;
     } catch (err: any) {
         console.error(" Error :", err.response?.status, err.message);
@@ -113,6 +140,9 @@ export const updateBook = async (book: any, accessToken: string) => {
         cover: book.cover,
         description: book.description,
         author: book.author,
+        status: book.status,
+        realaseDate: Number(book.realaseDate),
+        language: book.language
     }, {
         headers: {
             "Content-Type": "application/json",
@@ -174,7 +204,7 @@ await Promise.all(
     }
   })
 );
-    return response.status;
+    return response.data.data;
   } catch (error) {
     console.error("Error updating book:", error);
     return null; 

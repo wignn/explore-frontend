@@ -2,20 +2,10 @@
 
 import { useEffect, useState } from "react"
 import List from "./List"
+import { bookInterface } from "@/types/book"
 
 interface RankProps {
-  books: {
-    id: string
-    title: string
-    cover: string
-    chapter: number
-    updatedAt: string
-    popular: boolean
-    genre?: {
-      id: string
-      title: string
-    }[]
-  }[]
+  books:bookInterface[]
 }
 
 const genres = ["Popular", "Action", "Fantasy", "Romance"]

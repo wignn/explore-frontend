@@ -22,7 +22,7 @@ export default async function ProfilePage() {
     <div><Navbar user={user} />
     <div className="min-h-screen bg-gray-900  flex items-center justify-center p-4 sm:p-6 lg:p-8">
       
-      <ProfileCard users={user}/>
+      <ProfileCard users={user} accessToken={session?.backendTokens.accessToken as string}/>
      
     </div> <Footer/>
     </div>

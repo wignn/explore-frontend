@@ -1,4 +1,5 @@
 import { Book, Globe, Users, Bookmark } from "lucide-react"
+import {normalizeTitle}from '../lib/utils'
 
 export default function About() {
   return (

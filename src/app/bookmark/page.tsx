@@ -13,7 +13,8 @@ async function page() {
   try {   
     if (session?.id && session?.backendTokens?.accessToken) {
       user = await getProfile(session.id, session.backendTokens.accessToken);
-      books =  await getBookmarkById(session.id, session.backendTokens.accessToken);;
+      books =  await getBookmarkById(session.id, session.backendTokens.accessToken) || []
+      
     }
   } catch (error) {
     console.log(error);

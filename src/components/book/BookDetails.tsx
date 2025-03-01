@@ -26,6 +26,7 @@ type Chapter = {
   content: string
   updatedAt: string
   description: string
+  chapterNum: number
 }
 
 interface BookProps {

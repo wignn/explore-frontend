@@ -27,9 +27,8 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
   const toggleProfileModal = () => setIsProfileModalOpen(!isProfileModalOpen)
   const handleSignOut = async ()=>{
      const res = await logout(user?.username as string, user?.token as string)
-      if (res === 200) {
         signOut()
-      }
+      
     }
 
   useEffect(() => {
@@ -93,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
                         Profile
                       </Link>
                       <Link
-                        href="/dashboard"
+                        href="/dasboard"
                         className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-teal-400"
                         role="menuitem"
                       >

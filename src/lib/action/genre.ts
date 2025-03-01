@@ -20,8 +20,8 @@ export const createGenre = async(title: string, description:string ,accessToken:
                 Authorization: `Bearer ${accessToken}`
             }
         });
-
-        return genreResponse.status ;
+        
+        return genreResponse.data.data ;
     } catch (error) {
         console.error("Error creating genre:", error);
         return null;

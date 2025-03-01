@@ -29,7 +29,7 @@ export default function AddGenreForm({ accessToken }: { accessToken: string }) {
     try {
       const res = await createGenre(formData.name, formData.description, accessToken);
 
-      if (res === 200) {
+      if (res !== null) {
         setSuccess("Genre added successfully!");
         setFormData({ name: "", description: "" });
       } else {

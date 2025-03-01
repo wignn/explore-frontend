@@ -9,17 +9,31 @@ import { Suspense } from "react"
 import { BookListSkeleton } from "@/components/List";
 import { getServerSession } from "next-auth";
 import { bookInterface } from "@/types/book";
+
+
+  interface RankProps {
+
+      id: string
+      title: string
+      cover: string
+      chapter: number
+      updatedAt: string
+      popular: boolean
+      genre?: {
+        id: string
+        title: string
+      }[]
+  }[]
+
 export default async function Home() {
     let user = null;
-    let books: bookInterface[] = []; 
+    let books = []; 
 
     try {
         const session = await getServerSession(authOptions);
 
-        console.log(session)
         if (session?.id && session?.backendTokens?.accessToken) {
             const profile = await getProfile(session.id, session.backendTokens.accessToken);
-            console.log(profile)
             user = profile !== "unauthorized" ? profile : null;
         }
 
@@ -29,8 +43,9 @@ export default async function Home() {
         });
 
         books = sortedBooks.slice(0, 24); 
+
     } catch (error) {
-        console.error("❌ Error pada halaman Home:", error);
+        console.error("aError pada halaman Home:", error);
         books = [];
     }
 
@@ -46,5 +61,5 @@ export default async function Home() {
             <Footer />
         </div>
     );
-}
+}``
 

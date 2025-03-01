@@ -1,11 +1,12 @@
+
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
-import { useParams } from "next/navigation"
+import { useState, useEffect, useMemo } from "react"
+import { usePathname } from "next/navigation"
 import dynamic from "next/dynamic"
 import Image from "next/image"
-import { updateBook, getBookDetail } from "@/lib/action/book"
+import { updateBook } from "@/lib/action/book"
 import { useEdgeStore } from "@/lib/edgeStore"
 import { ImagePlus, Loader2, BookOpen, User, AlignLeft, Tag } from "lucide-react"
 
@@ -24,25 +25,38 @@ type BookGenre = {
     title: string
   }
 }
+enum Language {
+  English = "English",
+  Japanese = "Japanese",
+  Korean = "Korean",
+}
 
+enum BookStatus {
+  Completed = "Completed",
+  Drop = "Drop",
+  Ongoing = "Ongoing",
+}
 interface Book {
   id: string
   title: string
   cover: string
   description: string
   author: string
+  status: BookStatus
+  language: Language
+  realaseDate: number
   genre: BookGenre[]
 }
 
 interface UpdateBookProps {
   accessToken: string
   genres: Genre[]
+  book: Book
 }
 
-const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres }) => {
-  const params = useParams()
-  const bookId = params.id as string
-
+const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => {
+  const pathname = usePathname()
+  const bookId = useMemo(() => pathname.split("/")[3],[pathname])
   const [formData, setFormData] = useState<Book>({
     id: "",
     title: "",
@@ -50,6 +64,10 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres }) => {
     description: "",
     author: "",
     genre: [],
+    status: BookStatus.Ongoing,
+    language: Language.English,
+    realaseDate: 0,
+
   })
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string>("")
@@ -58,31 +76,26 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres }) => {
   const { edgestore } = useEdgeStore()
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
-
   useEffect(() => {
-    const fetchBook = async () => {
-      setIsDataLoading(true)
-      try {
-        const book = await getBookDetail(bookId)
-        setFormData(book)
-        setPreview(book.cover)
-      } catch (error) {
-        console.error("Error fetching book:", error)
-        setError("Failed to fetch book data")
-      } finally {
-        setIsDataLoading(false)
-      }
+    if (book) {
+      setFormData(book);
+      setPreview(book.cover);
+      setIsDataLoading(false);
     }
-
-    if (bookId) {
-      fetchBook()
-    }
-  }, [bookId])
+  }, [book]);
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: keyof Book) => {
     setFormData((prevState) => ({
       ...prevState,
       [field]: e.target.value,
+    }))
+  }
+
+  const handleLanguageChange = (selectedLanguage: any) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      language: selectedLanguage.value,
     }))
   }
 
@@ -113,6 +126,16 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres }) => {
     }))
   }
 
+  const handleStatusChange = (selectedStatus: any) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      status: selectedStatus.value,
+    }))
+  }
+  const statusOptions = Object.values(BookStatus).map((status) => ({ value: status, label: status }))
+  const languageOptions = Object.values(Language).map((language) => ({ value: language, label: language }))
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -138,7 +161,7 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres }) => {
       }
 
       const res = await updateBook(updatedBook, accessToken)
-      if (res === 200) {
+      if (res !== null) {
         setSuccess("Book updated successfully!")
       } else {
         throw new Error("Failed to update book")
@@ -241,7 +264,42 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres }) => {
                 className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
+            <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Status</label>
+          <Select
+            options={statusOptions}
+            value={statusOptions.find((option) => option.value === formData.status)}
+            onChange={handleStatusChange}
+            placeholder="Select status"
+            className="w-full text-black bg-gray-900/50 border border-gray-700"
+            classNamePrefix="select"
+          />
+        </div>
 
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Language</label>
+          <Select
+            options={languageOptions}
+            value={languageOptions.find((option) => option.value === formData.language)}
+            onChange={handleLanguageChange}
+            placeholder="Select language"
+            className="w-full text-black bg-gray-900/50 border border-gray-700"
+            classNamePrefix="select"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">year of release</label>
+          <input
+            type="text"
+            value={formData.realaseDate}
+            onChange={(e) => handleChange(e, "realaseDate")}
+            placeholder="published year"
+            className="w-full px-3 py-2 dark:border-gray-600 rounded-md 
+                     bg-gray-900/50 border border-gray-700 dark:bg-gray-700 text-white dark:text-white
+                    focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500
+                         transition-all duration-300 ease-in-out"
+          />
+        </div>
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 <Tag className="inline-block mr-2" size={18} />

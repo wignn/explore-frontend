@@ -92,7 +92,7 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
 
     const res = await createGenre(newGenreName , newGenreDescription, accessToken)
 
-    if(res !== 200){
+    if(res === null){
         setError("error create new genre")
         return
     }
@@ -124,6 +124,10 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
     }
     try {
         const res = await updateGenre(editGenreId as string, editGenreName, editGenreDescription, accessToken)
+        if(res !== 200){
+            setError("error update genre")
+            return
+        }
         setGenreList(
             genreList.map((genre) => 
               genre.id === editGenreId 

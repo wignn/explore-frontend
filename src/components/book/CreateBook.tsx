@@ -20,12 +20,28 @@ interface Book {
   cover: string
   description: string
   author: string
+  status: BookStatus
+  language: Language
   genre: Genre[]
+  realaseDate: number
 }
 
 interface CreateBookProps {
   accessToken: any
   genre: Genre[]
+}
+
+
+enum Language {
+  English = "English",
+  Japanese = "Japanese",
+  Korean = "Korean",
+}
+
+enum BookStatus {
+  Completed = "Completed",
+  Drop = "Drop",
+  Ongoing = "Ongoing",
 }
 
 const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
@@ -34,7 +50,10 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
     cover: "",
     description: "",
     author: "",
+    status:  BookStatus.Ongoing,
+    language: Language.Korean,
     genre: [],
+    realaseDate: 2024,
   })
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string>("")
@@ -72,6 +91,22 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
       genre: genres,
     }))
   }
+  const statusOptions = Object.values(BookStatus).map((status) => ({ value: status, label: status }))
+  const languageOptions = Object.values(Language).map((language) => ({ value: language, label: language }))
+
+  const handleStatusChange = (selectedStatus: any) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      status: selectedStatus.value,
+    }))
+  }
+
+  const handleLanguageChange = (selectedLanguage: any) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      language: selectedLanguage.value,
+    }))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -81,7 +116,7 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
       if (file) {
         const uploadedImage = await edgestore.myPublicImage.upload({ file })
         const res =await createBook({ ...formData, cover: uploadedImage.url }, accessToken)
-        if (res === 200) {
+        if (res !== null) {
           setSuccess("Book created successfully!")
           setFormData({
             title: "",
@@ -89,6 +124,9 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
             description: "",
             author: "",
             genre: [],
+            status: BookStatus.Ongoing,
+            language: Language.Korean,
+            realaseDate: 0,
           })
           setPreview("")
           setError("")
@@ -159,8 +197,8 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
             onChange={(e) => handleChange(e, "description")}
             placeholder="Enter book description"
             rows={3}
-            className="w-full px-3 py-2 bg-gray-900/50 border border-gray-700 dark:border-gray-600 rounded-md 
-                      dark:bg-gray-700 text-gray-900 dark:text-white
+            className="w-full px-3 py-2 bg-gray-900/50 border border-gray-700 text-white dark:border-gray-600 rounded-md 
+                      dark:bg-gray-700 dark:text-white
                     focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500
                          transition-all duration-300 ease-in-out"
           />
@@ -174,7 +212,43 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
             onChange={(e) => handleChange(e, "author")}
             placeholder="Enter author's name"
             className="w-full px-3 py-2 dark:border-gray-600 rounded-md 
-                     bg-gray-900/50 border border-gray-700 dark:bg-gray-700 text-gray-900 dark:text-white
+                     bg-gray-900/50 border border-gray-700 dark:bg-gray-700 text-white dark:text-white
+                    focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500
+                         transition-all duration-300 ease-in-out"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Status</label>
+          <Select
+            options={statusOptions}
+            value={statusOptions.find((option) => option.value === formData.status)}
+            onChange={handleStatusChange}
+            placeholder="Select status"
+            className="w-full text-black bg-gray-900/50 border border-gray-700"
+            classNamePrefix="select"
+          />
+        </div>
+          
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Language</label>
+          <Select
+            options={languageOptions}
+            value={languageOptions.find((option) => option.value === formData.language)}
+            onChange={handleLanguageChange}
+            placeholder="Select language"
+            className="w-full text-black bg-gray-900/50 border border-gray-700"
+            classNamePrefix="select"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">year of release</label>
+          <input
+            type="text"
+            value={formData.realaseDate}
+            onChange={(e) => handleChange(e, "realaseDate")}
+            placeholder="published year"
+            className="w-full px-3 py-2 dark:border-gray-600 rounded-md 
+                     bg-gray-900/50 border border-gray-700 dark:bg-gray-700 text-white dark:text-white
                     focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500
                          transition-all duration-300 ease-in-out"
           />

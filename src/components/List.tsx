@@ -4,15 +4,12 @@ import { timeAgo } from "@/lib/DateToHour"
 import { Book } from "lucide-react"
 import { motion } from "framer-motion"
 import { Skeleton } from "@/components/loading/skletonBook"
+import { bookInterface } from "@/types/book"
+import Link from "next/link"
+import { normalizeTitle } from "../lib/utils"
 
 interface ListProps {
-  books: {
-    id: string
-    title: string
-    cover: string
-    chapter: number
-    updatedAt: string
-  }[]
+  books: bookInterface[]
 }
 
 function List({ books, text }: { books: ListProps["books"]; text: string }) {
@@ -38,14 +35,19 @@ function List({ books, text }: { books: ListProps["books"]; text: string }) {
                 />
               </div>
               <div className="p-3">
-                <a href={`/view/${book.title.replaceAll(" ", "-")}`} className="flex flex-col gap-2">
-                  <h2 className="line-clamp-2 font-medium text-gray-200 group-hover:text-teal-300">{book.title}</h2>
-                  <div className="flex items-center gap-2 text-xs text-gray-400">
-                    <Book className="h-3 w-3" />
-                    <span>Chapter {book.chapter}</span>
-                  </div>
-                  <p className="text-xs text-gray-500">{timeAgo(book.updatedAt)}</p>
-                </a>
+              <Link href={`/view/${normalizeTitle(book.title)}`} className="flex flex-col gap-2">
+  <h2 className="line-clamp-2 font-medium text-gray-200 group-hover:text-teal-300">{book.title}</h2>
+</Link>
+<div className="flex items-center gap-2 text-xs text-gray-400">
+  <Book className="h-3 w-3" />
+  <span>
+    {/* <Link href={`/read/${book.title.replaceAll(" ", "-")}/${book?.chapter[book?.chapter?.length - 1]?.id}`} className="hover:text-teal-300">
+      Chapter {book.chapter.length}
+    </Link> */}
+  </span>
+</div>
+<p className="text-xs text-gray-500">{timeAgo(book.updatedAt)}</p>
+
               </div>
             </motion.div>
           ))

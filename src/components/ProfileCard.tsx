@@ -3,37 +3,68 @@
 import { UserInterface } from "@/types/user"
 import type React from "react"
 import Image from "next/image"
+import { useEdgeStore } from "@/lib/edgeStore"
 
 import { useState, useEffect } from "react"
+import { updateProfile } from "@/lib/action/user"
+import { set } from "zod"
 
 interface profileProps {
     users: UserInterface
+    accessToken: string
 }
 
-export default function ProfileCard({users}:profileProps) {
+export default function ProfileCard({users,accessToken}:profileProps) {
   const [user, setUser] = useState(users)
   const [newUsername, setNewUsername] = useState(user.username)
   const [newName, setNewName] = useState(user.name)
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
+  const [file, setFile] = useState<File | null>(null)
+  const { edgestore } = useEdgeStore()
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1500)
     return () => clearTimeout(timer)
   }, [])
 
-  const handleSave = () => {
+  const handleSave =async () => {
     setUser((prevUser) => ({
       ...prevUser,
       username: newUsername,
       name: newName,
     }))
-    alert("Profile updated successfully!")
+    try{
+      if(file){
+        const upload = await edgestore.myPublicImage.upload({file})
+
+        
+      const newData = {
+        name: newName,
+        profilePic: upload.url
+      }
+      const res = updateProfile(newData, user.id, accessToken)
+      if(res !== null){
+        console.log("Profile updated")
+        setSuccess(true)
+        setError(false)
+      }else{
+        console.error("error in updateProfile")
+        setError(true)
+        setSuccess(false)
+      }
+    }
+    }catch(error){
+      console.error("error in handleSave")
+    }
   }
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
+      setFile(file)
       const reader = new FileReader()
       reader.onloadend = () => {
         setUser((prevUser) => ({
@@ -97,8 +128,7 @@ export default function ProfileCard({users}:profileProps) {
                   </label>
                   <input
                     id="username"
-                    className="w-full bg-white/20 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 text-white dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                    value={newUsername}
+                    className="w-full bg-white/10 dark:bg-gray-800/30 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 text-gray-400 dark:text-gray-500 cursor-not-allowed" value={newUsername}
                     onChange={(e) => setNewUsername(e.target.value)}
                   />
                 </div>
@@ -125,7 +155,14 @@ export default function ProfileCard({users}:profileProps) {
                   />
                 </div>
               </div>
-                   <div className="px-8 py-4  mt-4">
+
+              {success && (
+                <p className="text-green-500 text-center mt-4">Profile updated successfully</p>
+              )}
+              {error && (
+                <p className="text-red-500 text-center mt-4">Error updating profile</p>
+              )}
+            <div className="px-8 py-4  mt-4">
           <button
             onClick={handleSave}
             className="w-full bg-gradient-to-r from-black to-zinc-800 hover:from-zinc-800 hover:to-black text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"

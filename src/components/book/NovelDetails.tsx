@@ -1,118 +1,125 @@
-import { createBookmark, deleteBookmark } from "@/lib/action/bookmark";
-import { formatDate } from "@/lib/dateFormat";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
+"use client"
+import { createBookmark, deleteBookmark } from "@/lib/action/bookmark"
+import { formatDate } from "@/lib/dateFormat"
+import Image from "next/image"
+import Link from "next/link"
+import type React from "react"
+import { useEffect, useState } from "react"
+import ChapterList from "@/components/view/chapter/Chapter-details"
 
 type Genre = {
   Genre: {
-    id: string;
-    title: string;
-  };
-};
+    id: string
+    title: string
+  }
+}
 
 type Chapter = {
-  id: string;
-  title: string;
-  content: string;
-  updatedAt: string;
-  description: string;
-};
+  id: string
+  title: string
+  content: string
+  updatedAt: string
+  description: string
+  chapterNum: number
+}
 
 interface BookProps {
-  id: string;
-  title: string;
-  cover: string;
-  description: string;
-  author: string;
-  updatedAt: string;
-  popular: boolean;
-  genre: Genre[];
-  Chapter: Chapter[];
-  createdAt: string;
+  id: string
+  title: string
+  cover: string
+  description: string
+  author: string
+  updatedAt: string
+  popular: boolean
+  genre: Genre[]
+  Chapter: Chapter[]
+  bookMark:[]
+  createdAt: string
+  status: string
+  realaseDate: number
+  language: string
 }
 
 interface BookPopular {
-  id: string;
-  title: string;
-  cover: string;
-  description: string;
-  author: string;
-  updatedAt: string;
-  popular: boolean;
+  id: string
+  title: string
+  cover: string
+  description: string
+  author: string
+  updatedAt: string
+  popular: boolean
   genre: {
-    id: string;
-    title: string;
-  }[];
-  Chapter: Chapter[];
-  createdAt: string;
-
+    id: string
+    title: string
+  }[]
+  Chapter: Chapter[]
+  createdAt: string
 }
 
 export interface User {
-      id: string;
-      name: string;
-      profilePic?: string | null;
-      username: string;
-      email: string;
-      bio: string;
-      createdAt: string;
-      updatedAt: string;
-      lastLogin: string;
-      token: string;
-      valToken: string;
-      isAdmin: boolean;
+  id: string
+  name: string
+  profilePic?: string | null
+  username: string
+  email: string
+  bio: string
+  createdAt: string
+  updatedAt: string
+  lastLogin: string
+  token: string
+  valToken: string
+  isAdmin: boolean
 }
 
 interface BookmarkProps {
-  id: string;
-  bookId: string;
-  userId: string;
+  id: string
+  bookId: string
+  userId: string
 }
 
 interface NovelDetailsProps {
-  book: BookProps;
-  Popular: BookPopular[];
-  userId: string;
-  accessToken: string;
-  Bookmark: any;
-};
-
+  book: BookProps
+  Popular: BookPopular[]
+  userId: string
+  accessToken: string
+  Bookmark: any
+}
 
 const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, accessToken, Bookmark }) => {
-  const [bookmark, setBookmark] = useState<BookmarkProps | null>(Bookmark);
-
-  useEffect(() => { 
-    setBookmark(Bookmark);
-  }, [Bookmark]);
-
+  const [bookmark, setBookmark] = useState<BookmarkProps | null>(Bookmark)
+  useEffect(() => {
+    setBookmark(Bookmark)
+  }, [Bookmark])
   const handleBookmark = async () => {
     if (!userId) {
-      console.warn("User tidak login, tidak bisa menambah bookmark.");
-      return;
+      console.warn("User tidak login, tidak bisa menambah bookmark.")
+      return
     }
 
-    const prevBookmark = bookmark; 
+    const prevBookmark = bookmark
 
     try {
       if (bookmark) {
-        setBookmark(null);
-        await deleteBookmark(bookmark.id, accessToken);
+        setBookmark(null)
+        await deleteBookmark(bookmark.id, accessToken)
       } else {
-        const newBookmark = { id: Date.now().toString(), bookId: book.id, userId }; 
-        setBookmark(newBookmark);
-        await createBookmark(userId, book.id, accessToken);
+        const newBookmark = { id: Date.now().toString(), bookId: book.id, userId }
+        setBookmark(newBookmark)
+        await createBookmark(userId, book.id, accessToken)
       }
     } catch (e) {
-      console.error("Gagal mengubah bookmark:", e);
-      setBookmark(prevBookmark); 
+      console.error("Gagal mengubah bookmark:", e)
+      setBookmark(prevBookmark)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-zinc-900 text-white">
       <nav className="p-4 text-sm text-zinc-300">
         <div className="max-w-7xl mx-auto flex gap-2">
-          <a href="#" className="hover:text-white">Home</a>
+          <Link href="#" className="hover:text-white">
+            Home
+          </Link>
           <span>›</span>
           <span className="text-zinc-400">{book.title}</span>
         </div>
@@ -123,7 +130,7 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
           <div className="grid md:grid-cols-[300px,1fr] gap-6">
             <div className="space-y-4">
               <Image
-                src={book.cover}
+                src={book.cover || "/placeholder.svg"}
                 alt="Novel Cover"
                 width={300}
                 height={450}
@@ -150,7 +157,7 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
                 </svg>
                 {bookmark ? "Hapus Bookmark" : "Tambahkan Bookmark"}
               </button>
-              <p className="text-sm text-zinc-400 text-center">Followed 204 people</p>
+              <p className="text-sm text-zinc-400 text-center">{`Followed ${book.bookMark.length} people`}</p>
             </div>
 
             <div className="space-y-4">
@@ -158,15 +165,29 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
               <div className="grid gap-3 text-sm">
                 <div className="grid grid-cols-2 md:grid-cols-[200px,1fr] gap-4">
                   <div className="space-y-2">
-                    <p><span className="text-zinc-400">Status:</span> Ongoing</p>
-                    <p><span className="text-zinc-400">Author:</span> {book.author || "Unknown"}</p>
-                    <p><span className="text-zinc-400">Released:</span> 2024</p>
-                    <p><span className="text-zinc-400">Native Language:</span> Korean</p>
+                    <p>
+                      <span className="text-zinc-400">Status:</span> {book.status}
+                    </p>
+                    <p>
+                      <span className="text-zinc-400">Author:</span> {book.author || "Unknown"}
+                    </p>
+                    <p>
+                      <span className="text-zinc-400">Released:</span> {book.realaseDate}
+                    </p>
+                    <p>
+                      <span className="text-zinc-400">Native Language:</span> {book.language}
+                    </p>
                   </div>
                   <div className="space-y-2">
-                    <p><span className="text-zinc-400">Posted by:</span> wign</p>
-                    <p><span className="text-zinc-400">Posted on:</span> {formatDate(book.createdAt)}</p>
-                    <p><span className="text-zinc-400">Updated on:</span> {formatDate(book.updatedAt)}</p>
+                    <p>
+                      <span className="text-zinc-400">Posted by:</span> wign
+                    </p>
+                    <p>
+                      <span className="text-zinc-400">Posted on:</span> {formatDate(book.createdAt)}
+                    </p>
+                    <p>
+                      <span className="text-zinc-400">Updated on:</span> {formatDate(book.updatedAt)}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -186,6 +207,8 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
               <p>{book.description}</p>
             </div>
           </div>
+
+          <ChapterList chapters={book.Chapter} bookTitle={book.title} />
         </div>
 
         <div className="space-y-4">
@@ -206,7 +229,7 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
                   />
                   <div className="space-y-1">
                     <h3 className="font-medium line-clamp-2">
-                      <a href={`/view/${novel.title.replaceAll(" ", "-")}`}>{novel.title}</a>
+                      <Link href={`/view/${novel.title.replaceAll(" ", "-")}`}>{novel.title}</Link>
                     </h3>
                     <p className="text-xs text-zinc-400">
                       Genres: {novel.genre.map((genre) => genre?.title).join(", ")}
@@ -235,7 +258,8 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
         </div>
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default NovelDetails;
+export default NovelDetails
+

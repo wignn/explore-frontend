@@ -8,9 +8,11 @@ export type bookInterface = {
   updatedAt: string;
   popular: boolean;
   genre: Genre[];
-  Chapter: Chapter[];
+  chapter: Chapter[];
   createdAt: string;
+
 };
+
 
 
 interface Genre {

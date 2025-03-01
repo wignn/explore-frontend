@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { FaFacebook, FaTwitter, FaInstagram, FaGithub } from "react-icons/fa"
 
 function Footer() {
@@ -13,18 +14,18 @@ function Footer() {
           <div className="text-center">
             <h3 className="text-lg font-semibold text-teal-300 mb-4">Connect With Us</h3>
             <div className="flex justify-center space-x-4">
-              <a href="#" className="hover:text-teal-400 transition-colors duration-300">
+              <Link href="#" className="hover:text-teal-400 transition-colors duration-300">
                 <FaFacebook size={24} />
-              </a>
-              <a href="#" className="hover:text-teal-400 transition-colors duration-300">
+              </Link>
+              <Link href="#" className="hover:text-teal-400 transition-colors duration-300">
                 <FaTwitter size={24} />
-              </a>
-              <a href="#" className="hover:text-teal-400 transition-colors duration-300">
+              </Link>
+              <Link href="#" className="hover:text-teal-400 transition-colors duration-300">
                 <FaInstagram size={24} />
-              </a>
-              <a href="#" className="hover:text-teal-400 transition-colors duration-300">
+              </Link>
+              <Link href="#" className="hover:text-teal-400 transition-colors duration-300">
                 <FaGithub size={24} />
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -32,36 +33,36 @@ function Footer() {
             <h3 className="text-lg font-semibold text-teal-300 mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="hover:text-teal-400 transition-colors duration-300">
+                <Link href="#" className="hover:text-teal-400 transition-colors duration-300">
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-teal-400 transition-colors duration-300">
+                <Link href="#" className="hover:text-teal-400 transition-colors duration-300">
                   Contact
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-teal-400 transition-colors duration-300">
+                <Link href="#" className="hover:text-teal-400 transition-colors duration-300">
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-teal-400 transition-colors duration-300">
+                <Link href="#" className="hover:text-teal-400 transition-colors duration-300">
                   Terms of Service
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="mt-8 pt-8 border-t border-gray-700 text-center">
-          <p className="text-sm">
+          <div className="text-sm">
             © {new Date().getFullYear()} Wign. All rights reserved. Created with ❤️ by{" "}
-            <a href="?" className="text-teal-400 hover:underline">
+            <Link href="?" className="text-teal-400 hover:underline">
               Wign Team
-            </a>
-          </p>
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

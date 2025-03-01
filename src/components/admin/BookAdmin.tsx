@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Book, Edit, Trash2, Search } from "lucide-react"
+import { Book, Edit, Trash2, Search, Plus, List } from 'lucide-react'
 import Link from "next/link"
 import { bookInterface } from "@/types/book"
 import { formatDate } from "@/lib/dateFormat"
@@ -21,7 +21,7 @@ export default function AdminBookList({ book, accesToken}:Props) {
   const [error, setError] = useState("")
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [bookToDelete, setBookToDelete] = useState<string | null>(null)
-  const route = useRouter()
+  const router = useRouter()
   
   useEffect(() => {
     const results = books.filter(
@@ -34,8 +34,7 @@ export default function AdminBookList({ book, accesToken}:Props) {
   }, [searchTerm, books])
 
   const handleUpdate = (id: string) => {
-    route.push(`/dashboard/book/${id}`)
-    console.log(`Update book with id: ${id}`)
+    router.push(`/dashboard/book/${id}`)
   }
 
   const confirmDelete = (id: string) => {
@@ -63,8 +62,16 @@ export default function AdminBookList({ book, accesToken}:Props) {
     setBookToDelete(null)
   }
 
+  const navigateToChapters = (bookId: string) => {
+    router.push(`/dasboard/book/${bookId}/chapter`)
+  }
+
+  const createNewChapter = (bookId: string) => {
+    router.push(`/dasboard/book/chapter/${bookId}/create`)
+  }
+
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-8 relative">
+    <div className="min-h-screen bg-gray-900 text-gray-100 relative">
       
       {showConfirmation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -138,20 +145,38 @@ export default function AdminBookList({ book, accesToken}:Props) {
                 <td className="p-3">{book.title}</td>
                 <td className="p-3">{book.author}</td>
                 <td className="p-3">{formatDate(book.createdAt)}</td>
-                <td className="p-3">
+                <td className="p-3 flex space-x-2">
                   <button
                     onClick={() => handleUpdate(book.id)}
-                    className="mr-2 p-2 bg-blue-600 hover:bg-blue-700 rounded transition-colors"
-                    aria-label="Update"
+                    className="p-2 bg-blue-600 hover:bg-blue-700 rounded transition-colors"
+                    aria-label="Edit Book"
+                    title="Edit Book"
                   >
                     <Edit size={18} />
                   </button>
                   <button
                     onClick={() => confirmDelete(book.id)}
                     className="p-2 bg-red-600 hover:bg-red-700 rounded transition-colors"
-                    aria-label="Delete"
+                    aria-label="Delete Book"
+                    title="Delete Book"
                   >
                     <Trash2 size={18} />
+                  </button>
+                  <button
+                    onClick={() => navigateToChapters(book.id)}
+                    className="p-2 bg-purple-600 hover:bg-purple-700 rounded transition-colors"
+                    aria-label="Manage Chapters"
+                    title="Manage Chapters"
+                  >
+                    <List size={18} />
+                  </button>
+                  <button
+                    onClick={() => createNewChapter(book.id)}
+                    className="p-2 bg-green-600 hover:bg-green-700 rounded transition-colors"
+                    aria-label="Add Chapter"
+                    title="Add Chapter"
+                  >
+                    <Plus size={18} />
                   </button>
                 </td>
               </tr>
