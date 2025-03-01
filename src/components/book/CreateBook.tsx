@@ -27,7 +27,7 @@ interface Book {
 }
 
 interface CreateBookProps {
-  accessToken: any
+  accessToken: string
   genre: Genre[]
 }
 
@@ -81,8 +81,10 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
     }
   }
 
-  const handleGenreChange = (selectedGenres: any) => {
-    const genres = selectedGenres.map((genre: any) => ({
+  const handleGenreChange = (selectedGenres: unknown) => {
+    console.log(selectedGenres, "selectedGenres")
+    const genr = selectedGenres as {label:string, value:string}[]
+    const genres = genr.map((genre: {label:string, value:string}) => ({
       id: genre.value,
       title: genre.label,
     }))
@@ -94,17 +96,20 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
   const statusOptions = Object.values(BookStatus).map((status) => ({ value: status, label: status }))
   const languageOptions = Object.values(Language).map((language) => ({ value: language, label: language }))
 
-  const handleStatusChange = (selectedStatus: any) => {
+  const handleStatusChange = (selectedStatus: unknown) => {
+    const status = selectedStatus as {value: string; label: string};
+    console.log(status, "selectedStatus")
     setFormData((prevState) => ({
       ...prevState,
-      status: selectedStatus.value,
+      status: status.value as BookStatus,
     }))
   }
 
-  const handleLanguageChange = (selectedLanguage: any) => {
+  const handleLanguageChange = (selectedLanguage: unknown) => {
+    const language = selectedLanguage as {value: string; label: string};
     setFormData((prevState) => ({
       ...prevState,
-      language: selectedLanguage.value,
+      language: language.value as Language,
     }))
   }
 
