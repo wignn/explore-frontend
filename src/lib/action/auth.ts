@@ -23,7 +23,6 @@ export const register = async (data: registerData) => {
         return response.data.data
     } catch (err) {
         console.log(" Error :", err);
-        return null;
     }
 }
 
@@ -42,6 +41,5 @@ export const logout = async(username:string, token: string)=>{
         return response.status
     } catch (err) {
         console.log(" Error :", err);
-        return null;
     }
 }

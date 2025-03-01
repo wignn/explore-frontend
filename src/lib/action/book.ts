@@ -185,7 +185,7 @@ export const updateBook = async (book:BookDetails , accessToken: string) => {
     }
 
     const existingGenresData = existingGenresResponse.data.data;
-    const existingGenres = existingGenresData.genre.map((g: any) => g.genreId);
+    const existingGenres: string[] = existingGenresData.genre.map((g: { genreId: string }) => g.genreId);
     const newGenres = book.genre.filter((g: BookGenre) => !existingGenres.includes(g.genreId));
     const removedGenres = existingGenres.filter((g: string) => !book.genre.some(genre => genre.genreId === g));
 
