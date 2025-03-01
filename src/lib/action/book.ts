@@ -2,7 +2,6 @@
 
 import axios from "axios";
 import { API_URL } from "../API";
-import { bookInterface } from "@/types/book";
 
 type Genre = {
     id: string;
@@ -46,9 +45,8 @@ export const bookList = async () => {
        
 
         return response.data.data;
-    } catch (err: any) {
-        console.error(" Error :", err.response?.status, err.message);
-        return null;
+    } catch (err) {
+        console.error(" Error :", err);
     }
 }
 
@@ -63,9 +61,8 @@ export const bookSearch = async () => {
         });
 
         return response.data.data || [];
-    } catch (err: any) {
-        console.error("❌ Error :", err.response?.status, err.message);
-        return { books: [], isLastPage: true };
+    } catch (err) {
+        console.error("❌ Error :", err);
     }
 };
 
@@ -74,15 +71,16 @@ export const bookSearch = async () => {
 
 export const createBook = async (book: Book, accessToken: string) => {
     try {
-      console.log("book", book)
+      console.log("book", book)   
+       console.log("book", Number(book.realaseDate))
         const bookResponse = await axios.post(`${API_URL}/api/book`, {
             title: book.title,
             cover: book.cover,
             description: book.description,
             author: book.author,
+            language: book.language,   
+            realaseDate:Number(book.realaseDate),
             status: book.status,
-            realaseDate: book.realaseDate,
-            language: book.language
         }, {
             headers: {
               'x-api-key': process.env.API_KEY,
@@ -110,10 +108,9 @@ export const createBook = async (book: Book, accessToken: string) => {
             });
         }
         return bookResponse.data.data;
-    } catch (err: any) {
+    } catch (err) {
       console.log(err)
-        console.error(" Error :", err.response?.status, err.message);
-        return null;
+        console.log(" Error :", err);
     }
 }
 
@@ -128,15 +125,30 @@ export const getBookDetail = async (id: string) => {
           }
         });
         return response.data.data;
-    } catch (err: any) {
-        console.error(" Error :", err.response?.status, err.message);
-        return null;
+    } catch (err) {
+        console.log(" Error :", err);
     }
 }
 
-export const updateBook = async (book: any, accessToken: string) => {
+
+interface UpdateBook {
+  id: string;
+  title: string;
+  cover: string;
+  description: string;
+  author: string;
+  genre: string[];
+  status: BookStatus;
+  realaseDate: number;
+  language: Language;
+  
+}
+
+
+
+export const updateBook = async (book: UpdateBook , accessToken: string) => {
   try {
-    console.log("book", book)
+console.log("book", book)
 
     const response = await axios.post(`${API_URL}/api/book/${book.id}`, {
         title: book.title,
@@ -145,7 +157,7 @@ export const updateBook = async (book: any, accessToken: string) => {
         author: book.author,
         status: book.status,
         realaseDate: Number(book.realaseDate),
-        language: book.language
+        language: book.language,
     }, {
         headers: {
             'x-api-key': process.env.API_KEY,
@@ -170,7 +182,7 @@ export const updateBook = async (book: any, accessToken: string) => {
     }
 
     const existingGenresData = existingGenresResponse.data.data;
-    const existingGenres = existingGenresData.genre.map((g: any) => g.genreId);
+    const existingGenres = existingGenresData.genre.map((g: {genreId: string}) => g.genreId);
     const newGenres = book.genre.filter((g: string) => !existingGenres.includes(g));
     const removedGenres = existingGenres.filter((g: string) => !book.genre.includes(g));
 
@@ -211,8 +223,7 @@ await Promise.all(
 );
     return response.data.data;
   } catch (error) {
-    console.error("Error updating book:", error);
-    return null; 
+    console.log("Error updating book:", error);
   }
 };
 
@@ -230,6 +241,6 @@ export const deleteBook = async (id: string, accessToken: string) => {
     }
     return response.status
   } catch (error) {
-    console.error("Error deleting book:", error);
+    console.log("Error deleting book:", error);
   }
 }
