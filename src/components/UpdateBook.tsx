@@ -73,7 +73,7 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => 
   const [preview, setPreview] = useState<string>("")
   const [isLoading, setIsLoading] = useState(false)
   const [isDataLoading, setIsDataLoading] = useState(true)
-  const { edgestore } = useEdgeStore()
+  const {edgestore } = useEdgeStore()
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   useEffect(() => {
@@ -92,10 +92,16 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => 
     }))
   }
 
-  const handleLanguageChange = (selectedLanguage: any) => {
+  interface LanguageOption {
+    value: Language;
+    label: string;
+  }
+
+  const handleLanguageChange = (selectedLanguage: unknown) => {
+    const option = selectedLanguage as LanguageOption;
     setFormData((prevState) => ({
       ...prevState,
-      language: selectedLanguage.value,
+      language: option?.value || Language.English,
     }))
   }
 
@@ -111,8 +117,14 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => 
     }
   }
 
-  const handleGenreChange = (selectedGenres: any) => {
-    const newGenres = selectedGenres.map((genre: any) => ({
+  interface GenreOption {
+    value: string;
+    label: string;
+  }
+
+  const handleGenreChange = (newValue: unknown) => {
+    const selectedGenres = newValue as GenreOption[];
+    const newGenres: BookGenre[] = (selectedGenres || []).map((genre: GenreOption) => ({
       bookId: bookId,
       genreId: genre.value,
       Genre: {
@@ -126,10 +138,16 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => 
     }))
   }
 
-  const handleStatusChange = (selectedStatus: any) => {
+  interface StatusOption {
+    value: BookStatus;
+    label: string;
+  }
+
+  const handleStatusChange = (newValue: unknown) => {
+    const selectedStatus = newValue as StatusOption | null;
     setFormData((prevState) => ({
       ...prevState,
-      status: selectedStatus.value,
+      status: selectedStatus?.value || BookStatus.Ongoing,
     }))
   }
   const statusOptions = Object.values(BookStatus).map((status) => ({ value: status, label: status }))

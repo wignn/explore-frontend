@@ -25,11 +25,10 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const toggleProfileModal = () => setIsProfileModalOpen(!isProfileModalOpen)
-  const handleSignOut = async ()=>{
-     const res = await logout(user?.username as string, user?.token as string)
-        signOut()
-      
-    }
+  const handleSignOut = async () => {
+    await logout(user?.username as string, user?.token as string)
+    signOut()
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -138,10 +137,9 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 key={href}
                 href={href}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
-                  ${
-                    pathname === href
-                      ? "text-teal-300 bg-gray-700"
-                      : "text-gray-300 hover:text-teal-400 hover:bg-gray-700"
+                  ${pathname === href
+                    ? "text-teal-300 bg-gray-700"
+                    : "text-gray-300 hover:text-teal-400 hover:bg-gray-700"
                   } transition-colors`}
                 onClick={() => setIsMenuOpen(false)}
               >

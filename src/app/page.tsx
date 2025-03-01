@@ -8,22 +8,6 @@ import { authOptions } from "@/lib/auth";
 import { Suspense } from "react"
 import { BookListSkeleton } from "@/components/List";
 import { getServerSession } from "next-auth";
-import { bookInterface } from "@/types/book";
-
-
-  interface RankProps {
-
-      id: string
-      title: string
-      cover: string
-      chapter: number
-      updatedAt: string
-      popular: boolean
-      genre?: {
-        id: string
-        title: string
-      }[]
-  }[]
 
 export default async function Home() {
     let user = null;
@@ -38,7 +22,7 @@ export default async function Home() {
         }
 
         const allBooks = await bookList() || [];
-        const sortedBooks = allBooks.sort((a:any, b:any) => {
+        const sortedBooks = allBooks.sort((a: { updatedAt: string }, b: { updatedAt: string }) => {
             return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
         });
 

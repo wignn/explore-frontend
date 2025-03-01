@@ -7,6 +7,7 @@ import { authOptions } from '@/lib/auth';
 import { getGenre } from '@/lib/action/genre';
 import Footer from '@/components/Footer';
 
+
 async function page() {
   let user, genre, err;    
   const session = await getServerSession(authOptions)
@@ -17,8 +18,8 @@ async function page() {
     
      user = await getProfile(session.id, session.backendTokens.accessToken)
      genre = await getGenre()
-    }catch(e:any){
-      console.log(e.message)
+    }catch(e){
+      console.log("error", e)
       err = true
     }
 

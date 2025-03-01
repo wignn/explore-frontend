@@ -54,7 +54,13 @@ export const authOptions: NextAuthOptions = {
         const response = await axios.patch(`${API_URL}/api/auth/login`, {
           username: credentials.username,
           password: credentials.password,
-        });
+        },
+        {
+          headers: {
+            'x-api-key': process.env.API_KEY
+          }
+        }
+      );
 
         if (response.status !== 200 || !response?.data) {
           return null;
