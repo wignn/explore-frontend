@@ -9,28 +9,19 @@ import Footer from '@/components/Footer';
 
 
 async function page() {
-  let user, genre, err;    
+  let user, genre   
   const session = await getServerSession(authOptions)
   try{
     if (!session) {
       throw new Error('Authentication required')
     }
-    
+  
      user = await getProfile(session.id, session.backendTokens.accessToken)
      genre = await getGenre()
     }catch(e){
       console.log("error", e)
-      err = true
     }
 
-    if(err){
-      return {
-        redirect: {
-          destination: '/login',
-          permanent: false,
-        },
-      }
-    }
 
   return (
     <div className="min-h-screen flex flex-col bg-[#222831] text-white">

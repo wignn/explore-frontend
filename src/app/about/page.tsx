@@ -14,7 +14,7 @@ async function page() {
       user = await getProfile(session.id, session.backendTokens.accessToken);
     }
   } catch (error) {
-    
+    console.log("Error fetching user profile", error);
   }
   return (
     <div>

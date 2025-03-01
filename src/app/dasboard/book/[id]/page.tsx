@@ -48,7 +48,6 @@ interface Book {
 
 const page = async ({ params }: { params: { id: string } }) => {
   let genre: Genre[] = [];
-  let user: UserInterface | null = null;
   let book: Book | null = null;
   const bookId = params.id ?? ""
 
@@ -58,7 +57,7 @@ const page = async ({ params }: { params: { id: string } }) => {
     book = await getBookDetail(bookId);
     genre = await getGenre();
   } catch (error) {
-
+    console.log("Error fetching book detail", error);
   }
   return (
     <div>
