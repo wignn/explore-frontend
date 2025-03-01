@@ -2,6 +2,7 @@ import UpdateBook from '@/components/UpdateBook'
 import { getBookDetail } from '@/lib/action/book';
 import { getGenre } from '@/lib/action/genre';
 import { authOptions } from '@/lib/auth';
+import { UserInterface } from '@/types/user';
 import { Book } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import React from 'react'
@@ -47,6 +48,7 @@ interface Book {
 
 const page = async ({ params }: { params: { id: string } }) => {
   let genre: Genre[] = [];
+  let user: UserInterface | null = null;
   let book: Book | null = null;
   const bookId = params.id ?? ""
 
@@ -56,7 +58,7 @@ const page = async ({ params }: { params: { id: string } }) => {
     book = await getBookDetail(bookId);
     genre = await getGenre();
   } catch (error) {
-    console.log("Error fetching book detail", error);
+
   }
   return (
     <div>

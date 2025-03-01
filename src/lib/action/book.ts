@@ -2,6 +2,8 @@
 
 import axios from "axios";
 import { API_URL } from "../API";
+import { bookInterface } from "@/types/book";
+
 type Genre = {
     id: string;
     title: string;
@@ -44,8 +46,8 @@ export const bookList = async () => {
        
 
         return response.data.data;
-    } catch (err) {
-        console.log(" Error :", err);
+    } catch (err: any) {
+        console.error(" Error :", err.response?.status, err.message);
         return null;
     }
 }
@@ -61,8 +63,8 @@ export const bookSearch = async () => {
         });
 
         return response.data.data || [];
-    } catch (err) {
-        console.log("❌ Error :", err);
+    } catch (err: any) {
+        console.error("❌ Error :", err.response?.status, err.message);
         return { books: [], isLastPage: true };
     }
 };
@@ -72,6 +74,7 @@ export const bookSearch = async () => {
 
 export const createBook = async (book: Book, accessToken: string) => {
     try {
+      console.log("book", book)
         const bookResponse = await axios.post(`${API_URL}/api/book`, {
             title: book.title,
             cover: book.cover,
@@ -91,7 +94,11 @@ export const createBook = async (book: Book, accessToken: string) => {
 
         for (const genre of book.genre) {
             const genreName = genre.title.toLowerCase();
-            const getGenre = await axios.get(`${API_URL}/api/genre/${genreName}`)
+            const getGenre = await axios.get(`${API_URL}/api/genre/${genreName}`,{
+              headers: {
+                'x-api-key': process.env.API_KEY,
+              }
+            })
             await axios.post(`${API_URL}/api/genre/book`, {
                 bookId,
                 genreId: getGenre.data.data.id
@@ -103,9 +110,9 @@ export const createBook = async (book: Book, accessToken: string) => {
             });
         }
         return bookResponse.data.data;
-    } catch (err) {
+    } catch (err: any) {
       console.log(err)
-        console.log(" Error :", err);
+        console.error(" Error :", err.response?.status, err.message);
         return null;
     }
 }
@@ -121,37 +128,15 @@ export const getBookDetail = async (id: string) => {
           }
         });
         return response.data.data;
-    } catch (err) {
-        console.log(" Error :", err);
+    } catch (err: any) {
+        console.error(" Error :", err.response?.status, err.message);
         return null;
     }
 }
 
-
-
-
-type BookGenre = {
-  bookId: string
-  genreId: string
-  Genre: {
-    id: string
-    title: string
-  }
-}
-interface BookDetails {
-  id: string
-  title: string
-  cover: string
-  description: string
-  author: string
-  status: BookStatus
-  language: Language
-  realaseDate: number
-  genre: BookGenre[]
-}
-
-export const updateBook = async (book:BookDetails , accessToken: string) => {
+export const updateBook = async (book: any, accessToken: string) => {
   try {
+    console.log("book", book)
 
     const response = await axios.post(`${API_URL}/api/book/${book.id}`, {
         title: book.title,
@@ -185,15 +170,15 @@ export const updateBook = async (book:BookDetails , accessToken: string) => {
     }
 
     const existingGenresData = existingGenresResponse.data.data;
-    const existingGenres: string[] = existingGenresData.genre.map((g: { genreId: string }) => g.genreId);
-    const newGenres = book.genre.filter((g: BookGenre) => !existingGenres.includes(g.genreId));
-    const removedGenres = existingGenres.filter((g: string) => !book.genre.some(genre => genre.genreId === g));
+    const existingGenres = existingGenresData.genre.map((g: any) => g.genreId);
+    const newGenres = book.genre.filter((g: string) => !existingGenres.includes(g));
+    const removedGenres = existingGenres.filter((g: string) => !book.genre.includes(g));
 
     await Promise.all(
-      newGenres.map(async (genre: BookGenre) => {
+      newGenres.map(async (genreId: string) => {
         const genreResponse = await axios.post(
           `${API_URL}/api/genre/book`,
-          { bookId, genreId: genre.genreId },
+          { bookId, genreId },
           {
             headers: {
               'x-api-key': process.env.API_KEY,

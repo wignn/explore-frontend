@@ -2,6 +2,7 @@
 
 import axios from "axios"
 import { API_URL } from "../API"
+import { bookInterface } from "@/types/book"
 
 
 export const createBookmark = async (userId:string, bookId: string, accessToken: string) => {
@@ -23,7 +24,9 @@ export const createBookmark = async (userId:string, bookId: string, accessToken:
  
 } 
 
+export const getBookmarkList = async (accessToken: string) => {
 
+}
 
 export const deleteBookmark = async (id: string, accessToken?: string) => {
     try {
@@ -43,7 +46,6 @@ export const deleteBookmark = async (id: string, accessToken?: string) => {
 }
 
 
-
 export const getBookmarkById= async (bookId: string, accessToken: string) => {
     try {
         const result = await axios.get(`${API_URL}/api/bookmark/list/${bookId}`, {
@@ -54,8 +56,11 @@ export const getBookmarkById= async (bookId: string, accessToken: string) => {
             }
         })
 
+        const dataFilter = result.data.data.map((data: { book: bookInterface }) => {
+            return data.book
+        })
 
-        return result.data.data
+        return dataFilter
     } catch (error) {
         console.log(error)
     }
@@ -71,17 +76,19 @@ export const isBookmark = async (userId: string, bookId: string, accessToken: st
             }
         })
         const bookmarks = result.data.data
-        const matchedBookmark = bookmarks.find((bookmark: {bookId: string, userId:string, id:string}) => 
-            bookmark.bookId === bookId && bookmark.userId === userId
-        )
+        const matchedBookmark = bookmarks.find((bookmark: {
+            id: string;
+            bookId: string;
+            userId: string;
+        }) => bookmark.bookId === bookId && bookmark.userId === userId)
         if(!matchedBookmark) {
             return null
         }
         
         return {
             id: matchedBookmark.id as string,
-            bookId: matchedBookmark.bookId as string,
-            userId: matchedBookmark.userId as string,
+            bookId: matchedBookmark.bookId ,
+            userId: matchedBookmark.userId,
         }
     } catch (error) {
         console.log(error)

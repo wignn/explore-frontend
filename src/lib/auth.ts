@@ -16,6 +16,7 @@ async function refreshAccessToken(token: any) {
   },
   {
     headers: {
+        'x-api-key': process.env.API_KEY,
       Authorization: `Refresh ${token.backendTokens.refreshToken}`
     }
   }

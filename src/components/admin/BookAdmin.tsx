@@ -34,7 +34,7 @@ export default function AdminBookList({ book, accesToken}:Props) {
   }, [searchTerm, books])
 
   const handleUpdate = (id: string) => {
-    router.push(`/dashboard/book/${id}`)
+    router.push(`/dasboard/book/${id}`)
   }
 
   const confirmDelete = (id: string) => {

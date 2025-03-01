@@ -66,7 +66,6 @@ export const updateGenre = async(id: string, title: string, description: string,
                 Authorization: `Bearer ${accessToken}`
             }
         });
-
         return genreResponse.status;
     } catch (error) {
         console.error("Error updating genre:", error);
