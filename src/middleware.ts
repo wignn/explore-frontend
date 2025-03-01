@@ -13,14 +13,27 @@ export const middleware = async (req: NextRequest, res: NextResponse) => {
     const isAuthenticated = !!token;
     const isAdmin = token?.isAdmin;
 
+
     const isLoginPage = req.nextUrl.pathname.startsWith("/login");
-    if (isLoginPage && isAuthenticated && isAdmin) {
+    if (isLoginPage && isAuthenticated) {
       return NextResponse.redirect(new URL("/profile", req.url));
     }
 
-    const isDashboard = req.nextUrl.pathname.startsWith("dashboard")
-    if(isDashboard && isAuthenticated){
-        return NextResponse.redirect(new URL("/login"))
+    const isProfilePage = req.nextUrl.pathname.startsWith("/profile");
+    if (isProfilePage && !isAuthenticated) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+
+    const isBookmark = req.nextUrl.pathname.startsWith("/bookmark");
+    if (isBookmark && !isAuthenticated) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+
+    const isDashboard = req.nextUrl.pathname.startsWith("/dasboard")
+    if(isDashboard && !isAuthenticated){
+      if(!isAdmin){
+        return NextResponse.redirect(new URL("/", req.url));
+      }
     }
 
     const regis = req.nextUrl.pathname.startsWith("/register");

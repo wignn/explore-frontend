@@ -5,8 +5,17 @@ import { API_URL } from "../API"
 
 
 export const getGenre =async() =>{
-    const res = await axios.get(`${API_URL}/api/genre`)
-    return res.data.data
+    try {
+         const res = await axios.get(`${API_URL}/api/genre`,{
+            headers: {
+                'x-api-key': process.env.API_KEY
+            }
+         })
+        return res.data.data
+    } catch (error) {
+        
+    }
+
 }
 
 
@@ -17,10 +26,11 @@ export const createGenre = async(title: string, description:string ,accessToken:
             description
         }, {
             headers: {
+                'x-api-key': process.env.API_KEY,
                 Authorization: `Bearer ${accessToken}`
             }
         });
-        
+
         return genreResponse.data.data ;
     } catch (error) {
         console.error("Error creating genre:", error);
@@ -33,6 +43,7 @@ export const deleteGenre = async(id: string, accessToken: string) => {
     try {
         const genreResponse = await axios.delete(`${API_URL}/api/genre/${id}`, {
             headers: {
+                'x-api-key': process.env.API_KEY,
                 Authorization: `Bearer ${accessToken}`
             }
         });
@@ -51,6 +62,7 @@ export const updateGenre = async(id: string, title: string, description: string,
             description
         }, {
             headers: {
+                'x-api-key': process.env.API_KEY,
                 Authorization: `Bearer ${accessToken}`
             }
         });

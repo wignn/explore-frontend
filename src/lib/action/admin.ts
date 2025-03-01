@@ -5,7 +5,9 @@ import { API_URL } from "../API"
 export const userSessions = async (accessToken: string) => {
     try {
         const response = await axios.get(`${API_URL}/api/admin/user/session`, {
-            headers: { Authorization: `Bearer ${accessToken}` },
+            headers: { 
+            'x-api-key': process.env.API_KEY,
+            Authorization: `Bearer ${accessToken}` },
         })
         return response.data.data
     } catch (error) {
@@ -17,7 +19,9 @@ export const userSessions = async (accessToken: string) => {
 export const users = async (accessToken: string) => {
     try {
         const response = await axios.get(`${API_URL}/api/admin/user`, {
-            headers: { Authorization: `Bearer ${accessToken}` },
+            headers: {
+                'x-api-key': process.env.API_KEY, 
+                Authorization: `Bearer ${accessToken}` },
         })
         return response.data.data
     } catch (error) {
@@ -29,7 +33,9 @@ export const users = async (accessToken: string) => {
 export const chapters = async (accessToken: string) => {
     try {
         const response = await axios.get(`${API_URL}/api/admin/chapter`, {
-            headers: { Authorization: `Bearer ${accessToken}` },
+            headers: {
+                'x-api-key': process.env.API_KEY,
+                Authorization: `Bearer ${accessToken}` },
         })
         return response.data.data
     } catch (error) {
@@ -41,7 +47,9 @@ export const chapters = async (accessToken: string) => {
 export const genres = async (accessToken: string) => {
     try {
         const response = await axios.get(`${API_URL}/api/admin/genre`, {
-            headers: { Authorization: `Bearer ${accessToken}` },
+            headers: { 
+                'x-api-key': process.env.API_KEY,
+                Authorization: `Bearer ${accessToken}` },
         })
         return response.data.data
     } catch (error) {
@@ -53,7 +61,9 @@ export const genres = async (accessToken: string) => {
 export const bookmarks = async (accessToken: string) => {
     try {
         const response = await axios.get(`${API_URL}/api/admin/bookmark`, {
-            headers: { Authorization: `Bearer ${accessToken}` },
+            headers: {
+                'x-api-key': process.env.API_KEY,
+                Authorization: `Bearer ${accessToken}` },
         })
         return response.data.data
     } catch (error) {
@@ -65,7 +75,9 @@ export const bookmarks = async (accessToken: string) => {
 export const books = async (accessToken: string) => {
     try {
         const response = await axios.get(`${API_URL}/api/admin/book`, {
-            headers: { Authorization: `Bearer ${accessToken}` },
+            headers: { 
+                'x-api-key': process.env.API_KEY,
+                Authorization: `Bearer ${accessToken}` },
         })
         return response.data.data
     } catch (error) {

@@ -13,6 +13,7 @@ export const getProfile = async (id: string, accessToken: string) => {
 
         const response = await axios.get(`${API_URL}/api/user/${id}`, {
             headers: {
+                'x-api-key': process.env.API_KEY,
                 Authorization: `Bearer ${accessToken}`,
             },
         });
@@ -39,6 +40,7 @@ export const updateProfile = async (data: ProfileData, userId: string, accessTok
     try {
         const response = await axios.put(`${API_URL}/api/user/${userId}`, data, {
             headers:{
+                'x-api-key': process.env.API_KEY,
                 Authorization: `Bearer ${accessToken}`
             }
         });

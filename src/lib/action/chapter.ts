@@ -15,6 +15,7 @@ export const createChapter = async (chapter: Chapter, accessToken: string) => {
     try {
         const response = await axios.post(`${API_URL}/api/chapter`, chapter, {
             headers: {
+                'x-api-key': process.env.API_KEY,
                 Authorization: `Bearer ${accessToken}`
             }
         });
@@ -30,6 +31,9 @@ export const createChapter = async (chapter: Chapter, accessToken: string) => {
 export const getChapters = async (bookId: string) => {
     try {
         const response = await axios.get(`${API_URL}/api/chapter/${bookId}`, {
+            headers: {
+                'x-api-key': process.env.API_KEY,
+            }
         });
 
         return response.data.data
@@ -44,6 +48,7 @@ export const deleteChapter = async (chapterId: string, accessToken: string) => {
     try {
         const response = await axios.delete(`${API_URL}/api/chapter/${chapterId}`, {
             headers: {
+                'x-api-key': process.env.API_KEY,
                 Authorization: `Bearer ${accessToken}`
             }
         });

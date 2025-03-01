@@ -37,7 +37,11 @@ interface Book {
 
 export const bookList = async () => {
     try {
-        const response = await axios.get(`${API_URL}/api/book/list`
+        const response = await axios.get(`${API_URL}/api/book/list`,{
+          headers: {
+            'x-api-key': process.env.API_KEY,
+          }
+        }
         );
        
 
@@ -48,29 +52,15 @@ export const bookList = async () => {
     }
 }
 
-const bookPage = async (page: number, limit: number) => {
-    try {
-        const response = await axios.get(`${API_URL}/api/book/list`);
-        const allBooks: bookInterface[] = response.data.data;
 
-        if (!Array.isArray(allBooks)) {
-            console.error("❌ Data buku tidak valid:", allBooks);
-            return [];
-        }
-
-        const startIndex = (page - 1) * limit;
-        const paginatedBooks = allBooks.slice(startIndex, startIndex + limit);
-
-        return paginatedBooks;
-    } catch (err: any) {
-        console.error(" Error :", err.response?.status, err.message);
-        return [];
-    }
-}
 
 export const bookSearch = async () => {
     try {
-        const response = await axios.get(`${API_URL}/api/book/list/`);
+        const response = await axios.get(`${API_URL}/api/book/list/`,{
+          headers: {
+            'x-api-key': process.env.API_KEY,
+          }
+        });
 
         return response.data.data || [];
     } catch (err: any) {
@@ -94,6 +84,7 @@ export const createBook = async (book: Book, accessToken: string) => {
             language: book.language
         }, {
             headers: {
+              'x-api-key': process.env.API_KEY,
                 Authorization: `Bearer ${accessToken}`
             }
         });
@@ -108,6 +99,7 @@ export const createBook = async (book: Book, accessToken: string) => {
                 genreId: getGenre.data.data.id
             }, {
                 headers: {
+                  'x-api-key': process.env.API_KEY,
                     Authorization: `Bearer ${accessToken}`
                 }
             });
@@ -123,8 +115,13 @@ export const createBook = async (book: Book, accessToken: string) => {
 
 export const getBookDetail = async (id: string) => {
     try {
-        const response = await axios.get(`${API_URL}/api/book/${id}`);
-       console.log(response.data.data)
+
+      console.log("id", id)
+        const response = await axios.get(`${API_URL}/api/book/${id}`,{
+          headers: {
+            'x-api-key': process.env.API_KEY,
+          }
+        });
         return response.data.data;
     } catch (err: any) {
         console.error(" Error :", err.response?.status, err.message);
@@ -145,7 +142,7 @@ export const updateBook = async (book: any, accessToken: string) => {
         language: book.language
     }, {
         headers: {
-            "Content-Type": "application/json",
+            'x-api-key': process.env.API_KEY,
             Authorization: `Bearer ${accessToken}`,
         }
     });
@@ -157,6 +154,7 @@ export const updateBook = async (book: any, accessToken: string) => {
     const bookId = responseData.id;
     const existingGenresResponse = await axios.get(`${API_URL}/api/book/${bookId}`, {
         headers: {
+           'x-api-key': process.env.API_KEY,
             Authorization: `Bearer ${accessToken}`,
         },
     })
@@ -177,7 +175,7 @@ export const updateBook = async (book: any, accessToken: string) => {
           { bookId, genreId },
           {
             headers: {
-              "Content-Type": "application/json",
+              'x-api-key': process.env.API_KEY,
               Authorization: `Bearer ${accessToken}`,
             },
           }
@@ -194,6 +192,7 @@ await Promise.all(
       `${API_URL}/api/genre/book/${genreId}/${bookId}`,
       {
         headers: {
+          'x-api-key': process.env.API_KEY,
           Authorization: `Bearer ${accessToken}`,
         },
       }
@@ -216,6 +215,7 @@ export const deleteBook = async (id: string, accessToken: string) => {
   try {
     const response = await axios.delete(`${API_URL}/api/book/${id}`, {
     headers:{
+      'x-api-key': process.env.API_KEY,
       Authorization: `Bearer ${accessToken}`,
     }
     })

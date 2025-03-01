@@ -11,6 +11,7 @@ export const createBookmark = async (userId:string, bookId: string, accessToken:
         bookId
     }, {
         headers: {
+            'x-api-key': process.env.API_KEY,
             Authorization: accessToken
         }
     })
@@ -30,6 +31,7 @@ export const deleteBookmark = async (id: string, accessToken?: string) => {
     try {
     const res = await axios.delete(`${API_URL}/api/bookmark/${id}`, {
         headers: {
+            'x-api-key': process.env.API_KEY,
             Authorization: `Bearer ${accessToken}`
         }
     })
@@ -48,6 +50,7 @@ export const getBookmarkById= async (bookId: string, accessToken: string) => {
         const result = await axios.get(`${API_URL}/api/bookmark/list/${bookId}`, {
 
             headers: {
+                'x-api-key': process.env.API_KEY,
                 Authorization: `Bearer ${accessToken}`
             }
         })
@@ -67,6 +70,7 @@ export const isBookmark = async (userId: string, bookId: string, accessToken: st
     try {
         const result = await axios.get(`${API_URL}/api/bookmark/list/${userId}`, {
             headers: {
+                'x-api-key': process.env.API_KEY,
                 Authorization: accessToken
             }
         })

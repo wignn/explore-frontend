@@ -42,21 +42,19 @@ async function page({ params }: { params: { name?: string } }) {
   let popular: PopularProps[] = [];
   let bookmark = null;
   let session = null;
- 
+  
 
   try {
     const bookName = params.name ?? "";
-
     session = await getServerSession(authOptions);
 
-    if (session?.id && session?.backendTokens?.accessToken) {
-      
-      book = await getBookDetail(denormalizeTitle(bookName));
-      user = await getProfile(session.id, session.backendTokens.accessToken);
-      bookmark = await isBookmark(session.id,book.id ,session.backendTokens.accessToken);
-    }
-
-    const booklist = await bookList();
+  book = await getBookDetail(denormalizeTitle(bookName));
+  const booklist = await bookList();
+  
+  if (session?.id && session?.backendTokens?.accessToken) {
+    user = await getProfile(session.id, session.backendTokens.accessToken);
+    bookmark = await isBookmark(session.id, book.id, session.backendTokens.accessToken);
+  }
 
     if (booklist?.length) {
       popular = booklist
@@ -64,7 +62,7 @@ async function page({ params }: { params: { name?: string } }) {
         .slice(0, 5);
     }
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.log("Error fetching data:", error);
   }
 
   return (
