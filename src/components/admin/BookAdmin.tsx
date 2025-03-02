@@ -113,7 +113,7 @@ export default function AdminBookList({ book, accesToken}:Props) {
       )}
       
       <Link 
-        href="/dashboard/book/create" 
+        href="/dasboard/book/create" 
         className="inline-flex items-center mb-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200 font-medium"
       >
         <Book className="mr-2 h-5 w-5" />
