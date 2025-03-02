@@ -2,10 +2,43 @@
 
 import { useEffect, useState } from "react"
 import List from "./List"
-import { bookInterface } from "@/types/book"
 
+interface Genre {
+  id: string;
+  title: string;
+}
+
+interface Chapter {
+  id: string;
+  title: string;
+  description: string;
+  content: string;
+  updatedAt: string;
+  chapterNum: number;
+  createdAt: string;
+}
+
+export type book = {  
+  id: string;
+  title: string;
+  cover: string;
+  description: string;
+  author: string;
+  updatedAt: string;
+  popular: boolean;
+  genre: Genre[];
+  chapter: Chapter[];
+  createdAt: string;
+  bookmark: bookmark[];
+};
+
+type bookmark = {
+  id: string;
+  bookId: string;
+  userId: string;
+}
 interface RankProps {
-  books:bookInterface[]
+  books:book[]
 }
 
 const genres = ["Popular", "Action", "Fantasy", "Romance"]
@@ -17,7 +50,12 @@ function Rank({ books }: RankProps) {
   useEffect(() => {
     if (books.length === 0) return
     if (selectedGenre === "Popular") {
-      setFilteredBooks(books.filter((book) => book.popular))
+      setFilteredBooks(
+        [...books] 
+          .filter((book) => book.bookmark?.length > 0) 
+          .sort((a, b) => (b.bookmark.length || 0) - (a.bookmark?.length || 0)) 
+          .slice(0, 10) 
+      );
     } else {
       setFilteredBooks(
         books.filter((book) => book.genre?.some((g) => g.title.toLowerCase() === selectedGenre.toLowerCase())),
