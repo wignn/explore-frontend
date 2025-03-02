@@ -5,6 +5,7 @@ import ProfileCard from "@/components/ProfileCard";
 import { getProfile } from "@/lib/action/user";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
   let user = null;
@@ -16,6 +17,8 @@ export default async function ProfilePage() {
     } catch (error) {
       console.error("❌ Error fetching user profile:", error);
     }
+  } else {
+    redirect("/login");
   }
 
   return (

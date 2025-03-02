@@ -8,10 +8,12 @@ import { getToken } from "next-auth/jwt";
     If the user is authenticated, they will be redirected to the profile page.
 */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const middleware = async (req: NextRequest, _res: NextResponse) => {
+export const middleware = async (req: NextRequest, res: NextResponse) => {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     const isAuthenticated = !!token;
-    const isAdmin = token?.isAdmin;
+    const isAdmin = token?.isAdmin; 
+    console.log(isAdmin)
+    console.log(isAuthenticated)
 
 
     const isLoginPage = req.nextUrl.pathname.startsWith("/login");
@@ -40,6 +42,6 @@ export const middleware = async (req: NextRequest, _res: NextResponse) => {
     if (regis && isAuthenticated) {
       return NextResponse.redirect(new URL("/", req.url));
     }
-    
+
     return NextResponse.next();
 }
