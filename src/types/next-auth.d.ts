@@ -29,7 +29,9 @@ declare module "next-auth/jwt" {
     username: string;
     token: string;    
     id: string;
-
+    exp: number;
+    iat: number;
+    isAdmin: boolean;
     backendTokens: {
       accessToken: string;
       refreshToken: string;

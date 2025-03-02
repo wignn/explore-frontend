@@ -71,8 +71,6 @@ export const bookSearch = async () => {
 
 export const createBook = async (book: Book, accessToken: string) => {
     try {
-      console.log("book", book)   
-       console.log("book", Number(book.realaseDate))
         const bookResponse = await axios.post(`${API_URL}/api/book`, {
             title: book.title,
             cover: book.cover,
@@ -117,8 +115,6 @@ export const createBook = async (book: Book, accessToken: string) => {
 
 export const getBookDetail = async (id: string) => {
     try {
-
-      console.log("id", id)
         const response = await axios.get(`${API_URL}/api/book/${id}`,{
           headers: {
             'x-api-key': process.env.API_KEY,
@@ -148,7 +144,6 @@ interface UpdateBook {
 
 export const updateBook = async (book: UpdateBook , accessToken: string) => {
   try {
-console.log("book", book)
 
     const response = await axios.post(`${API_URL}/api/book/${book.id}`, {
         title: book.title,

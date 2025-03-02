@@ -3,12 +3,14 @@ import { API_URL } from "./API";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { jwtDecode } from "jwt-decode";
+import { JWT } from "next-auth/jwt";
 
 
 
-async function refreshAccessToken(token: any) {
+
+async function refreshAccessToken(token:JWT) {
   try {
-    // console.log(token)
+    console.log("token",token)
     const response = await axios.post(`${API_URL}/api/auth/refresh`, {
       username: token.username,
       isAdmin: token.isAdmin,
@@ -82,14 +84,12 @@ export const authOptions: NextAuthOptions = {
     signIn: "/sign",
   },
   callbacks: {
+
     async jwt({ token, user }) {
       if (user) {
-        // console.log("ada user", user)
         return { ...token, ...user };
       }
-
       if (Date.now() < token.accessTokenExpires) {
-        // console.log("tidak refresh", token)
         return token; 
       }
       // console.log("aku refresg", token)
@@ -97,6 +97,7 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
+      console.log("session", token)
       return {...session, ...token};
     },
   },

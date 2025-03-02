@@ -48,13 +48,13 @@ async function page({ params }: { params: { name?: string } }) {
   let popular: PopularProps[] = [];
   let bookmark: Bookmark | null = null;
   let session = null;
-  
+  const {name} = await params
 
   try {
-    const bookName = params.name ?? "";
+
     session = await getServerSession(authOptions);
 
-  book = await getBookDetail(denormalizeTitle(bookName));
+  book = await getBookDetail(denormalizeTitle(name as string));
   const booklist = await bookList();
   
   if (session?.id && session?.backendTokens?.accessToken) {

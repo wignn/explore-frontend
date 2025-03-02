@@ -48,12 +48,12 @@ interface Book {
 const page = async ({ params }: { params: { id: string } }) => {
   let genre: Genre[] = [];
   let book: Book | null = null;
-  const bookId = params.id ?? ""
+  const {id} = await params
 
 
   const session = await getServerSession(authOptions);
   try {
-    book = await getBookDetail(bookId);
+    book = await getBookDetail(id);
     genre = await getGenre();
   } catch (error) {
     console.log("Error fetching book detail", error);

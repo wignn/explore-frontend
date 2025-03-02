@@ -8,7 +8,7 @@ import React from 'react'
 
 
 export default async function page({params}:{params:{chapterId:string}}) {
-    const chapterId = params.chapterId ?? ""
+    const {chapterId} = await params
     let chapter 
     let user = null
     try {

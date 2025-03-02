@@ -16,8 +16,9 @@ interface Chapter {
 const page = async ({params}: {params: {id: string}}) => {
     let book
     let chapter
+    const {id} = await params
     try {
-        book = await getBookDetail(params.id)
+        book = await getBookDetail(id)
         chapter = book.Chapter?.map((chapter: Chapter) => ({
             id: chapter.id,
             title: chapter.title,
