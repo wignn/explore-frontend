@@ -8,10 +8,11 @@ import React from 'react'
 
 
 export default async function page({params}:{params:{chapterId:string}}) {
-    const {chapterId} = await params
-    let chapter 
-    let user = null
-    try {
+  // @ts-ignore
+  const {chapterId} = await params
+  let chapter 
+  let user = null
+  try {
         chapter =await getChapters(chapterId)
         const session = await getServerSession(authOptions)
         if (session?.id && session?.backendTokens?.accessToken) {

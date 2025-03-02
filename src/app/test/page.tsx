@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 
 export default async function Sidebar() {
-  const headerList = headers();
+  const headerList = await headers();
   const pathname = (await headerList).get("x-current-path");
   return (
     <div>

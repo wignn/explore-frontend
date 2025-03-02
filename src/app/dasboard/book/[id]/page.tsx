@@ -48,6 +48,7 @@ interface Book {
 const page = async ({ params }: { params: { id: string } }) => {
   let genre: Genre[] = [];
   let book: Book | null = null;
+  // @ts-ignore
   const {id} = await params
 
 

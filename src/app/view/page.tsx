@@ -18,7 +18,8 @@ interface SearchParams {
     page?: number;
 }
 
-const Page = async ({ searchParams }: { searchParams?: SearchParams }) => {
+const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
+    const searchParams = await props.searchParams;
     const searchQuery = searchParams?.query ?? "";
     const pageParam = parseInt(searchParams?.page?.toString() ?? "1", 10);
     const limit = 10;
@@ -27,7 +28,7 @@ const Page = async ({ searchParams }: { searchParams?: SearchParams }) => {
     if (session?.id && session?.backendTokens?.accessToken) {
         user = await getProfile(session.id, session.backendTokens.accessToken);
     }
- 
+
     const allBooks = await bookSearch();
 
     const filteredBooks = searchQuery

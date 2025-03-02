@@ -48,6 +48,7 @@ async function page({ params }: { params: { name?: string } }) {
   let popular: PopularProps[] = [];
   let bookmark: Bookmark | null = null;
   let session = null;
+  // @ts-ignore
   const {name} = await params
 
   try {
