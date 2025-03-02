@@ -167,7 +167,7 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
                 >
                   <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
                 </svg>
-                {bookmark ? "Hapus Bookmark" : "Tambahkan Bookmark"}
+                {bookmark ? "Bookmarked" : "Bookmark"}
               </button>
               <p className="text-sm text-zinc-400 text-center">{`Followed ${book.bookMark.length} people`}</p>
             </div>
