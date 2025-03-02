@@ -9,7 +9,7 @@ import { getServerSession } from "next-auth";
 
 export default async function ProfilePage() {
   let user = null;
-  let session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions);
 
   if (session?.id && session?.backendTokens?.accessToken) {
     try {
