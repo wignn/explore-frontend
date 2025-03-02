@@ -89,14 +89,16 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
                         <User className="mr-3 h-5 w-5" />
                         Profile
                       </Link>
-                      <Link
-                        href="/dasboard"
-                        className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-teal-400"
-                        role="menuitem"
-                      >
-                        <Settings className="mr-3 h-5 w-5" />
-                        Admin
-                      </Link>
+                      {user.isAdmin && (
+                        <Link
+                          href="/dasboard"
+                          className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-teal-400"
+                          role="menuitem"
+                        >
+                          <Settings className="mr-3 h-5 w-5" />
+                          Admin
+                        </Link>
+                      )}
                       <button
                         onClick={handleSignOut}
                         className="flex w-full items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-teal-400"
@@ -137,10 +139,9 @@ export const Navbar: React.FC<NavbarProps> = ({ user }) => {
                 key={href}
                 href={href}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium
-                  ${
-                    pathname === href
-                      ? "text-teal-300 bg-gray-700"
-                      : "text-gray-300 hover:text-teal-400 hover:bg-gray-700"
+                  ${pathname === href
+                    ? "text-teal-300 bg-gray-700"
+                    : "text-gray-300 hover:text-teal-400 hover:bg-gray-700"
                   } transition-colors`}
                 onClick={() => setIsMenuOpen(false)}
               >
