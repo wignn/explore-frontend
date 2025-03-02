@@ -24,9 +24,7 @@ export const createBookmark = async (userId:string, bookId: string, accessToken:
  
 } 
 
-export const getBookmarkList = async (accessToken: string) => {
 
-}
 
 export const deleteBookmark = async (id: string, accessToken?: string) => {
     try {

@@ -10,21 +10,29 @@ interface registerData {
 }
 
 
-export const register = async (data: registerData) => {
+interface RegisterResponse {
+    id: string;
+    email: string;
+    username: string;
+    name: string;
+    token: string;
+  }
+  
+  export const register = async (data: registerData): Promise<RegisterResponse | null> => {
     try {
-
-        const response = await axios.post(`${API_URL}/api/auth/register`, data,{
-            headers:{
-                'x-api-key': process.env.API_KEY,
-            }}
-
-        );
-    
-        return response.data.data
+      const response = await axios.post<RegisterResponse>(`${API_URL}/api/auth/register`, data, {
+        headers: {
+          'x-api-key': process.env.API_KEY!,
+        },
+      });
+  
+      return response.data;
     } catch (err) {
-        console.log(" Error :", err);
+      console.error("Error:", err);
+      return null;
     }
-}
+  };
+  
 
 export const logout = async(username:string, token: string)=>{
     try {

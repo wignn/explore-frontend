@@ -91,10 +91,10 @@ interface NovelDetailsProps {
 
 const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, accessToken, Bookmark }) => {
   const [bookmark, setBookmark] = useState<BookmarkProps | null>(Bookmark)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   useEffect(() => {
     setBookmark(Bookmark)
-  }, [Bookmark])
+  }, [Bookmark, accessToken])
   const handleBookmark = async () => {
     if (!userId) {
       console.warn("User tidak login, tidak bisa menambah bookmark.")
