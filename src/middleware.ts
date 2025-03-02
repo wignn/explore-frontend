@@ -40,8 +40,6 @@ export const middleware = async (req: NextRequest, _res: NextResponse) => {
     if (regis && isAuthenticated) {
       return NextResponse.redirect(new URL("/", req.url));
     }
-    const headers = new Headers(req.headers);
-  headers.set("x-current-path", req.nextUrl.pathname);
-
-    return NextResponse.next({headers});
+    
+    return NextResponse.next();
 }
