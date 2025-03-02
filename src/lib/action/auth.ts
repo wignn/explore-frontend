@@ -10,26 +10,18 @@ interface registerData {
 }
 
 
-interface RegisterResponse {
-    id: string;
-    email: string;
-    username: string;
-    name: string;
-    token: string;
-  }
   
-  export const register = async (data: registerData): Promise<RegisterResponse | null> => {
+  export const register = async (data: registerData)=> {
     try {
-      const response = await axios.post<RegisterResponse>(`${API_URL}/api/auth/register`, data, {
+      const response = await axios.post(`${API_URL}/api/auth/register`, data, {
         headers: {
           'x-api-key': process.env.API_KEY!,
         },
       });
   
-      return response.data;
+      return response.data.data;
     } catch (err) {
-      console.error("Error:", err);
-      return null;
+      console.log("Error:", err);
     }
   };
   

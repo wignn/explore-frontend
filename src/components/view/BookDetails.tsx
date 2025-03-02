@@ -118,7 +118,7 @@ function BookDetails() {
     };
   
     fetchData();
-  }, [bookName]);
+  });
   
   return (
     <div className="bg-gray-900">
