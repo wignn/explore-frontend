@@ -7,7 +7,7 @@ import { getToken } from "next-auth/jwt";
     If the user is not authenticated, they will be redirected to the login page.
     If the user is authenticated, they will be redirected to the profile page.
 */
-export const middleware = async (req: NextRequest) => {
+export const middleware = async (req: NextRequest, _res: NextResponse) => {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     const isAuthenticated = !!token;
     const isAdmin = token?.isAdmin;
