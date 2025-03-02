@@ -12,8 +12,10 @@ export const middleware = async (req: NextRequest, res: NextResponse) => {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     const isAuthenticated = !!token;
     const isAdmin = token?.isAdmin; 
+    console.log(token)
     console.log(isAdmin)
     console.log(isAuthenticated)
+
 
 
     const isLoginPage = req.nextUrl.pathname.startsWith("/login");
