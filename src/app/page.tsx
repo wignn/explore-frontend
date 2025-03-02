@@ -31,7 +31,6 @@ export default async function Home() {
         books = [];
     }
 
-    console.log(books);
     return (
         <div>
             <Navbar user={user} />

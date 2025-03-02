@@ -17,7 +17,7 @@ function List({ books, text }: { books: ListProps["books"]; text: string }) {
   return (
     <div className="min-h-screen w-full bg-gray-900 p-4 md:p-6 lg:p-8">
       <h1 className="mb-6 text-2xl font-bold tracking-tight text-teal-400">{text}</h1>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {books.length > 0 ? (
           books.map((book, index) => (
             <motion.div
@@ -39,7 +39,7 @@ function List({ books, text }: { books: ListProps["books"]; text: string }) {
               </div>
               <div className="flex flex-1 flex-col justify-between p-4">
                 <Link href={`/view/${normalizeTitle(book.title)}`} className="flex flex-col gap-2">
-                  <h2 className="line-clamp-2 text-lg font-semibold text-gray-200 group-hover:text-teal-300">
+                  <h2 className="line-clamp-2 text-sm md:text-lg font-semibold text-gray-200 group-hover:text-teal-300">
                     {book.title}
                   </h2>
                 </Link>

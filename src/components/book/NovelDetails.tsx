@@ -146,7 +146,7 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
                 alt="Novel Cover"
                 width={300}
                 height={450}
-                className="w-1/2 mx-auto md:mx-0 md:w-full rounded-lg"
+                className="w-2/3 mx-auto md:mx-0 md:w-full rounded-lg"
               />
               <button
                 onClick={handleBookmark}
@@ -219,8 +219,14 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
               <p>{book.description}</p>
             </div>
           </div>
-
-          <ChapterList chapters={book.Chapter} bookTitle={book.title} />
+            {}
+            {book.Chapter && book.Chapter.length > 0 ? (
+            <ChapterList chapters={book.Chapter} bookTitle={book.title} />
+          ) : (
+            <div className="text-center py-8 text-zinc-400">
+              No chapters available yet
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">

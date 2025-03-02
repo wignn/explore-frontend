@@ -42,31 +42,31 @@ interface Bookmark {
   userId: string;
 }
 
-async function page({ params }: { params: Promise <{ name?: string }> }) {
+async function page({ params }: { params: Promise<{ name?: string }> }) {
   let user = null;
   let book = null;
   let popular: PopularProps[] = [];
   let bookmark: Bookmark | null = null;
   let session = null;
-  const {name} = await params
+  const { name } = await params
 
   try {
 
     session = await getServerSession(authOptions);
 
-  book = await getBookDetail(denormalizeTitle(name as string));
-  const booklist = await bookList();
-  
-  if (session?.id && session?.backendTokens?.accessToken) {
-    user = await getProfile(session.id, session.backendTokens.accessToken); 
-    bookmark = await isBookmark(session.id, book.id, session.backendTokens.accessToken) as Bookmark
-  }
+    book = await getBookDetail(denormalizeTitle(name as string));
+    const booklist = await bookList();
+
+    if (session?.id && session?.backendTokens?.accessToken) {
+      user = await getProfile(session.id, session.backendTokens.accessToken);
+      bookmark = await isBookmark(session.id, book.id, session.backendTokens.accessToken) as Bookmark
+    }
 
     if (booklist?.length) {
       popular = [...booklist]
-      .filter((book) => book.bookmark?.length > 0) 
-      .sort((a, b) => (b.bookmark.length || 0) - (a.bookmark?.length || 0)) 
-      .slice(0, 10) 
+        .filter((book) => book.bookmark?.length > 0)
+        .sort((a, b) => (b.bookmark.length || 0) - (a.bookmark?.length || 0))
+        .slice(0, 10)
     }
   } catch (error) {
     console.log("Error fetching data:", error);
