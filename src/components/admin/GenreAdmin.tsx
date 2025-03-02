@@ -33,7 +33,7 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
   const [editGenreId, setEditGenreId] = useState<string | null>(null)
   const [editGenreName, setEditGenreName] = useState("")
   const [editGenreDescription, setEditGenreDescription] = useState("")
-  
+
   useEffect(() => {
     const results = genreList.filter(
       (genre) =>
@@ -58,7 +58,7 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
   const handleConfirmDelete = async () => {
     if (genreToDelete) {
       try {
-        
+
         setSuccess("Genre berhasil dihapus")
         setTimeout(() => setSuccess(""), 3000)
       } catch (err) {
@@ -84,29 +84,29 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
       setTimeout(() => setError(""), 3000)
       return
     }
-    
+
 
     try {
 
-    const res = await createGenre(newGenreName , newGenreDescription, accessToken)
+      const res = await createGenre(newGenreName, newGenreDescription, accessToken)
 
-    if(res === null){
+      if (res === null) {
         setError("error create new genre")
         return
-    }
+      }
 
-    const newGenre: GenreInterface = {
+      const newGenre: GenreInterface = {
         id: `genre-${Date.now()}`,
         title: newGenreName,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         description: newGenreDescription
       }
-    setGenreList([...genreList, newGenre])
-    setNewGenreName("")
-    setShowAddForm(false)
-    setSuccess("Genre berhasil ditambahkan")
-    setTimeout(() => setSuccess(""), 3000)
+      setGenreList([...genreList, newGenre])
+      setNewGenreName("")
+      setShowAddForm(false)
+      setSuccess("Genre berhasil ditambahkan")
+      setTimeout(() => setSuccess(""), 3000)
     } catch (err) {
       setError("Gagal menambahkan genre")
       console.log(err)
@@ -122,20 +122,20 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
       return
     }
     try {
-        const res = await updateGenre(editGenreId as string, editGenreName, editGenreDescription, accessToken)
-        if(res !== 200){
-            setError("error update genre")
-            return
-        }
-        setGenreList(
-            genreList.map((genre) => 
-              genre.id === editGenreId 
-                ? { ...genre, title: editGenreName, description: editGenreDescription, updatedAt: new Date().toISOString() } 
-                : genre
-            )
-          )
-          
-      
+      const res = await updateGenre(editGenreId as string, editGenreName, editGenreDescription, accessToken)
+      if (res !== 200) {
+        setError("error update genre")
+        return
+      }
+      setGenreList(
+        genreList.map((genre) =>
+          genre.id === editGenreId
+            ? { ...genre, title: editGenreName, description: editGenreDescription, updatedAt: new Date().toISOString() }
+            : genre
+        )
+      )
+
+
       setEditGenreId(null)
       setEditGenreName("")
       setShowEditForm(false)
@@ -158,13 +158,13 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
             <h3 className="text-xl font-semibold mb-4">Konfirmasi Hapus</h3>
             <p className="mb-6">Apakah Anda yakin ingin menghapus genre ini?</p>
             <div className="flex justify-end space-x-3">
-              <button 
+              <button
                 onClick={handleCancelDelete}
                 className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md transition-colors duration-200"
               >
                 Tidak
               </button>
-              <button 
+              <button
                 onClick={handleConfirmDelete}
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md transition-colors duration-200"
               >
@@ -195,7 +195,7 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
               </div>
               <div className="mb-4">
                 <label htmlFor="genreName" className="block mb-2 text-sm font-medium">
-                  Nama Genre
+                  Deskripsi
                 </label>
                 <input
                   type="text"
@@ -207,14 +207,14 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
                 />
               </div>
               <div className="flex justify-end space-x-3">
-                <button 
+                <button
                   type="button"
                   onClick={() => setShowAddForm(false)}
                   className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md transition-colors duration-200"
                 >
                   Batal
                 </button>
-                <button 
+                <button
                   type="submit"
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-200"
                 >
@@ -246,7 +246,7 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
               </div>
               <div className="mb-4">
                 <label htmlFor="editGenreName" className="block mb-2 text-sm font-medium">
-                  Nama Genre
+                  Deskripsi
                 </label>
                 <input
                   type="text"
@@ -258,14 +258,14 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
                 />
               </div>
               <div className="flex justify-end space-x-3">
-                <button 
+                <button
                   type="button"
                   onClick={() => setShowEditForm(false)}
                   className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md transition-colors duration-200"
                 >
                   Batal
                 </button>
-                <button 
+                <button
                   type="submit"
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-200"
                 >
@@ -279,9 +279,9 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
 
       <h1 className="text-3xl font-bold mb-8 flex items-center">
         <Tag className="mr-2" />
-        Daftar Genre 
+        Daftar Genre
       </h1>
-      
+
       {success && (
         <div className="mb-4 p-3 bg-green-600 bg-opacity-25 border border-green-600 rounded-md">
           {success}
@@ -292,8 +292,8 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
           {error}
         </div>
       )}
-      
-      <button 
+
+      <button
         onClick={() => setShowAddForm(true)}
         className="inline-flex items-center mb-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200 font-medium"
       >
@@ -301,7 +301,7 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
         Tambah Genre Baru
       </button>
 
-      <div className="mb-6 relative"> 
+      <div className="mb-6 relative">
         <input
           type="text"
           placeholder="Cari genre..."
