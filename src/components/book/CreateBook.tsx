@@ -298,6 +298,13 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
             <span className="font-medium">Success!</span> {success}
           </div>
         )}
+        {
+          error && (
+            <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-red-900 dark:text-red-400" role="alert">
+              <span className="font-medium">Error!</span> {error}
+            </div>
+          )
+        }
         <button
           type="submit"
           disabled={isLoading}

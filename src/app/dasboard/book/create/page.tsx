@@ -19,7 +19,7 @@ async function CreateBookPage() {
 
   return (
     <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
-      <CreateBook accessToken={session?.backendTokens.accessToken} genre={genre} />
+      <CreateBook accessToken={session?.backendTokens.accessToken as string} genre={genre} />
     </div>
   )
 }

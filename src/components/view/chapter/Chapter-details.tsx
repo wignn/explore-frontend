@@ -28,7 +28,7 @@ const ChapterList: React.FC<ChapterListProps> = ({ chapters, bookTitle }) => {
           <div className="p-4">Release Date</div>
         </div>
         <div className="divide-y divide-zinc-800">
-          {chapters.map((chapter, _) => (
+        {chapters.map((chapter) => (
               <Link
                 href={`/view/${bookTitle.replaceAll(" ", "-")}/${chapter.id}`}
                 key={chapter.id}
