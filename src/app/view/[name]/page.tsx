@@ -63,9 +63,10 @@ async function page({ params }: { params: Promise <{ name?: string }> }) {
   }
 
     if (booklist?.length) {
-      popular = booklist
-        .sort((a: PopularProps, b: PopularProps) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-        .slice(0, 5) as PopularProps[];
+      popular = [...booklist]
+      .filter((book) => book.bookmark?.length > 0) 
+      .sort((a, b) => (b.bookmark.length || 0) - (a.bookmark?.length || 0)) 
+      .slice(0, 10) 
     }
   } catch (error) {
     console.log("Error fetching data:", error);
