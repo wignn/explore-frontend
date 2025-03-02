@@ -33,7 +33,7 @@ interface BookProps {
   popular: boolean
   genre: Genre[]
   Chapter: Chapter[]
-  bookMark:[]
+  bookMark: []
   createdAt: string
   status: string
   realaseDate: number
@@ -83,26 +83,30 @@ interface NovelDetailsProps {
   userId: string
   accessToken: string
   Bookmark: {
-    id: string;
-    bookId:string;
-    userId: string;
+    id: string
+    bookId: string
+    userId: string
   } | null
 }
 
 const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, accessToken, Bookmark }) => {
   const [bookmark, setBookmark] = useState<BookmarkProps | null>(Bookmark)
-  
+  const [isProcessing, setIsProcessing] = useState(false) 
   useEffect(() => {
     setBookmark(Bookmark)
   }, [Bookmark, accessToken])
+  
   const handleBookmark = async () => {
     if (!userId) {
       console.warn("User tidak login, tidak bisa menambah bookmark.")
       return
     }
-
+  
+    if (isProcessing) return 
+  
+    setIsProcessing(true) 
     const prevBookmark = bookmark
-
+  
     try {
       if (bookmark) {
         setBookmark(null)
@@ -115,14 +119,17 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
     } catch (e) {
       console.error("Gagal mengubah bookmark:", e)
       setBookmark(prevBookmark)
+    } finally {
+      setIsProcessing(false)
     }
   }
+  
 
   return (
     <div className="min-h-screen bg-zinc-900 text-white">
       <nav className="p-4 text-sm text-zinc-300">
         <div className="max-w-7xl mx-auto flex gap-2">
-          <Link href="#" className="hover:text-white">
+          <Link href="/" className="hover:text-white">
             Home
           </Link>
           <span>›</span>
@@ -139,11 +146,11 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
                 alt="Novel Cover"
                 width={300}
                 height={450}
-                className="w-full rounded-lg"
+                className="w-1/2 mx-auto md:mx-0 md:w-full rounded-lg"
               />
               <button
                 onClick={handleBookmark}
-                className={`w-full p-2 rounded-md flex items-center justify-center gap-2 ${
+                className={`w-1/2 mx-auto md:mx-0 md:w-full p-2 rounded-md flex items-center justify-center gap-2 ${
                   bookmark ? "bg-red-600 hover:bg-red-700" : "bg-purple-600 hover:bg-purple-700"
                 } text-white`}
               >
