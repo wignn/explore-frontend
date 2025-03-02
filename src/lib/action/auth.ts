@@ -6,7 +6,6 @@ interface registerData {
   email: string;
   password: string;
   username: string;
-  name: string;
 }
 
 
@@ -19,7 +18,7 @@ export const register = async (data: registerData) => {
       },
     });
 
-    return response.data.data;
+    return response.status;
   } catch (err) {
     console.log("Error:", err);
   }

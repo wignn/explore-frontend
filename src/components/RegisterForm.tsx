@@ -1,11 +1,10 @@
 "use client"
 
+import { register } from "@/lib/action/auth"
 import Link from "next/link"
 import type React from "react"
 import { useState } from "react"
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa"
-import axios from "axios"
-import { API_URL } from "@/lib/API"
 
 export default function RegisterForm() {
   const [email, setEmail] = useState("")
@@ -28,8 +27,9 @@ export default function RegisterForm() {
     }
 
     try {
-      const response = await axios.post(`${API_URL}/api/auth/register`, { email, username, password, name: username })
-      if (response.data.data !== null && response.data.data !== undefined) {
+      const response = await register({email, username, password })
+      console.log(response)
+      if (response === 200) {
         setSuccess("Registration successful!")
         setTimeout(() => {
           window.location.href = "/login"
