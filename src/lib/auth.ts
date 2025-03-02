@@ -92,12 +92,10 @@ export const authOptions: NextAuthOptions = {
       if (Date.now() < token.accessTokenExpires) {
         return token; 
       }
-      // console.log("aku refresg", token)
       return await refreshAccessToken(token);
     },
 
     async session({ session, token }) {
-      console.log("session", token)
       return {...session, ...token};
     },
   },

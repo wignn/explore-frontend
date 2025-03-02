@@ -12,11 +12,6 @@ export const middleware = async (req: NextRequest, res: NextResponse) => {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     const isAuthenticated = !!token;
     const isAdmin = token?.isAdmin; 
-    console.log(token)
-    console.log(isAdmin)
-    console.log(isAuthenticated)
-
-
 
     const isLoginPage = req.nextUrl.pathname.startsWith("/login");
     if (isLoginPage && isAuthenticated) {
@@ -33,12 +28,13 @@ export const middleware = async (req: NextRequest, res: NextResponse) => {
       return NextResponse.redirect(new URL("/login", req.url));
     }
 
-    const isDashboard = req.nextUrl.pathname.startsWith("/dasboard")
-    if(isDashboard && !isAuthenticated){
-      if(!isAdmin){
+    const isDashboard = req.nextUrl.pathname.startsWith("/dasboard");
+    if (isDashboard) {
+      if (!isAuthenticated || isAdmin !== true) {
         return NextResponse.redirect(new URL("/", req.url));
       }
     }
+    
 
     const regis = req.nextUrl.pathname.startsWith("/register");
     if (regis && isAuthenticated) {
