@@ -7,8 +7,8 @@ import { getServerSession } from 'next-auth'
 import React from 'react'
 
 
-export default async function page({params}:{params:{chapterId:string}}) {
-  // @ts-ignore
+export default async function page({params}: {params: Promise <{chapterId:string}>}) {
+
   const {chapterId} = await params
   let chapter 
   let user = null

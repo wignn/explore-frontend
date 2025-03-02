@@ -42,13 +42,12 @@ interface Bookmark {
   userId: string;
 }
 
-async function page({ params }: { params: { name?: string } }) {
+async function page({ params }: { params: Promise <{ name?: string }> }) {
   let user = null;
   let book = null;
   let popular: PopularProps[] = [];
   let bookmark: Bookmark | null = null;
   let session = null;
-  // @ts-ignore
   const {name} = await params
 
   try {
