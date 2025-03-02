@@ -13,7 +13,7 @@ interface Chapter {
     createdAt: string
 }
 
-const page = async ({params}: {params: {id: string}}) => {
+const page = async ({params}: {params: Promise <{id: string}>}) => {
     let book
     let chapter
     const {id} = await params
