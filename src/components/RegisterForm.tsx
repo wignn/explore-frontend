@@ -34,7 +34,7 @@ export default function RegisterForm() {
         setTimeout(() => {
           window.location.href = "/login"
         }, 1500)
-      } else if (response.status === 409) {
+      } else if (response === 409) {
         setError("Registration failed. Username or email already exists")
       }
     } catch (err) {
