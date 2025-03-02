@@ -10,7 +10,6 @@ import { JWT } from "next-auth/jwt";
 
 async function refreshAccessToken(token:JWT) {
   try {
-    console.log("token",token)
     const response = await axios.post(`${API_URL}/api/auth/refresh`, {
       username: token.username,
       isAdmin: token.isAdmin,

@@ -47,6 +47,10 @@ const CreateChapterForm: React.FC<Props> = ({ accessToken }) => {
     event.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
+    if(!form.title || !form.content) {
+      setErrorMessage("Please fill in all required fields");
+      return;
+    }
     const response = await createChapter(form, accessToken);
     if (response !== null) {
       setSuccessMessage("Chapter created successfully!");

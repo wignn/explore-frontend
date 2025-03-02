@@ -116,7 +116,11 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-
+    if(!file || !formData.title || !formData.description || !formData.author || !formData.genre || !formData.status || !formData.language || !formData.realaseDate) {
+      setError("required fields are missing")
+      setIsLoading(false)
+      return
+    } 
     try {
       if (file) {
         const uploadedImage = await edgestore.myPublicImage.upload({ file })
