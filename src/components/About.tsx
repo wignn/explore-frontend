@@ -1,4 +1,5 @@
 import { Book, Globe, Users, Bookmark } from "lucide-react"
+import Link from "next/link"
 
 export default function About() {
   return (
@@ -20,12 +21,12 @@ export default function About() {
           <div className="text-center space-y-8 max-w-4xl mx-auto">
 
             <div className="space-y-4 animate-fade-in">
-              <h1 className="text-5xl md:text-7xl font-bold">
-                <span className="bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">
-                  NovelTrans
+              <h1 className="text-2xl md:text-5xl font-bold">
+                <span className="bg-gradient-to-r text-teal-400 bg-clip-text">
+                  Wi<span className="text-white">gn</span>
                 </span>
               </h1>
-              <p className="text-xl md:text-3xl text-gray-200 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-lg md:text-2xl text-gray-200 max-w-2xl mx-auto leading-relaxed">
                 Your gateway to world literature through quality translations
               </p>
             </div>
@@ -36,12 +37,16 @@ export default function About() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                <Link href={"/view"}>
                 <button className="px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transform transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25">
                   Start Reading
                 </button>
+                </Link>
+                <Link href={"#features"}>
                 <button className="px-8 py-3 bg-transparent hover:bg-white/10 text-white border border-white/30 hover:border-white/50 rounded-lg transform transition-all hover:scale-105">
                   Learn More
                 </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -50,7 +55,7 @@ export default function About() {
         </div>
       </section>
 
-      <section className="px-4 py-16 bg-gray-900">
+      <section className="px-4 py-16 bg-gray-900" id="features">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Why Choose NovelTrans?</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
