@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SpeedInsights } from '@vercel/speed-insights/next';
-
+import { Analytics } from "@vercel/analytics/react"
 import "./globals.css";
 import Providers from "./Providers";
 
@@ -21,6 +21,7 @@ export default function RootLayout({
         className={`antialiased`}>
         <Providers>
           {children}
+          <Analytics/>
           <SpeedInsights />
         </Providers>
       </body>
