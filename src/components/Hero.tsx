@@ -1,4 +1,5 @@
 import { UserInterface } from "@/types/user"
+import { Link } from "lucide-react"
 import React from "react"
 
 
@@ -41,18 +42,18 @@ const Hero:React.FC<HeroProps> = (user) => {
               </div>
             ) : (
               <div className="flex flex-wrap justify-center gap-4">
-                <a
+                <Link
                   href="/auth/signin"
                   className="rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-6 py-3 font-medium text-white shadow-lg shadow-teal-500/20 transition-all hover:shadow-xl hover:shadow-teal-500/30"
                 >
                   Sign In
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/browse"
                   className="rounded-full border border-gray-700 bg-gray-800/50 px-6 py-3 font-medium text-gray-300 backdrop-blur-sm transition-all hover:bg-gray-800 hover:text-white"
                 >
                   Browse Books
-                </a>
+                </Link>
               </div>
             )}
           </div>
