@@ -38,7 +38,7 @@ const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
   const startIndex = (pageParam - 1) * limit
   const paginatedBooks = filteredBooks.slice(startIndex, startIndex + limit)
   const isLastPage = startIndex + limit >= filteredBooks.length
-  const totalResults = filteredBooks.length
+  
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-gray-950 to-gray-900 relative overflow-hidden">

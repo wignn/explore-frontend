@@ -1,5 +1,5 @@
 import { UserInterface } from "@/types/user"
-import { Link } from "lucide-react"
+import Link from "next/link"
 import React from "react"
 
 
@@ -8,7 +8,7 @@ interface HeroProps {
     user?: UserInterface
 }
 
-const Hero:React.FC<HeroProps> = (user) => {
+const Hero: React.FC<HeroProps> = ({ user }) => {
     return (
         <section className="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-950 py-16 md:py-24">
         <div className="absolute inset-0 z-0 opacity-20">
@@ -27,29 +27,29 @@ const Hero:React.FC<HeroProps> = (user) => {
 
             {user ? (
               <div className="flex flex-wrap justify-center gap-4">
-                <a
+                <Link
                   href="/bookmark"
                   className="rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-6 py-3 font-medium text-white shadow-lg shadow-teal-500/20 transition-all hover:shadow-xl hover:shadow-teal-500/30"
                 >
                   My Library
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/view"
                   className="rounded-full border border-gray-700 bg-gray-800/50 px-6 py-3 font-medium text-gray-300 backdrop-blur-sm transition-all hover:bg-gray-800 hover:text-white"
                 >
                   Browse All
-                </a>
+                </Link>
               </div>
             ) : (
               <div className="flex flex-wrap justify-center gap-4">
                 <Link
-                  href="/auth/signin"
+                  href="/login"
                   className="rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-6 py-3 font-medium text-white shadow-lg shadow-teal-500/20 transition-all hover:shadow-xl hover:shadow-teal-500/30"
                 >
                   Sign In
                 </Link>
                 <Link
-                  href="/browse"
+                  href="/view"
                   className="rounded-full border border-gray-700 bg-gray-800/50 px-6 py-3 font-medium text-gray-300 backdrop-blur-sm transition-all hover:bg-gray-800 hover:text-white"
                 >
                   Browse Books
