@@ -55,12 +55,14 @@ function Rank({ books }: RankProps) {
         [...books]
           .filter((book) => book.bookmark?.length > 0)
           .sort((a, b) => (b.bookmark?.length || 0) - (a.bookmark?.length || 0))
-          .slice(0, 10),
+          .slice(0, 6),
       )
     } else {
       setFilteredBooks(
-        books.filter((book) => book.genre?.some((g) => g.title.toLowerCase() === selectedGenre.toLowerCase())),
-      )
+        books
+          .filter((book) => book.genre?.some((g) => g.title.toLowerCase() === selectedGenre.toLowerCase()))
+          .slice(0, 6)
+      );
     }
   }, [selectedGenre, books])
 

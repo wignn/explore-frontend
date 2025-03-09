@@ -12,7 +12,7 @@ export default async function Home() {
   let user = null;
   let books = [];
   let isError = false;
-
+  
   try {
     const session = await getServerSession(authOptions);
 
@@ -30,7 +30,8 @@ export default async function Home() {
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     );
 
-    books = sortedBooks.slice(0, 24);
+    books = sortedBooks.slice(0, 12);
+
   } catch (error) {
     console.error("Error pada halaman Home:", error);
     books = [];
