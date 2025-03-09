@@ -17,7 +17,7 @@ const Prev = ({ pageParam, isLastPage, searchQuery }: PrevProps) => {
     <div className="flex items-center justify-center gap-2 py-4">
       {prevPage ? (
         <Link
-          href={`/search?query=${searchQuery}&page=${prevPage}`}
+          href={`/view?query=${searchQuery}&page=${prevPage}`}
           className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm font-medium text-gray-300 transition-all hover:bg-gray-700 hover:text-white"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -39,7 +39,7 @@ const Prev = ({ pageParam, isLastPage, searchQuery }: PrevProps) => {
 
       {nextPage ? (
         <Link
-          href={`/search?query=${searchQuery}&page=${nextPage}`}
+          href={`/view?query=${searchQuery}&page=${nextPage}`}
           className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm font-medium text-gray-300 transition-all hover:bg-gray-700 hover:text-white"
         >
           Next

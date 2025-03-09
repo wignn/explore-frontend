@@ -82,7 +82,6 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
   }
 
   const handleGenreChange = (selectedGenres: unknown) => {
-    console.log(selectedGenres, "selectedGenres")
     const genr = selectedGenres as {label:string, value:string}[]
     const genres = genr.map((genre: {label:string, value:string}) => ({
       id: genre.value,
@@ -98,7 +97,6 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
 
   const handleStatusChange = (selectedStatus: unknown) => {
     const status = selectedStatus as {value: string; label: string};
-    console.log(status, "selectedStatus")
     setFormData((prevState) => ({
       ...prevState,
       status: status.value as BookStatus,
