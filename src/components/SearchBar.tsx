@@ -18,10 +18,11 @@ const Search = () => {
       params.delete("query");
     }
     replace(`${pathname}?${params.toString()}`);
-  }, 300);
+  }, 50);
+  
 
   return (
-    <div className="flex justify-center items-center bg-gray-900 py-6">
+    <div className="flex justify-center items-center">
       <div className="relative flex items-center max-w-96 w-full border-2 border-gray-700 bg-gray-800 shadow-lg rounded-lg">
         <IoSearch className="absolute left-3 inset-y-0 my-auto h-5 w-5 text-gray-400" />
         <input

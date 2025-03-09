@@ -20,7 +20,7 @@ interface ChapterListProps {
 }
 
 const ChapterList: React.FC<ChapterListProps> = ({ chapters, bookTitle }) => {
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
   const [isExpanded, setIsExpanded] = useState(false)
   const sortedChapters = [...chapters].sort((a, b) => {
     return sortOrder === "asc" ? a.chapterNum - b.chapterNum : b.chapterNum - a.chapterNum

@@ -4,41 +4,42 @@ import { useEffect, useState } from "react"
 import List from "./List"
 
 interface Genre {
-  id: string;
-  title: string;
+  id: string
+  title: string
 }
 
 interface Chapter {
-  id: string;
-  title: string;
-  description: string;
-  content: string;
-  updatedAt: string;
-  chapterNum: number;
-  createdAt: string;
+  id: string
+  title: string
+  description: string
+  content: string
+  updatedAt: string
+  chapterNum: number
+  createdAt: string
 }
 
-export type book = {  
-  id: string;
-  title: string;
-  cover: string;
-  description: string;
-  author: string;
-  updatedAt: string;
-  popular: boolean;
-  genre: Genre[];
-  chapter: Chapter[];
-  createdAt: string;
-  bookmark: bookmark[];
-};
+export type book = {
+  id: string
+  title: string
+  cover: string
+  description: string
+  author: string
+  updatedAt: string
+  popular: boolean
+  genre: Genre[]
+  chapter: Chapter[]
+  createdAt: string
+  bookmark: bookmark[]
+}
 
 type bookmark = {
-  id: string;
-  bookId: string;
-  userId: string;
+  id: string
+  bookId: string
+  userId: string
 }
+
 interface RankProps {
-  books:book[]
+  books: book[]
 }
 
 const genres = ["Popular", "Action", "Fantasy", "Romance"]
@@ -51,11 +52,11 @@ function Rank({ books }: RankProps) {
     if (books.length === 0) return
     if (selectedGenre === "Popular") {
       setFilteredBooks(
-        [...books] 
-          .filter((book) => book.bookmark?.length > 0) 
-          .sort((a, b) => (b.bookmark.length || 0) - (a.bookmark?.length || 0)) 
-          .slice(0, 10) 
-      );
+        [...books]
+          .filter((book) => book.bookmark?.length > 0)
+          .sort((a, b) => (b.bookmark?.length || 0) - (a.bookmark?.length || 0))
+          .slice(0, 10),
+      )
     } else {
       setFilteredBooks(
         books.filter((book) => book.genre?.some((g) => g.title.toLowerCase() === selectedGenre.toLowerCase())),
@@ -64,38 +65,37 @@ function Rank({ books }: RankProps) {
   }, [selectedGenre, books])
 
   return (
-    <div className="bg-gray-900 py-8">
+    <div className="py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl text-center font-bold text-teal-400 mb-6">Top Ranked Books</h2>
-        <div className="mb-8">
-          <ul className="flex flex-wrap justify-center gap-4 items-center">
-            {genres.map((genre) => (
-              <li key={genre}>
-                <button
-                  onClick={() => setSelectedGenre(genre)}
-                  className={`px-6 py-2 rounded-full text-sm font-medium transition duration-300 ${
-                    selectedGenre === genre
-                      ? "bg-teal-500 text-gray-900 shadow-lg"
-                      : "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-teal-300"
-                  }`}
-                >
-                  {genre}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-        {filteredBooks.length > 0 ? (
-          <List books={filteredBooks} text={`${selectedGenre} Books`} />
-        ) : (
-          <div className="text-center text-gray-400 py-20">
-            <p className="text-xl">No books available for {selectedGenre}</p>
-          </div>
-        )}
+        <ul className="flex flex-wrap justify-center my-6 gap-4 items-center">
+          {genres.map((genre) => (
+            <li key={genre}>
+              <button
+                onClick={() => setSelectedGenre(genre)}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition duration-300 ${
+                  selectedGenre === genre
+                    ? "bg-teal-500 text-gray-900 shadow-lg"
+                    : "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-teal-300"
+                }`}
+              >
+                {genre}
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
+      {filteredBooks.length > 0 ? (
+        <List books={filteredBooks}/>
+      ) : (
+        <div className="text-center text-gray-400 py-20">
+          <p className="text-xl">No books available for {selectedGenre}</p>
+        </div>
+      )}
     </div>
   )
 }
 
 export default Rank
+
+
 

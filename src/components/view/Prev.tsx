@@ -1,46 +1,62 @@
 "use client"
-import React from 'react'
-import { useRouter } from "next/navigation";
-interface Props {
-    pageParam: number;
-    searchQuery: string;
-    isLastPage: boolean;
+
+import Link from "next/link"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+
+interface PrevProps {
+  pageParam: number
+  isLastPage: boolean
+  searchQuery: string
 }
 
-
-const Prev:React.FC<Props> = ({pageParam,searchQuery, isLastPage}) => {
-    
-    const router = useRouter();
-    const handlePageChange = (newPage: number) => {
-        if (newPage < 1 || (isLastPage && newPage > pageParam)) return;
-        router.push(`?query=${searchQuery}&page=${newPage}`);
-    };
+const Prev = ({ pageParam, isLastPage, searchQuery }: PrevProps) => {
+  const prevPage = pageParam > 1 ? pageParam - 1 : null
+  const nextPage = !isLastPage ? pageParam + 1 : null
 
   return (
-    <div>
-        <div className="flex justify-center gap-4 m-4">
-                <button
-                    onClick={() => handlePageChange(pageParam - 1)}
-                    disabled={pageParam <= 1}
-                    className={`px-4 py-2 rounded transition duration-300 ease-in-out ${
-                        pageParam <= 1 ? "bg-gray-600 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"
-                    }`}
-                >
-                    Previous
-                </button>
-                <span className="text-white">Page {pageParam}</span>
-                <button
-                    onClick={() => handlePageChange(pageParam + 1)}
-                    disabled={isLastPage}
-                    className={`px-4 py-2 rounded transition duration-300 ease-in-out ${
-                        isLastPage ? "bg-gray-600 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 text-white"
-                    }`}
-                >
-                    Next
-                </button>
-            </div>
+    <div className="flex items-center justify-center gap-2 py-4">
+      {prevPage ? (
+        <Link
+          href={`/search?query=${searchQuery}&page=${prevPage}`}
+          className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm font-medium text-gray-300 transition-all hover:bg-gray-700 hover:text-white"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Previous
+        </Link>
+      ) : (
+        <button
+          disabled
+          className="flex cursor-not-allowed items-center gap-1 rounded-lg border border-gray-800 bg-gray-900 px-4 py-2 text-sm font-medium text-gray-600 opacity-50"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Previous
+        </button>
+      )}
+
+      <span className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-gradient-to-r from-teal-500 to-cyan-500 px-3 text-sm font-medium text-white">
+        {pageParam}
+      </span>
+
+      {nextPage ? (
+        <Link
+          href={`/search?query=${searchQuery}&page=${nextPage}`}
+          className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-sm font-medium text-gray-300 transition-all hover:bg-gray-700 hover:text-white"
+        >
+          Next
+          <ChevronRight className="h-4 w-4" />
+        </Link>
+      ) : (
+        <button
+          disabled
+          className="flex cursor-not-allowed items-center gap-1 rounded-lg border border-gray-800 bg-gray-900 px-4 py-2 text-sm font-medium text-gray-600 opacity-50"
+        >
+          Next
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      )}
     </div>
   )
 }
 
 export default Prev
+
