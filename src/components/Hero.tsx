@@ -10,7 +10,7 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ user }) => {
     return (
-        <section className="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-950 py-16 md:py-24">
+        <section className="relative overflow-hidden bg-gradient-to-b  from-gray-900 to-gray-950 py-16 md:py-24">
         <div className="absolute inset-0 z-0 opacity-20">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(0,200,200,0.1),transparent_70%)]"></div>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(0,200,200,0.05),transparent_70%)]"></div>

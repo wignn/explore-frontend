@@ -18,7 +18,7 @@ function List({ books }: { books: ListProps["books"] }) {
   return (
       <div className="mx-auto ">
         {books.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-y-8">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-y-8">
             {books.map((book, index) => (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
