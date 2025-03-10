@@ -3,7 +3,6 @@
 import { IoSearch } from "react-icons/io5";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
-import { useCallback } from "react";
 
 const Search = () => {
   const searchParams = useSearchParams();
@@ -19,7 +18,7 @@ const Search = () => {
       params.delete("query");
     }
     replace(`${pathname}?${params.toString()}`);
-  }, 50);
+  }, 300);
   
 
   return (
