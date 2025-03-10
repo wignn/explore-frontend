@@ -22,7 +22,6 @@ async function page() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950">
       <Navbar user={user} />
-
       <main className="container mx-auto px-4 py-8 sm:py-12">
         <div className="mb-8 text-center">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-400">
@@ -35,17 +34,11 @@ async function page() {
         </div>
 
         <div className="relative">
-          {/* Decorative elements */}
-          <div className="absolute -top-10 -left-10 w-40 h-40 bg-teal-500/10 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl"></div>
-
-          {/* Content with glass effect */}
           <div className="relative z-10 backdrop-blur-sm bg-gray-900/30 rounded-2xl p-6 border border-gray-800/50 shadow-xl">
             <List books={books} />
           </div>
         </div>
       </main>
-
       <Footer />
     </div>
   )
