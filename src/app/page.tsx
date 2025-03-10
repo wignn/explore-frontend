@@ -8,11 +8,12 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { TrendingUp, Clock } from "lucide-react";
 import Hero from "@/components/Hero";
+
 export default async function Home() {
   let user = null;
   let books = [];
   let isError = false;
-  
+
   try {
     const session = await getServerSession(authOptions);
 
@@ -31,7 +32,6 @@ export default async function Home() {
     );
 
     books = sortedBooks.slice(0, 12);
-
   } catch (error) {
     console.error("Error pada halaman Home:", error);
     books = [];
@@ -40,11 +40,14 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-gray-950 to-gray-900">
-      <Navbar user={user} />
+      <div className="flex min-h-screen flex-col">
+        <Navbar user={user} />
+        <Hero user={user} book={books}  />
+      </div>
+
       <main className="flex-1">
-        <Hero user={user} />
         <section className="py-8 md:py-12">
-          <div className="container mx-auto lg:px-4 sm:px-6 ">
+          <div className="container mx-auto lg:px-4 sm:px-6 px-2">
             <div className="mb-8 flex items-center gap-3">
               <Clock className="h-6 w-6 text-teal-400" />
               <h2 className="text-2xl font-bold text-white md:text-3xl">
@@ -71,8 +74,7 @@ export default async function Home() {
             {isError ? (
               <div className="rounded-xl bg-gray-800/50 p-8 text-center backdrop-blur-sm">
                 <p className="text-gray-400">
-                  There was an error loading the trending books. Please try
-                  again later.
+                  There was an error loading the trending books. Please try again later.
                 </p>
               </div>
             ) : (
@@ -81,6 +83,7 @@ export default async function Home() {
           </div>
         </section>
       </main>
+
       <Footer />
     </div>
   );

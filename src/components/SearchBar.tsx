@@ -3,6 +3,7 @@
 import { IoSearch } from "react-icons/io5";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
+import { useCallback } from "react";
 
 const Search = () => {
   const searchParams = useSearchParams();

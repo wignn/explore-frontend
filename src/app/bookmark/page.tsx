@@ -1,22 +1,48 @@
-import Footer from "@/components/Footer"
-import List from "@/components/List"
-import Navbar from "@/components/Navbar"
-import { getBookmarkById } from "@/lib/action/bookmark"
-import { getProfile } from "@/lib/action/user"
-import { authOptions } from "@/lib/auth"
-import { getServerSession } from "next-auth"
+import Footer from "@/components/Footer";
+import List from "@/components/List";
+import Navbar from "@/components/Navbar";
+import { getBookmarkById } from "@/lib/action/bookmark";
+import { getProfile } from "@/lib/action/user";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+
+interface BookObject {
+  id: string;
+  title: string;
+  author: string;
+  cover: string;
+  description: string;
+  Chapter: chapter[];
+}
+
+interface chapter {
+  id: string;
+}
 
 async function page() {
-  let user
-  let books = []
-  const session = await getServerSession(authOptions)
+  let user;
+  let books = [];
+  const session = await getServerSession(authOptions);
   try {
     if (session?.id && session?.backendTokens?.accessToken) {
-      user = await getProfile(session.id, session.backendTokens.accessToken)
-      books = (await getBookmarkById(session.id, session.backendTokens.accessToken)) || []
+      user = await getProfile(session.id, session.backendTokens.accessToken);
+      books =
+        (await getBookmarkById(
+          session.id,
+          session.backendTokens.accessToken
+        )) || [];
+
+      /*
+      ini di lakukan karna data yang dikirim dari backend tidak sesuai dengan yang diharapkan oleh component List
+    `chapter` adalah key yang diharapkan oleh component List, sedangkan data yang di kirim dari backend adalah `Chapter`
+      */
+      books = books.map((book: BookObject) => ({
+        ...book,
+        chapter: book.Chapter,
+      }));
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 
   return (
@@ -29,7 +55,8 @@ async function page() {
           </h1>
           <div className="h-1 w-24 mx-auto bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full mb-4"></div>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Track your favorite books and never lose your place in your reading journey
+            Track your favorite books and never lose your place in your reading
+            journey
           </p>
         </div>
 
@@ -41,8 +68,7 @@ async function page() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }
 
-export default page
-
+export default page;
