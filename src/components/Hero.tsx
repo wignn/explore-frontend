@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import type { bookInterface } from "@/types/book";
 import Image from "next/image";
+import { normalizeTitle } from "@/lib/utils";
 
 interface HeroProps {
   user?: UserInterface;
@@ -214,7 +215,7 @@ const Hero: React.FC<HeroProps> = ({ user, book }) => {
                         </div>
                         <div className="mt-3 flex justify-between items-center">
                           <Link
-                            href={`/read/${currentBook.id}`}
+                            href={`/view/${normalizeTitle(currentBook.title)}`}
                             className="text-xs text-white bg-gray-700/50 hover:bg-gray-700 px-3 py-1 rounded-full transition-colors"
                           >
                             Continue Reading
@@ -250,11 +251,11 @@ const Hero: React.FC<HeroProps> = ({ user, book }) => {
                     <div className="grid grid-cols-3 gap-3">
                       {recentBooks.map((book, index) => (
                         <Link
-                          href={`/book/${book.id}`}
+                          href={`/view/${normalizeTitle(book.title)}`}
                           key={book.id || index}
                           className="relative h-56 rounded-md overflow-hidden shadow-md group cursor-pointer"
                         >
-                          {/* Book cover image as background */}
+
                           {book.cover ? (
                             <Image
                               src={book.cover || "/placeholder.svg"}
