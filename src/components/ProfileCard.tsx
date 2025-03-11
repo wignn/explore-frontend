@@ -3,7 +3,6 @@
 import { UserInterface } from "@/types/user"
 import type React from "react"
 import Image from "next/image"
-import { useEdgeStore } from "@/lib/edgeStore"
 import { useState, useEffect } from "react"
 import { updateProfile } from "@/lib/action/user"
 
@@ -20,7 +19,6 @@ export default function ProfileCard({users,accessToken}:profileProps) {
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
   const [file, setFile] = useState<File | null>(null)
-  const { edgestore } = useEdgeStore()
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(false)
 
@@ -37,16 +35,27 @@ export default function ProfileCard({users,accessToken}:profileProps) {
     }))
     try{
       if(file){
-        const upload = await edgestore.myPublicImage.upload({file})
+        const formData = new FormData()
+        formData.append("file", file)
 
+        const upload = await fetch("/api/fileUpload", {
+          method: "POST",
+          body: formData
+        })
+
+        const uploadData = await upload.json()
         
       const newData = {
         name: newName,
-        profilePic: upload.url
+        profilePic: uploadData.url
       }
       const res = updateProfile(newData, user.id, accessToken)
       if(res !== null){
         console.log("Profile updated")
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000);
+      
         setSuccess(true)
         setError(false)
       }else{

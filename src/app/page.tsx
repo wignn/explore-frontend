@@ -40,6 +40,7 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-gray-950 to-gray-900">
+      
       <div className="flex min-h-screen flex-col">
         <Navbar user={user} />
         <Hero user={user} book={books}  />

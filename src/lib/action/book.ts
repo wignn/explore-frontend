@@ -71,7 +71,7 @@ export const bookSearch = async () => {
 
 export const createBook = async (book: Book, accessToken: string) => {
     try {
-      console.log(book)
+      
         const bookResponse = await axios.post(`${API_URL}/api/book`, {
             title: book.title,
             cover: book.cover,

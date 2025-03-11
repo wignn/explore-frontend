@@ -5,7 +5,6 @@ import { useState } from "react"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { createBook } from "@/lib/action/book"
-import { useEdgeStore } from "@/lib/edgeStore"
 import { ImagePlus, Loader2 } from "lucide-react"
 
 const Select = dynamic(() => import("react-select"), { ssr: false })
@@ -47,9 +46,9 @@ enum BookStatus {
 const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
   const [formData, setFormData] = useState<Book>({
     title: "",
-    cover: "",
     description: "",
     author: "",
+    cover: "",
     status:  BookStatus.Ongoing,
     language: Language.Korean,
     genre: [],
@@ -58,7 +57,6 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string>("")
   const [isLoading, setIsLoading] = useState(false)
-  const { edgestore } = useEdgeStore()
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
 
@@ -121,7 +119,14 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
     } 
     try {
       if (file) {
-        const uploadedImage = await edgestore.myPublicImage.upload({ file })
+        const formCover = new FormData()
+        formCover.append("file", file) 
+        const result = await fetch("/api/fileUpload", {
+          method: "POST",
+          body: formCover,
+        })
+        const uploadedImage = await result.json()
+
         const res =await createBook({ ...formData, cover: uploadedImage.url }, accessToken)
         if (res !== null) {
           setSuccess("Book created successfully!")
