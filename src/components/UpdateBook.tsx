@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { updateBook } from "@/lib/action/book"
-import { useEdgeStore } from "@/lib/edgeStore"
 import { ImagePlus, Loader2, BookOpen, User, AlignLeft, Tag } from "lucide-react"
 
 const Select = dynamic(() => import("react-select"), { ssr: false })
@@ -73,7 +72,6 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => 
   const [preview, setPreview] = useState<string>("")
   const [isLoading, setIsLoading] = useState(false)
   const [isDataLoading, setIsDataLoading] = useState(true)
-  const {edgestore } = useEdgeStore()
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   useEffect(() => {
@@ -164,12 +162,16 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => 
       let coverUrl = formData.cover
 
       if (file) {
-        const uploadedImage = await edgestore.myPublicImage.upload({ file })
-        coverUrl = uploadedImage.url
+        const formData = new FormData()
+        formData.append("file", file)
+        const uploadedImage = await fetch("/api/fileupload", {
+          method: "POST",
+          body: formData,
+        })
 
-        if (formData.cover) {
-          await edgestore.myPublicImage.delete({ url: formData.cover })
-        }
+        const uploadedImageData = await uploadedImage.json()
+        coverUrl = uploadedImageData.url
+
       }
 
       const updatedBook = {
