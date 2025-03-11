@@ -45,7 +45,7 @@ export default async function Home() {
       <main className="flex-1">
         <Hero user={user} book={books} />
         <section className="py-8 md:py-12">
-          <div className="container mx-auto lg:px-4 sm:px-6 px-2">
+          <div className="from-gray-950 to-gray-900 container mx-auto lg:px-4 sm:px-6 px-2">
             <div className="mb-8 flex items-center gap-3">
               <Clock className="h-6 w-6 text-teal-400" />
               <h2 className="text-2xl font-bold text-white md:text-3xl">
