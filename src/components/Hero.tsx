@@ -40,7 +40,7 @@ const Hero: React.FC<HeroProps> = ({ user, book }) => {
   const recentBooks = book.slice(1, 4);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-gray-900 via-gray-800 to-gray-950 py-16 md:py-24 min-h-[90vh] flex items-center">
+    <section className="relative overflow-hidden bg-gradient-to-b from-gray-900 via-gray-800 to-gray-950 py-16 md:py-24 lg:py-12 min-h-[90vh] flex items-center">
       {/* Background effects */}
       <div className="absolute inset-0 z-0 opacity-60">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(0,200,200,0.15),transparent_70%)]"></div>
