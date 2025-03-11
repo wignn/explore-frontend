@@ -15,7 +15,7 @@ interface ListProps {
 
 function List({ books }: { books: ListProps["books"] }) {
   return (
-    <div className="mx-auto">
+    <div className="mx-auto bg-gradient-to-b from-gray-950 to-gray-900">
       {books.length > 0 ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-y-8">
           {books.map((book, index) => (
