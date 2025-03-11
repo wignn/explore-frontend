@@ -15,7 +15,7 @@ interface ListProps {
 
 function List({ books }: { books: ListProps["books"] }) {
   return (
-    <div className="mx-auto from-gray-950 to-gray-900">
+    <div className="mx-auto bg-gray-900 min-h-screen relative">
       {books.length > 0 ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-y-8">
           {books.map((book, index) => (
@@ -35,7 +35,7 @@ function List({ books }: { books: ListProps["books"] }) {
                   sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
                   priority={index < 6}
-                  loading={index < 6 ? "eager" : "lazy"} 
+                  loading={index < 6 ? "eager" : "lazy"}
                 />
                 {book.chapter?.length > 0 && (
                   <div className="absolute top-2 right-2 z-20 rounded-full bg-teal-500/90 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm">
