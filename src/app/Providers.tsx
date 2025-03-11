@@ -7,7 +7,7 @@ interface Props {
 }
 
 const Providers = ({ children }:Props) => {
-    return <EdgeStoreProvider><SessionProvider>{children}</SessionProvider></EdgeStoreProvider>
+    return<SessionProvider>{children}</SessionProvider>
 }
 
 export default Providers;
