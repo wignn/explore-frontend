@@ -1,6 +1,7 @@
 "use server"
 import { NextRequest,NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { notFound } from "next/navigation";
 
 /*
     This middleware is used to protect routes that require authentication.
@@ -33,6 +34,11 @@ export const middleware = async (req: NextRequest, res: NextResponse) => {
       if (!isAuthenticated || isAdmin !== true) {
         return NextResponse.redirect(new URL("/", req.url));
       }
+    }
+
+    const isTest = req.nextUrl.pathname.startsWith("/test");
+    if(isTest && !isAuthenticated) {
+      return NextResponse.redirect(new URL("/login", req.url));
     }
     
 
