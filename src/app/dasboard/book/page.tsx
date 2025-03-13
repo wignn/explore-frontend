@@ -17,7 +17,7 @@ async function page() {
         if (session?.id && session?.backendTokens?.accessToken) {
             const [userData, bookData] = await Promise.all([
                 getProfile(session.id, session.backendTokens.accessToken),
-                bookList({limit: 12, page: 0, status:"Ongoing"})
+                bookList({limit: 200, page: 1, status:"Ongoing"})
             ]);
             user = userData;
             book = bookData?.books || [];
