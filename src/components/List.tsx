@@ -1,21 +1,21 @@
-"use client";
+"use client"
 
-import { timeAgo } from "@/lib/DateToHour";
-import { Book, Clock } from "lucide-react";
-import { motion } from "framer-motion";
-import { Skeleton } from "@/components/loading/skletonBook";
-import type { bookInterface } from "@/types/book";
-import Link from "next/link";
-import Image from "next/image";
-import { normalizeTitle } from "../lib/utils";
+import { timeAgo } from "@/lib/DateToHour"
+import { Book, Clock } from "lucide-react"
+import { motion } from "framer-motion"
+import { Skeleton } from "@/components/loading/skletonBook"
+import type { bookInterface } from "@/types/book"
+import Link from "next/link"
+import Image from "next/image"
+import { normalizeTitle } from "../lib/utils"
 
 interface ListProps {
-  books: bookInterface[];
+  books: bookInterface[]
 }
 
 function List({ books }: { books: ListProps["books"] }) {
   return (
-    <div className="mx-auto  bg-gray-900"> 
+    <div className="mx-auto bg-gray-900 min-h-screen w-full">
       {books.length > 0 ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-y-8">
           {books.map((book, index) => (
@@ -45,10 +45,7 @@ function List({ books }: { books: ListProps["books"] }) {
               </div>
 
               <div className="flex flex-1 flex-col justify-between p-4">
-                <Link
-                  href={`/view/${normalizeTitle(book.title)}`}
-                  className="group-hover:text-teal-300"
-                >
+                <Link href={`/view/${normalizeTitle(book.title)}`} className="group-hover:text-teal-300">
                   <h2 className="line-clamp-2 font-semibold text-gray-100 transition-colors duration-200 text-sm md:text-base">
                     {book.title}
                   </h2>
@@ -60,9 +57,7 @@ function List({ books }: { books: ListProps["books"] }) {
                     <span>
                       {book.chapter?.length > 0 ? (
                         <Link
-                          href={`/view/${normalizeTitle(book.title)}/${
-                            book?.chapter[book?.chapter?.length - 1]?.id
-                          }`}
+                          href={`/view/${normalizeTitle(book.title)}/${book?.chapter[book?.chapter?.length - 1]?.id}`}
                           className="transition-colors duration-200 hover:text-teal-300"
                         >
                           Chapter {book.chapter.length}
@@ -99,49 +94,29 @@ function List({ books }: { books: ListProps["books"] }) {
               className="absolute -right-2 -top-2 rounded-full bg-gray-800 p-2"
             >
               <div className="rounded-full bg-gray-700 p-1">
-                <svg
-                  className="h-4 w-4 text-gray-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                <svg className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </div>
             </motion.div>
           </div>
-          <h3 className="mb-2 text-xl font-medium text-gray-300">
-            Tidak ada buku yang tersedia
-          </h3>
-          <p className="text-center text-gray-500">
-            Buku yang Anda cari belum tersedia saat ini.
-          </p>
+          <h3 className="mb-2 text-xl font-medium text-gray-300">Tidak ada buku yang tersedia</h3>
+          <p className="text-center text-gray-500">Buku yang Anda cari belum tersedia saat ini.</p>
         </motion.div>
       )}
     </div>
-  );
+  )
 }
 
 export function BookListSkeleton() {
   return (
-    <div className="mx-auto">
+    <div className="mx-auto bg-gray-900 min-h-screen w-full">
       <Skeleton className="mb-2 h-8 w-48 rounded-lg bg-gray-800" />
       <Skeleton className="mb-8 h-1 w-20 rounded-full bg-gray-800" />
 
-      <div className="grid bg-gray-900 grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-y-8">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-y-8">
         {[...Array(10)].map((_, i) => (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: i * 0.05 }}
-            key={i}
-            className="flex flex-col overflow-hidden rounded-xl bg-gray-800/80 backdrop-blur-sm"
-          >
+          <div key={i} className="flex flex-col overflow-hidden rounded-xl bg-gray-800/80 backdrop-blur-sm">
             <Skeleton className="aspect-[3/4] w-full bg-gray-700/70" />
             <div className="p-4 space-y-3">
               <Skeleton className="h-5 w-full rounded bg-gray-700/70" />
@@ -151,11 +126,12 @@ export function BookListSkeleton() {
                 <Skeleton className="h-4 w-1/4 rounded bg-gray-700/70" />
               </div>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>
-  );
+  )
 }
 
-export default List;
+export default List
+

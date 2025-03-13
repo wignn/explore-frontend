@@ -5,11 +5,11 @@ export type bookInterface = {
   cover: string;
   description: string;
   author: string;
-  updatedAt: string;
+  updatedAt: Date;
   popular: boolean;
   genre: Genre[];
   chapter: Chapter[];
-  createdAt: string;
+  createdAt: Date;
 
 };
 
