@@ -65,31 +65,46 @@ export const getBookmarkById= async (bookId: string, accessToken: string) => {
 }
 
 
+// export const isBookmark = async (userId: string, bookId: string, accessToken: string) => {
+//     try {
+//         const result = await axios.get(`${API_URL}/api/bookmark/list/${userId}`, {
+//             headers: {
+//                 'x-api-key': process.env.API_KEY,
+//                 Authorization: accessToken
+//             }
+//         })
+//         const bookmarks = result.data.data
+//         const matchedBookmark = bookmarks.find((bookmark: {
+//             id: string;
+//             bookId: string;
+//             userId: string;
+//         }) => bookmark.bookId === bookId && bookmark.userId === userId)
+//         if(!matchedBookmark) {
+//             return null
+//         }
+        
+//         return {
+//             id: matchedBookmark.id as string,
+//             bookId: matchedBookmark.bookId ,
+//             userId: matchedBookmark.userId,
+//         }
+//     } catch (error) {
+//         console.log(error)
+      
+//     }
+// }
+
 export const isBookmark = async (userId: string, bookId: string, accessToken: string) => {
     try {
-        const result = await axios.get(`${API_URL}/api/bookmark/list/${userId}`, {
+        const result = await axios.get(`${API_URL}/api/bookmark/isBookmarked/${userId}/${bookId}`, {
             headers: {
                 'x-api-key': process.env.API_KEY,
                 Authorization: accessToken
             }
         })
-        const bookmarks = result.data.data
-        const matchedBookmark = bookmarks.find((bookmark: {
-            id: string;
-            bookId: string;
-            userId: string;
-        }) => bookmark.bookId === bookId && bookmark.userId === userId)
-        if(!matchedBookmark) {
-            return null
-        }
         
-        return {
-            id: matchedBookmark.id as string,
-            bookId: matchedBookmark.bookId ,
-            userId: matchedBookmark.userId,
-        }
+        return result.data.data
     } catch (error) {
         console.log(error)
-      
     }
 }

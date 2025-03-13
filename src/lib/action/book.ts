@@ -62,7 +62,6 @@ export const bookList = async (BookParams: BookParams)=> {
     );
 
     const data = response.data.data;
-    console.log(data);
     return {
       books: data.books,
       totalBooks: data.totalBooks,

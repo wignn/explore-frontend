@@ -27,7 +27,6 @@ const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
   if (session?.id && session?.backendTokens?.accessToken) {
     user = await getProfile(session.id, session.backendTokens.accessToken);
   }
-console.log(searchQuery, pageParam, limit)
   const res = await bookList({title: searchQuery, page: pageParam, limit:limit}) || { books: [], totalPage: 0 };
   const allBooks = res.books || [];
   const totalPage = res.totalPage ?? 1;

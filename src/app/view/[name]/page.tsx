@@ -55,19 +55,19 @@ async function page({ params }: { params: Promise<{ name?: string }> }) {
     session = await getServerSession(authOptions);
 
     book = await getBookDetail(denormalizeTitle(name as string));
-    const booklist = await bookList();
+    const booklist = await bookList({ page: 1, limit: 100, status: "Ongoing" });
 
     if (session?.id && session?.backendTokens?.accessToken) {
       user = await getProfile(session.id, session.backendTokens.accessToken);
-      bookmark = await isBookmark(session.id, book.id, session.backendTokens.accessToken) as Bookmark
+      bookmark = await isBookmark(user.id, book.id, session.backendTokens.accessToken ) as Bookmark
     }
 
-    if (booklist?.length) {
-      popular = [...booklist]
+    if (booklist?.books.length) {
+      popular = [...booklist.books]
         .filter((book) => book.bookmark?.length > 0)
         .sort((a, b) => (b.bookmark.length || 0) - (a.bookmark?.length || 0))
-        .slice(0, 10)
-    }
+        .slice(0, 5);
+      }
   } catch (error) {
     console.log("Error fetching data:", error);
   }
