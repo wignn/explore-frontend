@@ -15,10 +15,12 @@ async function page() {
     try {
 
         if (session?.id && session?.backendTokens?.accessToken) {
-            [user, book] = await Promise.all([
+            const [userData, bookData] = await Promise.all([
                 getProfile(session.id, session.backendTokens.accessToken),
-                bookList()
+                bookList({limit: 12, page: 0, status:"Ongoing"})
             ]);
+            user = userData;
+            book = bookData?.books || [];
         }
     } catch (error) {
         console.error('Error fetching user or books:', error);

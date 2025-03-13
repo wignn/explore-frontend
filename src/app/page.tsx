@@ -25,13 +25,8 @@ export default async function Home() {
       user = profile !== "unauthorized" ? profile : null;
     }
 
-    const allBooks = (await bookList()) || [];
-    const sortedBooks = allBooks.sort(
-      (a: { updatedAt: string }, b: { updatedAt: string }) =>
-        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-    );
-
-    books = sortedBooks.slice(0, 12);
+    const res = await bookList({limit: 12, page: 1, status:"Ongoing"}) || [];
+    books = Array.isArray(res) ? [] : res.books || [];
   } catch (error) {
     console.error("Error pada halaman Home:", error);
     books = [];

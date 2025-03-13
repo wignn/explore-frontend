@@ -93,7 +93,7 @@ function BookDetails() {
         const [userData, bookData, bookListData] = await Promise.all([
           id && token ? getProfile(id, token) : null,
           getBookDetail(bookName),
-          bookList() || [],
+          bookList({limit:5, page: 1, status:"Ongoing"}) || [],
          
         ]);
   
@@ -104,8 +104,8 @@ function BookDetails() {
         setUser(userData);
         setBook(bookData);
   
-        if (bookListData?.length) {
-          const sortedBooks = bookListData
+        if (bookListData?.books.length) {
+          const sortedBooks = bookListData.books
                 .sort((a: PopularProps, b: PopularProps) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
                 .slice(0, 5);
           setPopular(sortedBooks);

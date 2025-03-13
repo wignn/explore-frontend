@@ -4,8 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SkeletonNavbar from "@/components/loading/skletonNavbar";
 import SekletonSearch from "@/components/loading/sekletonSearch";
-import { bookSearch } from "@/lib/action/book";
-import type { bookInterface } from "@/types/book";
+import { bookList } from "@/lib/action/book";
 import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -21,26 +20,18 @@ interface SearchParams {
 const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
   const searchParams = await props.searchParams;
   const searchQuery = searchParams?.query ?? "";
-  const pageParam = Number.parseInt(searchParams?.page?.toString() ?? "1", 10);
   const limit = 12;
+  const pageParam = Number.parseInt(searchParams?.page?.toString() ?? "1", 10);
   const session = await getServerSession(authOptions);
   let user = null;
   if (session?.id && session?.backendTokens?.accessToken) {
     user = await getProfile(session.id, session.backendTokens.accessToken);
   }
+  const res = await bookList({title: searchQuery, page: pageParam, limit:limit}) || { books: [], totalPage: 0 };
+  const allBooks = res.books || [];
+  const totalPage = res.totalPage ?? 1;
 
-  const allBooks = await bookSearch();
-
-  const filteredBooks = searchQuery
-    ? allBooks.filter((book: bookInterface) =>
-        book.title.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : allBooks;
-
-  const startIndex = (pageParam - 1) * limit;
-  const paginatedBooks = filteredBooks.slice(startIndex, startIndex + limit);
-  const isLastPage = startIndex + limit >= filteredBooks.length;
-
+  const isLastPage = totalPage === pageParam;
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-gray-950 to-gray-900 relative overflow-hidden">
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -60,8 +51,7 @@ const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
                 Find Your Next Adventure
               </h1>
               <p className="mb-8 text-gray-400">
-                Search our collection of books and discover your next favorite
-                story
+                Search our collection of books and discover your next favorite story
               </p>
 
               <Suspense fallback={<SekletonSearch />}>
@@ -87,8 +77,8 @@ const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
             )}
 
             <Suspense fallback={<BookListSkeleton />}>
-              {paginatedBooks.length > 0 ? (
-                <List books={paginatedBooks} />
+              {allBooks.length > 0 ? (
+                <List books={allBooks} />
               ) : (
                 <div className="flex flex-col items-center justify-center rounded-xl bg-gray-800/50 py-16 px-4 text-center backdrop-blur-sm">
                   <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gray-700/50 backdrop-blur-sm">
@@ -113,13 +103,9 @@ const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
               )}
             </Suspense>
 
-            {paginatedBooks.length > 0 && (
+            {allBooks.length > 0 && (
               <div className="mt-8 flex justify-center">
-                <Prev
-                  pageParam={pageParam}
-                  isLastPage={isLastPage}
-                  searchQuery={searchQuery}
-                />
+                <Prev pageParam={pageParam} isLastPage={isLastPage} searchQuery={searchQuery} />
               </div>
             )}
           </div>

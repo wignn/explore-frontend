@@ -21,7 +21,7 @@ export default function Sidebar() {
     <div className={`bg-gray-800 text-white border-r border-gray-700 ${sidebarOpen ? "w-64" : "w-20"} transition-all duration-300 flex flex-col`}>
       <div className="p-4 flex items-center justify-between border-b border-gray-700">
         <h2 className={`font-bold text-xl ${!sidebarOpen && "hidden"}`}>Admin Panel</h2>
-        <button className="p-2 rounded-md hover:bg-gray-700 transition-colors" onClick={() => setSidebarOpen(!sidebarOpen)}>
+        <button title="Toggle Sidebar" className="p-2 rounded-md hover:bg-gray-700 transition-colors" onClick={() => setSidebarOpen(!sidebarOpen)}>
           <Menu className="h-5 w-5" />
         </button>
       </div>

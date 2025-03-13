@@ -1,14 +1,12 @@
-"use server"
+"use server";
 
 import axios from "axios";
 import { API_URL } from "../API";
 
 type Genre = {
-    id: string;
-    title: string;
+  id: string;
+  title: string;
 };
-
-
 
 enum Language {
   English = "English",
@@ -23,110 +21,134 @@ enum BookStatus {
 }
 
 interface Book {
-    title: string;
-    cover: string;
-    description: string;
-    author: string;
-    genre: Genre[];
-    status: BookStatus;
-    realaseDate: number;
-    language: Language;
+  title: string;
+  cover: string;
+  description: string;
+  author: string;
+  genre: Genre[];
+  status: BookStatus;
+  realaseDate: number;
+  language: Language;
+}
+
+interface BookParams {
+  page?: number;
+  limit?: number;
+  status?: string;
+  genre?: string[];
+  language?: string;
+  author?: string;
+  title?: string;
 }
 
 
-export const bookList = async () => {
-    try {
-        const response = await axios.get(`${API_URL}/api/book/list`,{
-          headers: {
-            'x-api-key': process.env.API_KEY,
-          }
-        }
-        );
-       
+export const bookList = async (BookParams: BookParams)=> {
+  try {
+    const response = await axios.get(`${API_URL}/api/book/list`,
+      {
+        params: {
+          page: BookParams.page,
+          limit: BookParams.limit,
+          status: BookParams.status,
+          genre: BookParams.genre,
+          language: BookParams.language,
+          author: BookParams.author,
+          title: BookParams.title || "",
+        },
+        headers: {
+          "x-api-key": process.env.API_KEY,
+        },
+      }
+    );
 
-        return response.data.data;
-    } catch (err) {
-        console.error(" Error :", err);
+    const data = response.data.data;
+    return {
+      books: data.books,
+      totalBooks: data.totalBooks,
+      totalPage: data.totalPage,
     }
-}
-
-
-
-export const bookSearch = async () => {
-    try {
-        const response = await axios.get(`${API_URL}/api/book/list/`,{
-          headers: {
-            'x-api-key': process.env.API_KEY,
-          }
-        });
-
-        return response.data.data || [];
-    } catch (err) {
-        console.error("❌ Error :", err);
-    }
+  } catch (err) {
+    console.error(" Error :", err);
+  }
 };
 
+export const bookSearch = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/book/list/`, {
+      headers: {
+        "x-api-key": process.env.API_KEY,
+      },
+    });
 
-
+    return response.data.data || [];
+  } catch (err) {
+    console.error("❌ Error :", err);
+  }
+};
 
 export const createBook = async (book: Book, accessToken: string) => {
-    try {
-      
-        const bookResponse = await axios.post(`${API_URL}/api/book`, {
-            title: book.title,
-            cover: book.cover,
-            description: book.description,
-            author: book.author,
-            language: book.language,   
-            realaseDate:Number(book.realaseDate),
-            status: book.status,
-        }, {
-            headers: {
-              'x-api-key': process.env.API_KEY,
-                Authorization: `Bearer ${accessToken}`
-            }
-        });
+  try {
+    const bookResponse = await axios.post(
+      `${API_URL}/api/book`,
+      {
+        title: book.title,
+        cover: book.cover,
+        description: book.description,
+        author: book.author,
+        language: book.language,
+        realaseDate: Number(book.realaseDate),
+        status: book.status,
+      },
+      {
+        headers: {
+          "x-api-key": process.env.API_KEY,
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
-        const bookId = bookResponse.data.data.id;
+    const bookId = bookResponse.data.data.id;
 
-        for (const genre of book.genre) {
-            const genreName = genre.title.toLowerCase();
-            const getGenre = await axios.get(`${API_URL}/api/genre/${genreName}`,{
-              headers: {
-                'x-api-key': process.env.API_KEY,
-              }
-            })
-            await axios.post(`${API_URL}/api/genre/book`, {
-                bookId,
-                genreId: getGenre.data.data.id
-            }, {
-                headers: {
-                  'x-api-key': process.env.API_KEY,
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
+    for (const genre of book.genre) {
+      const genreName = genre.title.toLowerCase();
+      const getGenre = await axios.get(`${API_URL}/api/genre/${genreName}`, {
+        headers: {
+          "x-api-key": process.env.API_KEY,
+        },
+      });
+      await axios.post(
+        `${API_URL}/api/genre/book`,
+        {
+          bookId,
+          genreId: getGenre.data.data.id,
+        },
+        {
+          headers: {
+            "x-api-key": process.env.API_KEY,
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
-        return bookResponse.data.data;
-    } catch (err) {
-      console.log(err)
-        console.log(" Error :", err);
+      );
     }
-}
-
+    return bookResponse.data.data;
+  } catch (err) {
+    console.log(err);
+    console.log(" Error :", err);
+  }
+};
 
 export const getBookDetail = async (id: string) => {
-    try {
-        const response = await axios.get(`${API_URL}/api/book/${id}`,{
-          headers: {
-            'x-api-key': process.env.API_KEY,
-          }
-        });
-        return response.data.data;
-    } catch (err) {
-        console.log(" Error :", err);
-    }
-}
-
+  try {
+    const response = await axios.get(`${API_URL}/api/book/${id}`, {
+      headers: {
+        "x-api-key": process.env.API_KEY,
+      },
+    });
+    return response.data.data;
+  } catch (err) {
+    console.log(" Error :", err);
+  }
+};
 
 interface UpdateBook {
   id: string;
@@ -138,15 +160,13 @@ interface UpdateBook {
   status: BookStatus;
   realaseDate: number;
   language: Language;
-  
 }
 
-
-
-export const updateBook = async (book: UpdateBook , accessToken: string) => {
+export const updateBook = async (book: UpdateBook, accessToken: string) => {
   try {
-
-    const response = await axios.post(`${API_URL}/api/book/${book.id}`, {
+    const response = await axios.post(
+      `${API_URL}/api/book/${book.id}`,
+      {
         title: book.title,
         cover: book.cover,
         description: book.description,
@@ -154,33 +174,45 @@ export const updateBook = async (book: UpdateBook , accessToken: string) => {
         status: book.status,
         realaseDate: Number(book.realaseDate),
         language: book.language,
-    }, {
+      },
+      {
         headers: {
-            'x-api-key': process.env.API_KEY,
-            Authorization: `Bearer ${accessToken}`,
-        }
-    });
+          "x-api-key": process.env.API_KEY,
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
     if (response.status !== 200) {
       throw new Error(`Failed to update book: ${response.status}`);
     }
-    const responseData = response.data.data
+    const responseData = response.data.data;
     const bookId = responseData.id;
-    const existingGenresResponse = await axios.get(`${API_URL}/api/book/${bookId}`, {
+    const existingGenresResponse = await axios.get(
+      `${API_URL}/api/book/${bookId}`,
+      {
         headers: {
-           'x-api-key': process.env.API_KEY,
-            Authorization: `Bearer ${accessToken}`,
+          "x-api-key": process.env.API_KEY,
+          Authorization: `Bearer ${accessToken}`,
         },
-    })
-;
+      }
+    );
     if (existingGenresResponse.status !== 200) {
-      throw new Error(`Failed to fetch existing genres: ${existingGenresResponse.status}`);
+      throw new Error(
+        `Failed to fetch existing genres: ${existingGenresResponse.status}`
+      );
     }
 
     const existingGenresData = existingGenresResponse.data.data;
-    const existingGenres = existingGenresData.genre.map((g: {genreId: string}) => g.genreId);
-    const newGenres = book.genre.filter((g: string) => !existingGenres.includes(g));
-    const removedGenres = existingGenres.filter((g: string) => !book.genre.includes(g));
+    const existingGenres = existingGenresData.genre.map(
+      (g: { genreId: string }) => g.genreId
+    );
+    const newGenres = book.genre.filter(
+      (g: string) => !existingGenres.includes(g)
+    );
+    const removedGenres = existingGenres.filter(
+      (g: string) => !book.genre.includes(g)
+    );
 
     await Promise.all(
       newGenres.map(async (genreId: string) => {
@@ -189,7 +221,7 @@ export const updateBook = async (book: UpdateBook , accessToken: string) => {
           { bookId, genreId },
           {
             headers: {
-              'x-api-key': process.env.API_KEY,
+              "x-api-key": process.env.API_KEY,
               Authorization: `Bearer ${accessToken}`,
             },
           }
@@ -200,43 +232,44 @@ export const updateBook = async (book: UpdateBook , accessToken: string) => {
         }
       })
     );
-await Promise.all(
-  removedGenres.map(async (genreId: string) => {
-    const genreDeleteResponse = await axios.delete(
-      `${API_URL}/api/genre/book/${genreId}/${bookId}`,
-      {
-        headers: {
-          'x-api-key': process.env.API_KEY,
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    await Promise.all(
+      removedGenres.map(async (genreId: string) => {
+        const genreDeleteResponse = await axios.delete(
+          `${API_URL}/api/genre/book/${genreId}/${bookId}`,
+          {
+            headers: {
+              "x-api-key": process.env.API_KEY,
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
 
-    if (genreDeleteResponse.status !== 200) {
-      throw new Error(`Failed to remove genre: ${genreDeleteResponse.status}`);
-    }
-  })
-);
+        if (genreDeleteResponse.status !== 200) {
+          throw new Error(
+            `Failed to remove genre: ${genreDeleteResponse.status}`
+          );
+        }
+      })
+    );
     return response.data.data;
   } catch (error) {
     console.log("Error updating book:", error);
   }
 };
 
-
 export const deleteBook = async (id: string, accessToken: string) => {
   try {
     const response = await axios.delete(`${API_URL}/api/book/${id}`, {
-    headers:{
-      'x-api-key': process.env.API_KEY,
-      Authorization: `Bearer ${accessToken}`,
-    }
-    })
+      headers: {
+        "x-api-key": process.env.API_KEY,
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     if (response.status !== 200) {
       throw new Error(`Failed to delete book: ${response.status}`);
     }
-    return response.status
+    return response.status;
   } catch (error) {
     console.log("Error deleting book:", error);
   }
-}
+};
