@@ -92,7 +92,7 @@ function Page() {
         const [userData, bookData, bookListData] = await Promise.all([
           id && token ? getProfile(id, token) : null,
           getBookDetail(bookName),
-          bookList() || [],
+          bookList({page: 1, limit:12, status:"Ongoing"}) || [],
         ])
 
         if (bookData?.id) {
@@ -103,8 +103,8 @@ function Page() {
         setUser(userData)
         setBook(bookData)
 
-        if (bookListData?.length) {
-          const sortedBooks: PopularProps[] = bookListData
+        if (bookListData?.books.length) {
+          const sortedBooks: PopularProps[] = bookListData.books
             .sort(
               (a: PopularProps, b: PopularProps) =>
                 new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()

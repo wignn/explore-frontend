@@ -10,6 +10,7 @@ interface PrevProps {
 }
 
 const Prev = ({ pageParam, isLastPage, searchQuery }: PrevProps) => {
+  console.log(pageParam, isLastPage, searchQuery)
   const prevPage = pageParam > 1 ? pageParam - 1 : null
   const nextPage = !isLastPage ? pageParam + 1 : null
 
