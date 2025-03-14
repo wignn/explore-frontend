@@ -24,11 +24,11 @@ export type book = {
   cover: string
   description: string
   author: string
-  updatedAt: Date
+  updatedAt: string
   popular: boolean
   genre: Genre[]
   chapter: Chapter[]
-  createdAt: Date
+  createdAt: string
   bookmark: bookmark[]
 }
 
