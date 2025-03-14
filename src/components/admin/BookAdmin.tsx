@@ -144,7 +144,7 @@ export default function AdminBookList({ book, accesToken}:Props) {
               <tr key={book.id} className="border-b border-gray-700 hover:bg-gray-800 transition-colors">
                 <td className="p-3">{book.title}</td>
                 <td className="p-3">{book.author}</td>
-                <td className="p-3">{formatDate(book.createdAt)}</td>
+                <td className="p-3">{formatDate(book.createdAt.toISOString())}</td>
                 <td className="p-3 flex space-x-2">
                   <button
                     onClick={() => handleUpdate(book.id)}

@@ -69,7 +69,7 @@ function List({ books }: { books: ListProps["books"] }) {
                   </div>
                   <div className="flex items-center gap-1.5 text-gray-500">
                     <Clock className="h-3.5 w-3.5" />
-                    <span>{timeAgo(book.updatedAt)}</span>
+                    <span>{timeAgo(book.updatedAt.toISOString())}</span>
                   </div>
                 </div>
               </div>
