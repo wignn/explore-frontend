@@ -11,71 +11,15 @@ import { getProfile } from "@/lib/action/user";
 import { NavbarProps } from "@/types/user";
 import SkeletonNavbar from "@/components/loading/skletonNavbar";
 import { isBookmark } from "@/lib/action/bookmark";
-
-type Genre = {
-  Genre: {
-    id: string;
-    title: string;
-  };
-};
-
-
-
-type Chapter = {
-  id: string
-  title: string
-  content: string
-  updatedAt: string
-  description: string
-  chapterNum: number
-}
-
-interface BookProps {
-  id: string
-  title: string
-  cover: string
-  description: string
-  author: string
-  updatedAt: string
-  popular: boolean
-  genre: Genre[]
-  Chapter: Chapter[]
-  bookMark:[]
-  createdAt: string
-  status: string
-  realaseDate: number
-  language: string
-}
-
-interface PopularProps {
-  id: string;
-  title: string;
-  cover: string;
-  description: string;
-  author: string;
-  updatedAt: string;
-  popular: boolean;
-  genre: {
-    id: string;
-    title: string;
-  }[];
-  Chapter: Chapter[];
-  createdAt: string;
-  bookmark: boolean;
-} 
-type Bookmark = {
-  id: string;
-  bookId:string;
-  userId: string;
-} | null;
+import { bookInterface, bookmark } from "@/types/book";
 
 function BookDetails() {
-  const [book, setBook] = useState<BookProps | null>(null);
+  const [book, setBook] = useState<bookInterface | null>(null);
   const pathname = usePathname();
   const [user, setUser] = useState<NavbarProps['user'] | undefined>(undefined);
-  const [popular, setPopular] = useState<PopularProps[]>([]);
+  const [popular, setPopular] = useState<bookInterface[]>([]);
   const [isBooksLoading, setIsBooksLoading] = useState(true);
-  const [bookmark, setBookmark] = useState<Bookmark| null>(null)
+  const [bookmark, setBookmark] = useState<bookmark| null>(null)
   const session = useSession();
   const bookName = useMemo(() => pathname.split("/")[2].replaceAll("-", " "), [pathname]);
 
@@ -106,7 +50,7 @@ function BookDetails() {
   
         if (bookListData?.books.length) {
           const sortedBooks = bookListData.books
-                .sort((a: PopularProps, b: PopularProps) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+                .sort((a: bookInterface, b: bookInterface) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
                 .slice(0, 5);
           setPopular(sortedBooks);
         }
@@ -124,7 +68,7 @@ function BookDetails() {
     <div className="bg-gray-900">
       {isBooksLoading ? <SkeletonNavbar /> : <Navbar user={user} />}
       <div className="bg-gray-900 w-full min-h-screen">
-      {!isBooksLoading && <NovelDetails book={book as BookProps} Popular={popular} userId={session?.data?.id as string} accessToken={session?.data?.backendTokens.accessToken as string} Bookmark={bookmark} />}
+      {!isBooksLoading && <NovelDetails book={book as bookInterface} Popular={popular} userId={session?.data?.id as string} accessToken={session?.data?.backendTokens.accessToken as string} Bookmark={bookmark} />}
       </div>
     </div>
   );

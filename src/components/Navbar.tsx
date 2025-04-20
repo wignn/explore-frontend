@@ -6,7 +6,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Menu, X, Home, Book, Info, Bookmark, User, Settings, LogOut } from "lucide-react"
 import { usePathname } from "next/navigation"
-import type { NavbarProps } from "@/types/user"
+import type { UserInterface } from "@/types/user"
 import { signOut } from "next-auth/react"
 import { logout } from "@/lib/action/auth"
 
@@ -17,7 +17,7 @@ const navLinks = [
   { href: "/bookmark", label: "Bookmark", icon: Bookmark },
 ]
 
-export const Navbar: React.FC<NavbarProps> = ({ user }) => {
+export const Navbar: React.FC<{ user?: UserInterface }> = ({ user }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const pathname = usePathname()

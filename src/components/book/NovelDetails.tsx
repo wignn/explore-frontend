@@ -1,124 +1,88 @@
-"use client"
-import { createBookmark, deleteBookmark } from "@/lib/action/bookmark"
-import { formatDate } from "@/lib/dateFormat"
-import Image from "next/image"
-import Link from "next/link"
-import type React from "react"
-import { useEffect, useState } from "react"
-import ChapterList from "@/components/view/chapter/Chapter-details"
+"use client";
 
-type Genre = {
-  Genre: {
-    id: string
-    title: string
-  }
-}
+import { formatDate } from "@/lib/dateFormat";
+import Image from "next/image";
+import Link from "next/link";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
+import ChapterList from "@/components/view/chapter/Chapter-details";
+import { bookInterface, bookmark } from "@/types/book";
+import { apiRequest } from "@/lib/Request";
 
-type Chapter = {
-  id: string
-  title: string
-  content: string
-  updatedAt: string
-  description: string
-  chapterNum: number
-}
-
-interface BookProps {
-  id: string
-  title: string
-  cover: string
-  description: string
-  author: string
-  updatedAt: string
-  popular: boolean
-  genre: Genre[]
-  Chapter: Chapter[]
-  bookMark: []
-  createdAt: string
-  status: string
-  realaseDate: number
-  language: string
-}
-
-interface BookPopular {
-  id: string
-  title: string
-  cover: string
-  description: string
-  author: string
-  updatedAt: string
-  popular: boolean
-  genre: {
-    id: string
-    title: string
-  }[]
-  Chapter: Chapter[]
-  createdAt: string
-}
-
-export interface User {
-  id: string
-  name: string
-  profilePic?: string | null
-  username: string
-  email: string
-  bio: string
-  createdAt: string
-  updatedAt: string
-  lastLogin: string
-  token: string
-  valToken: string
-  isAdmin: boolean
-}
-
-interface BookmarkProps {
-  id: string
-  bookId: string
-  userId: string
-}
 
 interface NovelDetailsProps {
-  book: BookProps
-  Popular: BookPopular[]
-  userId: string
-  accessToken: string
-  Bookmark: BookmarkProps | null
+  book: bookInterface;
+  Popular: bookInterface[];
+  userId: string;
+  accessToken: string;
+  Bookmark: bookmark | null;
 }
 
-const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, accessToken, Bookmark }) => {
-  const [bookmark, setBookmark] = useState<BookmarkProps | null>(Bookmark)
-  const [isProcessing, setIsProcessing] = useState(false) 
+const NovelDetails: React.FC<NovelDetailsProps> = ({
+  book,
+  Popular,
+  userId,
+  accessToken,
+  Bookmark,
+}) => {
+  const [bookmark, setBookmark] = useState<bookmark | null>(Bookmark);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const isHandlingRef = useRef(false);
+
   useEffect(() => {
-    setBookmark(Bookmark)
-  }, [Bookmark, accessToken])
-  
+    setBookmark(Bookmark);
+  }, [Bookmark, accessToken]);
   const handleBookmark = async () => {
     if (!userId) {
-      console.warn("User tidak login, tidak bisa menambah bookmark.")
-      return
+      console.warn("User tidak login, tidak bisa menambah bookmark.");
+      return;
     }
   
-    if (isProcessing) return 
+    isHandlingRef.current = true;
+    if (isProcessing) return;
   
-    setIsProcessing(true) 
-    const prevBookmark = bookmark
+    setIsProcessing(true);
+    const prevBookmark = bookmark;
   
     try {
       if (bookmark) {
-        setBookmark(null)
-        await deleteBookmark(bookmark.id, accessToken)
+        await apiRequest({
+          endpoint: `/bookmark/${bookmark.id}`,
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setBookmark(null);
       } else {
-        const newBookmark = { id: Date.now().toString(), bookId: book.id, userId }
+
+  
+        const response = await apiRequest<{data: bookmark}>({
+          endpoint: `/bookmark`,
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: {
+            bookId: book.id,
+            userId,
+          },
+        });
+        const newBookmark = {
+          id: response.data.id,
+          bookId: response.data.bookId,
+          userId: response.data.userId,
+        }
         setBookmark(newBookmark)
-        await createBookmark(userId, book.id, accessToken)
       }
     } catch (e) {
-      console.error("Gagal mengubah bookmark:", e)
-      setBookmark(prevBookmark)
+      console.error("Gagal mengubah bookmark:", e);
+      setBookmark(prevBookmark);
     } finally {
-      setIsProcessing(false)
+      isHandlingRef.current = false;
+      setIsProcessing(false);
     }
-  }
+  };
   
 
   return (
@@ -147,8 +111,11 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
               <button
                 onClick={handleBookmark}
                 className={`w-1/2 mx-auto md:mx-0 md:w-full p-2 rounded-md flex items-center justify-center gap-2 ${
-                  bookmark ? "bg-red-600 hover:bg-red-700" : "bg-purple-600 hover:bg-purple-700"
+                  bookmark
+                    ? "bg-red-600 hover:bg-red-700"
+                    : "bg-purple-600 hover:bg-purple-700"
                 } text-white`}
+                disabled={isProcessing}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -165,7 +132,7 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
                 </svg>
                 {bookmark ? "Bookmarked" : "Bookmark"}
               </button>
-              <p className="text-sm text-zinc-400 text-center">{`Followed ${book.bookMark.length} people`}</p>
+              <p className="text-sm text-zinc-400 text-center">{`Followed ${book.bookmark.length} people`}</p>
             </div>
 
             <div className="space-y-4">
@@ -174,16 +141,20 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
                 <div className="grid grid-cols-2 md:grid-cols-[200px,1fr] gap-4">
                   <div className="space-y-2">
                     <p>
-                      <span className="text-zinc-400">Status:</span> {book.status}
+                      <span className="text-zinc-400">Status:</span>{" "}
+                      {book.status}
                     </p>
                     <p>
-                      <span className="text-zinc-400">Author:</span> {book.author || "Unknown"}
+                      <span className="text-zinc-400">Author:</span>{" "}
+                      {book.author || "Unknown"}
                     </p>
                     <p>
-                      <span className="text-zinc-400">Released:</span> {book.realaseDate}
+                      <span className="text-zinc-400">Released:</span>{" "}
+                      {book.realaseDate}
                     </p>
                     <p>
-                      <span className="text-zinc-400">Native Language:</span> {book.language}
+                      <span className="text-zinc-400">Native Language:</span>{" "}
+                      {book.language}
                     </p>
                   </div>
                   <div className="space-y-2">
@@ -191,18 +162,23 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
                       <span className="text-zinc-400">Posted by:</span> wign
                     </p>
                     <p>
-                      <span className="text-zinc-400">Posted on:</span> {formatDate(book.createdAt)}
+                      <span className="text-zinc-400">Posted on:</span>{" "}
+                      {formatDate(book.createdAt)}
                     </p>
                     <p>
-                      <span className="text-zinc-400">Updated on:</span> {formatDate(book.updatedAt)}
+                      <span className="text-zinc-400">Updated on:</span>{" "}
+                      {formatDate(book.updatedAt)}
                     </p>
                   </div>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
                 {book.genre.map((tag) => (
-                  <span key={tag.Genre.id} className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 rounded-full text-sm">
-                    {tag.Genre.title}
+                  <span
+                    key={tag.id}
+                    className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 rounded-full text-sm"
+                  >
+                    {tag.title}
                   </span>
                 ))}
               </div>
@@ -215,9 +191,9 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
               <p>{book.description}</p>
             </div>
           </div>
-            {}
-            {book.Chapter && book.Chapter.length > 0 ? (
-            <ChapterList chapters={book.Chapter} bookTitle={book.title} />
+          {}
+          {book.chapter && book.chapter.length > 0 ? (
+            <ChapterList chapters={book.chapter} bookTitle={book.title} />
           ) : (
             <div className="text-center py-8 text-zinc-400">
               No chapters available yet
@@ -243,10 +219,12 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
                   />
                   <div className="space-y-1">
                     <h3 className="font-medium line-clamp-2">
-                      <Link href={`/view/${novel.title.replaceAll(" ", "-")}`}>{novel.title}</Link>
+                      <Link href={`/view/${novel.title.replaceAll(" ", "-")}`}>
+                        {novel.title}
+                      </Link>
                     </h3>
                     <p className="text-xs text-zinc-400">
-                      Genres: {novel.genre.map((genre) => genre?.title).join(", ")}
+                      {novel.genre.map((genre) => genre?.title).join(", ")}
                     </p>
                     <div className="flex items-center gap-1">
                       {[...Array(5)].map((_, i) => (
@@ -256,7 +234,7 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
                           width="16"
                           height="16"
                           viewBox="0 0 24 24"
-                          fill={i < 5 / 2 ? "#fbbf24" : "#4b5563"}
+                          fill={i < 10 / 2 ? "#fbbf24" : "#4b5563"}
                           stroke="none"
                         >
                           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
@@ -272,8 +250,7 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({ book, Popular, userId, acce
         </div>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default NovelDetails
-
+export default NovelDetails;

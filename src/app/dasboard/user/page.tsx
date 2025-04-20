@@ -1,15 +1,24 @@
 import React from 'react'
 import UserManagement from '@/components/admin/AdminUserList'
-import { users } from '@/lib/action/admin';
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { apiRequest } from '@/lib/Request';
+import { UserInterface } from '@/types/user';
 async function page() {
-    let user;
+    let user = [] as UserInterface[];
     const session = await getServerSession(authOptions)
     try {
         const accessToken = session?.backendTokens.accessToken as string
-        user = await users(accessToken)
+      const userRes = await apiRequest<{ data: UserInterface[] }>({
+        endpoint: '/admin/user',
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        }
+      })
 
+
+      user = userRes.data
     } catch (error) {
         console.log("Error in AdminPage:", error)
     }

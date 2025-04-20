@@ -4,31 +4,13 @@ import Link from "next/link"
 import { formatDate } from "@/lib/dateFormat"
 import { normalizeTitle } from "@/lib/utils"
 import Footer from "@/components/Footer"
+import { bookInterface, Chapter } from "@/types/book"
 
-type Chapter = {
-  id: string
-  title: string
-  bookId: string
-  description: string
-  content: string
-  chapterNum: number
-  createdAt: string
-  updatedAt: string
-}
 
-type BookData = {
-  id: string
-  title: string
-  author: string
-  cover: string
-  description: string
-  Chapter: Chapter[]
-}
-
-export default function ChapterPage({ book, chapter }: { book: BookData, chapter: Chapter }) {
+export default function ChapterPage({ book, chapter }: { book: bookInterface, chapter: Chapter }) {
   const bookName = normalizeTitle(book.title)
 
-  const sortedChapters = [...book.Chapter].sort((a, b) => a.chapterNum - b.chapterNum)
+  const sortedChapters = [...book.chapter].sort((a, b) => a.chapterNum - b.chapterNum)
   const prevChapter = sortedChapters.find(chap => chap.chapterNum === chapter.chapterNum - 1) || null
   const nextChapter = sortedChapters.find(chap => chap.chapterNum === chapter.chapterNum + 1) || null
 

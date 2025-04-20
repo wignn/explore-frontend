@@ -2,47 +2,75 @@ import List, { BookListSkeleton } from "@/components/List";
 import SearchBar from "@/components/SearchBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import SkeletonNavbar from "@/components/loading/skletonNavbar";
 import SekletonSearch from "@/components/loading/sekletonSearch";
-import { bookList } from "@/lib/action/book";
 import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { getProfile } from "@/lib/action/user";
 import Prev from "@/components/view/Prev";
 import { Search, BookOpen, AlertCircle, Link } from "lucide-react";
+import { apiRequest } from "@/lib/Request";
+import { bookInterface } from "@/types/book";
+import { UserInterface } from "@/types/user";
 
 interface SearchParams {
   query?: string;
   page?: number;
 }
 
+interface BookReturnType {
+  books: bookInterface[];
+  totalBooks: number;
+  totalPage: number;
+}
+interface SearchParams {
+  query?: string;
+  page?: number;
+}
 const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
   const searchParams = await props.searchParams;
-  const searchQuery = searchParams?.query ?? "";
+  const searchQuery: string = searchParams?.query ?? "";
+  const pageParam = Number(searchParams?.page ?? 1);
   const limit = 12;
-  const pageParam = Number.parseInt(searchParams?.page?.toString() ?? "1", 10);
-  const session = await getServerSession(authOptions);
-  let user = null;
-  if (session?.id && session?.backendTokens?.accessToken) {
-    user = await getProfile(session.id, session.backendTokens.accessToken);
-  }
-  const res = await bookList({title: searchQuery, page: pageParam, limit:limit}) || { books: [], totalPage: 0 };
-  const allBooks = res.books || [];
-  const totalPage = res.totalPage ?? 1;
+  let user: UserInterface | undefined;
 
-  const isLastPage = totalPage === pageParam;
+  const session = await getServerSession(authOptions);
+
+
+  if (session?.id && session?.backendTokens?.accessToken) {
+    const response = await apiRequest<{ data: UserInterface }>({
+      endpoint: `/user/${session.id}`,
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${session.backendTokens.accessToken}`,
+      },
+    });
+
+    user = response?.data;
+  }
+
+  const query = new URLSearchParams({
+    limit: limit.toString(),
+    page: pageParam.toString(),
+    title: searchQuery,
+  }).toString();
+
+  const res = await apiRequest<{ data: BookReturnType }>({
+    endpoint: `/book/list?${query}`,
+    method: "GET",
+  });
+
+  const data = res?.data;
+  const allBooks = data?.books ?? [];
+  const totalPage = data?.totalPage ?? 1;
+  const isLastPage = pageParam >= totalPage;
+
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-gray-950 to-gray-900 relative overflow-hidden">
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(0,200,200,0.05),transparent_70%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(0,200,200,0.05),transparent_70%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(0,200,200,0.05),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(0,200,200,0.05),transparent_70%)]" />
       </div>
-
-      <Suspense fallback={<SkeletonNavbar />}>
         <Navbar user={user} />
-      </Suspense>
-
       <main className="flex-1 relative z-10">
         <section className="relative py-8 md:py-12">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">

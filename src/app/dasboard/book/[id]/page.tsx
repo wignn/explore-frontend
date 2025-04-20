@@ -2,7 +2,6 @@ import UpdateBook from '@/components/UpdateBook'
 import { getBookDetail } from '@/lib/action/book';
 import { getGenre } from '@/lib/action/genre';
 import { authOptions } from '@/lib/auth';
-import { Book } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import React from 'react'
 

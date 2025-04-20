@@ -4,37 +4,44 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { jwtDecode } from "jwt-decode";
 import { JWT } from "next-auth/jwt";
+import { cookies } from "next/headers";
+import { signOut } from "next-auth/react";
 
-
-
-
-async function refreshAccessToken(token:JWT) {
+async function refreshAccessToken(token: JWT) {
   try {
-    const response = await axios.post(`${API_URL}/api/auth/refresh`, {
-      username: token.username,
-      isAdmin: token.isAdmin,
-      sub: token.name 
-  },
-  {
-    headers: {
-        'x-api-key': process.env.API_KEY,
-      Authorization: `Refresh ${token.backendTokens.refreshToken}`
-    }
-  }
-);
+    const response = await axios.post(
+      `${API_URL}/api/auth/refresh`,
+      {
+        username: token.username,
+        isAdmin: token.isAdmin,
+        sub: token.name,
+      },
+      {
+        headers: {
+          "x-api-key": process.env.API_KEY,
+          Authorization: `Refresh ${token.backendTokens.refreshToken}`,
+        },
+      }
+    );
 
-    const newTokens = response.data.data.backendTokens; 
-    const decodedToken = newTokens?.accessToken ? jwtDecode(newTokens.accessToken) : null;
-    
+    const newTokens = response.data.data.backendTokens;
+    const decodedToken =
+      newTokens?.accessToken ? jwtDecode(newTokens.accessToken) : null;
+
     return {
       ...token,
-      backendTokens:{
-        ...newTokens
+      backendTokens: {
+        ...newTokens,
       },
-      accessTokenExpires: decodedToken?.exp ? decodedToken.exp * 1000 : Date.now()
+      accessTokenExpires: decodedToken?.exp
+        ? decodedToken.exp * 1000
+        : Date.now(),
     };
   } catch (error) {
     console.error("Error refreshing access token:", error);
+    const cookieStore = await cookies();
+    cookieStore.set("next-auth.session-token", "", { maxAge: 0 }); 
+    signOut(); 
     return { ...token, error: "RefreshTokenError" };
   }
 }
@@ -53,16 +60,17 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const response = await axios.patch(`${API_URL}/api/auth/login`, {
-          username: credentials.username,
-          password: credentials.password,
-        },
-        {
-          headers: {
-            'x-api-key': process.env.API_KEY
-          }
-        }
-      );
+        const response = await axios.patch(
+          `${API_URL}/api/auth/login`,
+          {
+            username: credentials.username,
+            password: credentials.password,
+          },
+          {
+            headers: {
+              "x-api-key": process.env.API_KEY,
+            },          }
+        );
 
         if (response.status !== 200 || !response?.data) {
           return null;
@@ -70,11 +78,14 @@ export const authOptions: NextAuthOptions = {
 
         const user = response.data.data;
         const newTokens = response.data.data.backendTokens;
-        const decodedToken = newTokens?.accessToken ? jwtDecode(newTokens.accessToken) : null;
-    
+        const decodedToken =
+          newTokens?.accessToken ? jwtDecode(newTokens.accessToken) : null;
+
         return {
-         ...user,
-         accessTokenExpires: decodedToken?.exp ? decodedToken.exp * 1000 : Date.now(),
+          ...user,
+          accessTokenExpires: decodedToken?.exp
+            ? decodedToken.exp * 1000
+            : Date.now(),
         };
       },
     }),
@@ -83,19 +94,18 @@ export const authOptions: NextAuthOptions = {
     signIn: "/sign",
   },
   callbacks: {
-
     async jwt({ token, user }) {
       if (user) {
         return { ...token, ...user };
       }
       if (Date.now() < token.accessTokenExpires) {
-        return token; 
+        return token;
       }
       return await refreshAccessToken(token);
     },
 
     async session({ session, token }) {
-      return {...session, ...token};
+      return { ...session, ...token };
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

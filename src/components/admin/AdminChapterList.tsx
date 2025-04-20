@@ -6,21 +6,12 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { deleteChapter } from "@/lib/action/chapter"
 import { useSession } from "next-auth/react"
-import { bookInterface } from "@/types/book"
+import { bookInterface, Chapter } from "@/types/book"
 
-type ChapterInterface = {
-  id: string;
-  title: string;
-  description?: string;
-  content: string;
-  bookId: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 type Props = {
   book: bookInterface;
-  chapters: ChapterInterface[];
+  chapters: Chapter[];
 }
 
 export default function ChapterManagement({ book, chapters }: Props) {
@@ -28,10 +19,9 @@ export default function ChapterManagement({ book, chapters }: Props) {
   const accessToken = session?.backendTokens?.accessToken as string | undefined
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
-  const [filteredChapters, setFilteredChapters] = useState<ChapterInterface[]>(chapters)
+  const [filteredChapters, setFilteredChapters] = useState<Chapter[]>(chapters)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [chapterToDelete, setChapterToDelete] = useState<string | null>(null)
-
   useEffect(() => {
     const results = chapters.filter((chapter) =>
       chapter.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -103,10 +93,10 @@ export default function ChapterManagement({ book, chapters }: Props) {
             <div key={chapter.id} className="bg-gray-800 border border-gray-700 rounded-lg p-5">
               <h3 className="text-xl font-semibold mb-2">{chapter.title}</h3>
               <div className="flex justify-between">
-                <button onClick={() => handleEditChapter(chapter.id)} className="p-2 bg-blue-600 rounded">
+                <button title="edite" onClick={() => handleEditChapter(chapter.id)} className="p-2 bg-blue-600 rounded">
                   <Edit size={16} />
                 </button>
-                <button onClick={() => confirmDelete(chapter.id)} className="p-2 bg-red-600 rounded">
+                <button title="edite" onClick={() => confirmDelete(chapter.id)} className="p-2 bg-red-600 rounded">
                   <Trash2 size={16} />
                 </button>
               </div>

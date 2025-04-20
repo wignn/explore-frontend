@@ -2,49 +2,16 @@
 
 import { useEffect, useState } from "react"
 import List from "./List"
+import { bookInterface } from "@/types/book"
 
-interface Genre {
-  id: string
-  title: string
-}
 
-interface Chapter {
-  id: string
-  title: string
-  description: string
-  content: string
-  updatedAt: string
-  chapterNum: number
-  createdAt: string
-}
 
-export type book = {
-  id: string
-  title: string
-  cover: string
-  description: string
-  author: string
-  updatedAt: string
-  popular: boolean
-  genre: Genre[]
-  chapter: Chapter[]
-  createdAt: string
-  bookmark: bookmark[]
-}
-
-type bookmark = {
-  id: string
-  bookId: string
-  userId: string
-}
-
-interface RankProps {
-  books: book[]
-}
 
 const genres = ["Popular", "Action", "Fantasy", "Romance"]
 
-function Rank({ books }: RankProps) {
+
+
+function Rank({ books }: { books: bookInterface[] }) {
   const [selectedGenre, setSelectedGenre] = useState("Popular")
   const [filteredBooks, setFilteredBooks] = useState(books)
 

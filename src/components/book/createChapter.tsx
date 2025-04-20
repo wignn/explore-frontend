@@ -5,8 +5,8 @@ import type React from "react"
 import { useState } from "react"
 import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
-import { createChapter } from "@/lib/action/chapter"
 import { BookOpen, Save, Eye, CheckCircle, AlertCircle } from "lucide-react"
+import { apiRequest } from "@/lib/Request"
 
 type Props = {
   accessToken: string
@@ -51,8 +51,17 @@ const CreateChapterForm: React.FC<Props> = ({ accessToken }) => {
       setErrorMessage("Please fill in all required fields");
       return;
     }
-    const response = await createChapter(form, accessToken);
-    if (response !== null) {
+    // const response = await createChapter(form, accessToken);
+    const res = await apiRequest({
+      endpoint: `/chapter`,
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: form,
+    })
+
+    if (res !== null) {
       setSuccessMessage("Chapter created successfully!");
       setForm({
           title: "",
