@@ -6,7 +6,8 @@ import Link from "next/link"
 import { bookInterface } from "@/types/book"
 import { formatDate } from "@/lib/dateFormat"
 import { useRouter } from "next/navigation"
-import { deleteBook } from "@/lib/action/book"
+import { apiRequest } from "@/lib/Request"
+// import { deleteBook } from "@/lib/action/book"
 
 interface Props {
     book: bookInterface[];
@@ -45,8 +46,14 @@ export default function AdminBookList({ book, accesToken}:Props) {
   const handleConfirmDelete = async () => {
     if (bookToDelete) {
       setBooks(books.filter((book) => book.id !== bookToDelete))
-      const res = await deleteBook(bookToDelete, accesToken)
-      if (res === 200) {
+      const res = await apiRequest({
+        endpoint: `/book/${bookToDelete}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accesToken}`,
+        },
+      })
+      if (res !== null) {
         setSucces("Buku berhasil dihapus")
       } else {
         setError("Gagal menghapus buku")

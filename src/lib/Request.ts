@@ -17,6 +17,7 @@ export async function apiRequest<T>({ endpoint, method, body, headers = {} }: Ap
         method,
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'x-api-key': process.env.API_KEY as string,
             ...headers,
         },
@@ -40,3 +41,33 @@ export async function apiRequest<T>({ endpoint, method, body, headers = {} }: Ap
         throw error;
     }
 }
+
+export async function apiRequestUpload<T>({ endpoint, method, body, headers = {} }: ApiRequestProps): Promise<T> {
+    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/api` || 'http://localhost:4000/api';
+    const config: RequestInit = {
+        method,
+        headers: {
+            'x-api-key': process.env.API_KEY as string,
+            ...headers,
+        },
+        body: body instanceof FormData ? body : JSON.stringify(body),
+    };
+    try {
+        const response = await fetch(`${baseUrl}${endpoint}`, config);
+        
+        const responseBody = await response.json().catch(() => null);
+
+        if (!response.ok) {
+            const errorMessage = responseBody?.message || response.statusText;
+            console.error('API request error:', method, endpoint, errorMessage);
+            console.error('Response Body:', responseBody);
+            throw new Error(`Error ${response.status}: ${errorMessage}`);
+        }
+        
+        return responseBody as T;
+    } catch (error) {
+        console.error('API request failed:', error);
+        throw error;
+    }
+}
+

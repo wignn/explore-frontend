@@ -24,7 +24,7 @@ export interface bookmark {
 }
 
 
-interface Chapter {
+export interface Chapter {
   bookId: string;
   id: string
   title: string
@@ -62,4 +62,9 @@ export interface BookParams {
   language?: string;
   author?: string;
   title?: string;
+}
+export interface BookReturnType {
+  books: bookInterface[];
+  totalBooks: number;
+  totalPage: number;
 }

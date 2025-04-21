@@ -6,8 +6,9 @@ import { useState, useEffect, useMemo } from "react"
 import { usePathname } from "next/navigation"
 import dynamic from "next/dynamic"
 import Image from "next/image"
-import { updateBook } from "@/lib/action/book"
 import { ImagePlus, Loader2, BookOpen, User, AlignLeft, Tag } from "lucide-react"
+import { apiRequest, apiRequestUpload } from "@/lib/Request"
+import { bookInterface } from "@/types/book"
 
 const Select = dynamic(() => import("react-select"), { ssr: false })
 
@@ -50,13 +51,14 @@ interface Book {
 interface UpdateBookProps {
   accessToken: string
   genres: Genre[]
-  book: Book
+  book: bookInterface
 }
 
 const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => {
+  console.log("book", book)
   const pathname = usePathname()
   const bookId = useMemo(() => pathname.split("/")[3],[pathname])
-  const [formData, setFormData] = useState<Book>({
+  const [formData, setFormData] = useState<bookInterface>({
     id: "",
     title: "",
     cover: "",
@@ -66,7 +68,11 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => 
     status: BookStatus.Ongoing,
     language: Language.English,
     realaseDate: 0,
-
+    popular: false,
+    chapter: [],
+    updatedAt: "",
+    createdAt: "",
+    bookmark: []
   })
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string>("")
@@ -76,7 +82,15 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => 
   const [success, setSuccess] = useState("")
   useEffect(() => {
     if (book) {
-      setFormData(book);
+      setFormData({
+        ...book,
+        status: Object.values(BookStatus).includes(book.status as BookStatus)
+          ? (book.status as BookStatus)
+          : BookStatus.Ongoing,
+        language: Object.values(Language).includes(book.language as Language)
+          ? (book.language as Language)
+          : Language.English,
+      });
       setPreview(book.cover);
       setIsDataLoading(false);
     }
@@ -122,7 +136,9 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => 
 
   const handleGenreChange = (newValue: unknown) => {
     const selectedGenres = newValue as GenreOption[];
-    const newGenres: BookGenre[] = (selectedGenres || []).map((genre: GenreOption) => ({
+    const newGenres = (selectedGenres || []).map((genre: GenreOption) => ({
+      id: genre.value,
+      title: genre.label,
       bookId: bookId,
       genreId: genre.value,
       Genre: {
@@ -164,23 +180,49 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => 
       if (file) {
         const formData = new FormData()
         formData.append("file", file)
-        const uploadedImage = await fetch("/api/fileupload", {
+        // const uploadedImage = await fetch("/api/fileupload", {
+        //   method: "POST",
+        //   body: formData,
+        // })
+
+      const uploadedImage = await apiRequestUpload<{data:{url:string}}>({
+          endpoint: "/upload",
           method: "POST",
           body: formData,
-        })
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+      })
 
-        const uploadedImageData = await uploadedImage.json()
-        coverUrl = uploadedImageData.url
+        console.log("uploadedImage", uploadedImage)
+        coverUrl = uploadedImage.data.url
 
       }
 
       const updatedBook = {
-        ...formData,
+        title: formData.title,
+        description: formData.description,
+        author : formData.author,
+        status: formData.status,
+        language: formData.language,
+        realaseDate: Number(formData.realaseDate),
         cover: coverUrl,
-        genre: formData.genre.map((g) => g.genreId),
+        genre: formData.genre.map((g) => g.id),
       }
 
-      const res = await updateBook(updatedBook, accessToken)
+      console.log("updatedBook", updatedBook)
+
+
+      const res = await apiRequest<{data:{id:string}}>({
+        endpoint: `/book/${bookId}`,
+        method: "POST",
+        body: updatedBook,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      console.log("res", res)
+      
       if (res !== null) {
         setSuccess("Book updated successfully!")
       } else {
@@ -311,7 +353,7 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => 
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">year of release</label>
           <input
             type="text"
-            value={formData.realaseDate}
+            value={formData.realaseDate?.toString() ?? ""}
             onChange={(e) => handleChange(e, "realaseDate")}
             placeholder="published year"
             className="w-full px-3 py-2 dark:border-gray-600 rounded-md 
@@ -321,14 +363,12 @@ const UpdateBook: React.FC<UpdateBookProps> = ({ accessToken, genres,book }) => 
           />
         </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2"/>
                 <Tag className="inline-block mr-2" size={18} />
-                Genre
-              </label>
               <Select
                 options={genres.map((g) => ({ value: g.id, label: g.title }))}
                 isMulti
-                value={formData.genre.map((g) => ({ value: g.Genre.id, label: g.Genre.title }))}
+                value={formData.genre.map((g) => ({ value: g.id, label: g.title }))}
                 onChange={handleGenreChange}
                 placeholder="Select genres"
                 className="react-select-container"

@@ -4,8 +4,8 @@ import type React from "react"
 import { useState } from "react"
 import dynamic from "next/dynamic"
 import Image from "next/image"
-import { createBook } from "@/lib/action/book"
 import { ImagePlus, Loader2 } from "lucide-react"
+import { apiRequest } from "@/lib/Request"
 
 const Select = dynamic(() => import("react-select"), { ssr: false })
 
@@ -127,7 +127,19 @@ const CreateBook: React.FC<CreateBookProps> = ({ accessToken, genre }) => {
         })
         const uploadedImage = await result.json()
 
-        const res =await createBook({ ...formData, cover: uploadedImage.url }, accessToken)
+        // const res =await createBook({ ...formData, cover: uploadedImage.url }, accessToken)
+
+        const res = await apiRequest({
+          endpoint: "/book",
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: {
+            ...formData,
+            cover: uploadedImage.url,
+          },
+        })
         if (res !== null) {
           setSuccess("Book created successfully!")
           setFormData({

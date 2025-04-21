@@ -1,11 +1,17 @@
 import AdminBookList from '@/components/admin/BookAdmin';
-import { bookList } from '@/lib/action/book';
 import { getProfile } from '@/lib/action/user';
 import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth';
 import React from 'react';
 import { UserInterface } from '@/types/user';
-import { bookInterface } from '@/types/book'; 
+import { bookInterface } from '@/types/book';
+import { apiRequest } from '@/lib/Request';
+
+interface BookReturnType {
+    books: bookInterface[];
+    totalBooks: number;
+    totalPage: number;
+  }
 
 async function page() {
     let user: UserInterface | null = null;
@@ -17,10 +23,18 @@ async function page() {
         if (session?.id && session?.backendTokens?.accessToken) {
             const [userData, bookData] = await Promise.all([
                 getProfile(session.id, session.backendTokens.accessToken),
-                bookList({limit: 200, page: 1, status:"Ongoing"})
+                // bookList({limit: 200, page: 1, status:"Ongoing"})
+                apiRequest<{data:BookReturnType}>({
+                    endpoint: `/book/list?limit=200&page=1&status=Ongoing`,
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${session.backendTokens.accessToken}`,
+                    },
+                }),
             ]);
             user = userData;
-            book = bookData?.books || [];
+            const bookList = bookData?.data || [];
+            book = bookList.books || [];
         }
     } catch (error) {
         console.error('Error fetching user or books:', error);

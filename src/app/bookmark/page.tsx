@@ -1,44 +1,86 @@
 import Footer from "@/components/Footer";
 import List from "@/components/List";
 import Navbar from "@/components/Navbar";
-import { getBookmarkById } from "@/lib/action/bookmark";
-import { getProfile } from "@/lib/action/user";
 import { authOptions } from "@/lib/auth";
+import { apiRequest } from "@/lib/Request";
+import { bookmark, Chapter } from "@/types/book";
+import { UserInterface } from "@/types/user";
 import { getServerSession } from "next-auth";
 
-interface BookObject {
+
+type Genre = {
   id: string;
   title: string;
-  author: string;
-  cover: string;
-  description: string;
-  Chapter: chapter[];
+};
+
+enum Language {
+  English = "English",
+  Japanese = "Japanese",
+  Korean = "Korean",
 }
 
-interface chapter {
-  id: string;
+enum BookStatus {
+  Completed = "Completed",
+  Drop = "Drop",
+  Ongoing = "Ongoing",
 }
+
+
+
+
+export type bookInterface = {
+  id: string;
+  title: string;
+  cover: string;
+  description: string;
+  author: string;
+  updatedAt: string;
+  popular: boolean;
+  genre: Genre[];
+  Chapter: Chapter[];
+  chapter: Chapter[]; 
+  createdAt: string;
+  realaseDate: number;
+  status: BookStatus;
+  language: Language;
+  bookmark: bookmark[];
+};
+
+
 
 async function page() {
   let user;
-  let books = [];
+  let books: bookInterface[] = [];
   const session = await getServerSession(authOptions);
+
   try {
     if (session?.id && session?.backendTokens?.accessToken) {
-      user = await getProfile(session.id, session.backendTokens.accessToken);
-      books =
-        (await getBookmarkById(
-          session.id,
-          session.backendTokens.accessToken
-        )) || [];
+      const resProfile = await apiRequest<{ data: UserInterface }>({
+        endpoint: `/user/${session.id}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session.backendTokens.accessToken}`,
+        },
+      });
 
-      /*
-      ini di lakukan karna data yang dikirim dari backend tidak sesuai dengan yang diharapkan oleh component List
-    `chapter` adalah key yang diharapkan oleh component List, sedangkan data yang di kirim dari backend adalah `Chapter`
-      */
-      books = books.map((book: BookObject) => ({
+      const bookRes = await apiRequest<{ data: { book: bookInterface }[] }>({
+        endpoint: `/bookmark/list/${session.id}`,
+        method: "GET",
+      });
+
+      user = resProfile?.data;
+      const dataFilter = bookRes.data.map((data) => {
+        return data.book
+    })
+      books = dataFilter || [];
+
+/*
+  ini di lakukan karna data yang dikirim dari backend tidak sesuai dengan yang diharapkan oleh component List
+  `chapter` adalah key yang diharapkan oleh component List, sedangkan data yang di kirim dari backend adalah `Chapter`
+*/
+      books = books.map((book) => ({
         ...book,
-        chapter: book.Chapter,
+        chapter: book.Chapter || [],
       }));
     }
   } catch (error) {

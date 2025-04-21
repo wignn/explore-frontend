@@ -1,6 +1,7 @@
 "use client";
 
-import { createGenre } from "@/lib/action/genre";
+
+import { apiRequest } from "@/lib/Request";
 import { useState } from "react";
 
 export default function AddGenreForm({ accessToken }: { accessToken: string }) {
@@ -27,7 +28,17 @@ export default function AddGenreForm({ accessToken }: { accessToken: string }) {
     setSuccess("");
 
     try {
-      const res = await createGenre(formData.name, formData.description, accessToken);
+      const res = await apiRequest({
+        endpoint: "/genre",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body:{
+          title: formData.name,
+          description: formData.description,
+        }
+      })
 
       if (res !== null) {
         setSuccess("Genre added successfully!");

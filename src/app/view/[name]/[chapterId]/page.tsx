@@ -22,7 +22,7 @@ export default async function page({
   let book = null;
   try {
     const [detailRes, chapterRes] = await Promise.all([
-      apiRequest<{ data: bookInterface }>({
+      apiRequest<{data: bookInterface}>({
         endpoint: `/book/${denormalizeTitle(name as string)}`,
         method: "GET",
       }),

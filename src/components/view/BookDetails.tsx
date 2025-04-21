@@ -1,17 +1,14 @@
-
 "use client";
 
-import { bookList, getBookDetail } from "@/lib/action/book";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import Navbar from "@/components/Navbar";
 import NovelDetails from "@/components/book/NovelDetails";
 import { useSession } from "next-auth/react";
-import { getProfile } from "@/lib/action/user";
-import { NavbarProps } from "@/types/user";
+import { NavbarProps, UserInterface } from "@/types/user";
 import SkeletonNavbar from "@/components/loading/skletonNavbar";
-import { isBookmark } from "@/lib/action/bookmark";
 import { bookInterface, bookmark } from "@/types/book";
+import { apiRequest } from "@/lib/Request";
 
 function BookDetails() {
   const [book, setBook] = useState<bookInterface | null>(null);
@@ -35,17 +32,40 @@ function BookDetails() {
         const token = backendTokens?.accessToken;
   
         const [userData, bookData, bookListData] = await Promise.all([
-          id && token ? getProfile(id, token) : null,
-          getBookDetail(bookName),
-          bookList({limit:5, page: 1, status:"Ongoing"}) || [],
+          id && token ? 
+          apiRequest<UserInterface>({
+            endpoint: `/user/${id}`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }) : null,
+          await apiRequest<bookInterface>({
+            endpoint: `/book/${bookName}`,
+            method: "GET", 
+          })
+          ,
+        await apiRequest<{ books: bookInterface[]; totalBooks: number; totalPage: number }>({
+            endpoint: `/book/list?limit=100&page=1&status=Ongoing`,
+            method: "GET",
+
+        })
          
         ]);
   
-        const bookmark = await isBookmark(id, bookData.id, token)
+  
+        const bookmark = await apiRequest<bookmark>({
+          endpoint: `/bookmark/isBookmarked/${id}/${bookData.id}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         if (bookmark !== undefined) {
           setBookmark(bookmark)
         }
-        setUser(userData);
+
+        setUser(userData ?? undefined);
         setBook(bookData);
   
         if (bookListData?.books.length) {

@@ -1,11 +1,25 @@
-import axios from "axios";
-import { API_URL } from "./API";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { jwtDecode } from "jwt-decode";
 import { JWT } from "next-auth/jwt";
 import { cookies } from "next/headers";
 import { signOut } from "next-auth/react";
+import axios from "axios";
+import { apiRequest } from "./Request";
+import { API_URL } from "@/lib/API"
+
+interface UserResponse {
+  id: string;
+  name: string;
+  username: string;
+  token?: string;
+  isAdmin: boolean;
+  backendTokens?: {
+    accessToken: string;
+    refreshToken: string;
+  };
+}
+
 
 async function refreshAccessToken(token: JWT) {
   try {
@@ -24,9 +38,12 @@ async function refreshAccessToken(token: JWT) {
       }
     );
 
+
+
     const newTokens = response.data.data.backendTokens;
-    const decodedToken =
-      newTokens?.accessToken ? jwtDecode(newTokens.accessToken) : null;
+    const decodedToken = newTokens?.accessToken
+      ? jwtDecode(newTokens.accessToken)
+      : null;
 
     return {
       ...token,
@@ -40,11 +57,12 @@ async function refreshAccessToken(token: JWT) {
   } catch (error) {
     console.error("Error refreshing access token:", error);
     const cookieStore = await cookies();
-    cookieStore.set("next-auth.session-token", "", { maxAge: 0 }); 
-    signOut(); 
+    cookieStore.set("next-auth.session-token", "", { maxAge: 0 });
+    signOut();
     return { ...token, error: "RefreshTokenError" };
   }
 }
+
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -60,26 +78,36 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const response = await axios.patch(
-          `${API_URL}/api/auth/login`,
-          {
+        // const response = await axios.patch(
+        //   `${API_URL}/api/auth/login`,
+        //   {
+        //     username: credentials.username,
+        //     password: credentials.password,
+        //   },
+        //   {
+        //     headers: {
+        //       "x-api-key": process.env.API_KEY,
+        //     },          }
+        // );
+
+        const response = await apiRequest<{ data: UserResponse }>({
+          endpoint: `/auth/login`,
+          method: "PATCH",
+          body: {
             username: credentials.username,
             password: credentials.password,
           },
-          {
-            headers: {
-              "x-api-key": process.env.API_KEY,
-            },          }
-        );
+        });
 
-        if (response.status !== 200 || !response?.data) {
+        if (response === null || !response?.data) {
           return null;
         }
 
-        const user = response.data.data;
-        const newTokens = response.data.data.backendTokens;
-        const decodedToken =
-          newTokens?.accessToken ? jwtDecode(newTokens.accessToken) : null;
+        const user = response?.data;
+        const newTokens = response.data.backendTokens;
+        const decodedToken = newTokens?.accessToken
+          ? jwtDecode(newTokens.accessToken)
+          : null;
 
         return {
           ...user,

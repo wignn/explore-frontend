@@ -1,7 +1,7 @@
 import UpdateBook from '@/components/UpdateBook'
-import { getBookDetail } from '@/lib/action/book';
-import { getGenre } from '@/lib/action/genre';
 import { authOptions } from '@/lib/auth';
+import { apiRequest } from '@/lib/Request';
+import { bookInterface } from '@/types/book';
 import { getServerSession } from 'next-auth';
 import React from 'react'
 
@@ -10,50 +10,31 @@ type Genre = {
   title: string
 }
 
-
-enum Language {
-  English = "English",
-  Japanese = "Japanese",
-  Korean = "Korean",
-}
-
-enum BookStatus {
-  Completed = "Completed",
-  Drop = "Drop",
-  Ongoing = "Ongoing",
-}
-
-type BookGenre = {
-  bookId: string
-  genreId: string
-  Genre: {
-    id: string
-    title: string
-  }
-}
-interface Book {
-  id: string
-  title: string
-  cover: string
-  description: string
-  author: string
-  status: BookStatus
-  language: Language
-  realaseDate: number
-  genre: BookGenre[]
-}
-
-
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   let genre: Genre[] = [];
-  let book: Book | null = null;
+  let book: bookInterface | null = null;
   const {id} = await params
 
 
   const session = await getServerSession(authOptions);
   try {
-    book = await getBookDetail(id);
-    genre = await getGenre();
+
+    const [bookRes, genreRes] = await Promise.all([
+    apiRequest<{data: bookInterface}>({
+      endpoint: `/book/${id}`,
+      method: 'GET',
+    }),
+    apiRequest<{data: Genre[]}>({
+      endpoint: '/genre',
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${session?.backendTokens.accessToken}`,
+      },
+    }),
+  ])
+  
+  book = bookRes.data;
+    genre = genreRes.data;
   } catch (error) {
     console.log("Error fetching book detail", error);
   }

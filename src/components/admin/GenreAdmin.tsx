@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Tag, Edit, Trash2, Search, Plus } from 'lucide-react'
 import { formatDate } from "@/lib/dateFormat"
-import { createGenre, updateGenre } from "@/lib/action/genre"
+import { apiRequest } from "@/lib/Request"
 
 interface GenreInterface {
   id: string;
@@ -85,11 +85,19 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
       return
     }
 
-
     try {
 
-      const res = await createGenre(newGenreName, newGenreDescription, accessToken)
-
+      const res = await apiRequest<{ data: GenreInterface }>({
+        endpoint: "/genre",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body:{
+          title: newGenreName,
+          description: newGenreDescription
+        }
+      })
       if (res === null) {
         setError("error create new genre")
         return
@@ -122,8 +130,20 @@ export default function AdminGenreList({ genres, accessToken }: Props) {
       return
     }
     try {
-      const res = await updateGenre(editGenreId as string, editGenreName, editGenreDescription, accessToken)
-      if (res !== 200) {
+      console.log(editGenreId)
+      const res = await apiRequest({
+        endpoint: `/genre/${editGenreId}`,
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: {
+          title: editGenreName,
+          description: editGenreDescription
+        }
+      })
+      console.log(res)
+      if (res === null) {
         setError("error update genre")
         return
       }
