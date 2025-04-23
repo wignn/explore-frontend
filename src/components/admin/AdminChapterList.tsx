@@ -4,9 +4,9 @@ import { useState, useEffect } from "react"
 import { BookOpen, Edit, Trash2, Search, ArrowLeft, Plus } from 'lucide-react'
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { deleteChapter } from "@/lib/action/chapter"
 import { useSession } from "next-auth/react"
 import { bookInterface, Chapter } from "@/types/book"
+import { apiRequest } from "@/lib/Request"
 
 
 type Props = {
@@ -42,8 +42,16 @@ export default function ChapterManagement({ book, chapters }: Props) {
   const handleConfirmDelete = async () => {
     if (!chapterToDelete || !accessToken) return
     try {
-      const res = await deleteChapter(chapterToDelete, accessToken)
-      if (res === 200) {
+      // const res = await deleteChapter(chapterToDelete, accessToken)
+ 
+       const res = await apiRequest({
+        endpoint: `/chapter/${chapterToDelete}`,
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+       })
+      if (res !== null) {
         setFilteredChapters((prev) => prev.filter((chapter) => chapter.id !== chapterToDelete))
       }
     } catch (error) {

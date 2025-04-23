@@ -110,9 +110,9 @@ function List({ books }: { books: ListProps["books"] }) {
 
 export function BookListSkeleton() {
   return (
-    <div className="mx-auto bg-gray-900 min-h-screen w-full">
-      <Skeleton className="mb-2 h-8 w-48 rounded-lg bg-gray-800" />
-      <Skeleton className="mb-8 h-1 w-20 rounded-full bg-gray-800" />
+    <div className="mx-auto min-h-screen w-full">
+      {/* <Skeleton className="mb-2 h-8 w-48 rounded-lg" />
+      <Skeleton className="mb-8 h-1 w-20 rounded-full " /> */}
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-y-8">
         {[...Array(10)].map((_, i) => (
