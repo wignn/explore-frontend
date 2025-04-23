@@ -3,20 +3,11 @@
 import dynamic from 'next/dynamic';
 import { bookInterface } from '@/types/book';
 import { UserInterface } from '@/types/user';
-import { BookListSkeleton } from '@/components/List';
-
-const Navbar = dynamic(() => import('@/components/Navbar'), { ssr: true });
-const Hero = dynamic(() => import('@/components/Hero'), { ssr: true });
-const List = dynamic(() => import('@/components/List'), {
-    ssr: false,
-    loading: () => <BookListSkeleton />,
-  });
-  const Rank = dynamic(() => import('@/components/Rank'), {
-    ssr: false,
-    loading: () => <BookListSkeleton />,
-  });
-  
-const Footer = dynamic(() => import('@/components/Footer'), { ssr: false });
+import Footer from '@/components/Footer';
+import Hero from '@/components/Hero';
+import List from '@/components/List';
+import Navbar from '@/components/Navbar';
+import Rank from '@/components/Rank';
 
 export default function HomeClient({
   user,
