@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { timeAgo } from "@/lib/DateToHour"
-import { Book, Clock } from "lucide-react"
-import { motion } from "framer-motion"
-import { Skeleton } from "@/components/loading/skletonBook"
-import type { bookInterface } from "@/types/book"
-import Link from "next/link"
-import Image from "next/image"
-import { normalizeTitle } from "../lib/utils"
+import { timeAgo } from "@/lib/DateToHour";
+import { Book, Clock } from "lucide-react";
+import { motion } from "framer-motion";
+import { Skeleton } from "@/components/loading/skletonBook";
+import type { bookInterface } from "@/types/book";
+import Link from "next/link";
+import Image from "next/image";
+import { normalizeTitle } from "../lib/utils";
 
 interface ListProps {
-  books: bookInterface[]
+  books: bookInterface[];
 }
 
 function List({ books }: { books: ListProps["books"] }) {
@@ -29,15 +29,15 @@ function List({ books }: { books: ListProps["books"] }) {
               <div className="relative aspect-[3/4] overflow-hidden rounded-t-xl">
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-60 z-10" />
                 <Image
-  src={book.cover || "/placeholder.svg"}
-  alt={`cover ${book.title}`}
-  width={300}
-  height={400}
-  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-  className="object-cover w-full h-auto transition-transform duration-500 group-hover:scale-110"
-  priority={index < 6}
-  loading={index < 6 ? "eager" : "lazy"}
-/>
+                  src={book.cover || "/placeholder.svg"}
+                  alt={`cover ${book.title}`}
+                  width={300}
+                  height={400}
+                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                  className="object-cover w-full h-auto transition-transform duration-500 group-hover:scale-110"
+                  priority={index < 6}
+                  loading={index < 6 ? "eager" : "lazy"}
+                />
 
                 {book.chapter?.length > 0 && (
                   <div className="absolute top-2 right-2 z-20 rounded-full bg-teal-500/90 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm">
@@ -47,7 +47,10 @@ function List({ books }: { books: ListProps["books"] }) {
               </div>
 
               <div className="flex flex-1 flex-col justify-between p-4">
-                <Link href={`/view/${normalizeTitle(book.title)}`} className="group-hover:text-teal-300">
+                <Link
+                  href={`/view/${normalizeTitle(book.title)}`}
+                  className="group-hover:text-teal-300"
+                >
                   <h2 className="line-clamp-2 font-semibold text-gray-100 transition-colors duration-200 text-sm md:text-base">
                     {book.title}
                   </h2>
@@ -59,7 +62,9 @@ function List({ books }: { books: ListProps["books"] }) {
                     <span>
                       {book.chapter?.length > 0 ? (
                         <Link
-                          href={`/view/${normalizeTitle(book.title)}/${book?.chapter[book?.chapter?.length - 1]?.id}`}
+                          href={`/view/${normalizeTitle(book.title)}/${
+                            book?.chapter[book?.chapter?.length - 1]?.id
+                          }`}
                           className="transition-colors duration-200 hover:text-teal-300"
                         >
                           Chapter {book.chapter.length}
@@ -96,18 +101,32 @@ function List({ books }: { books: ListProps["books"] }) {
               className="absolute -right-2 -top-2 rounded-full bg-gray-800 p-2"
             >
               <div className="rounded-full bg-gray-700 p-1">
-                <svg className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="h-4 w-4 text-gray-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </div>
             </motion.div>
           </div>
-          <h3 className="mb-2 text-xl font-medium text-gray-300">Tidak ada buku yang tersedia</h3>
-          <p className="text-center text-gray-500">Buku yang Anda cari belum tersedia saat ini.</p>
+          <h3 className="mb-2 text-xl font-medium text-gray-300">
+            Tidak ada buku yang tersedia
+          </h3>
+          <p className="text-center text-gray-500">
+            Buku yang Anda cari belum tersedia saat ini.
+          </p>
         </motion.div>
       )}
     </div>
-  )
+  );
 }
 
 export function BookListSkeleton() {
@@ -115,7 +134,10 @@ export function BookListSkeleton() {
     <div className="mx-auto min-h-screen w-full">
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-y-8">
         {[...Array(12)].map((_, i) => (
-          <div key={i} className="flex flex-col overflow-hidden rounded-xl bg-gray-800/80 backdrop-blur-sm">
+          <div
+            key={i}
+            className="flex flex-col overflow-hidden rounded-xl bg-gray-800/80 backdrop-blur-sm"
+          >
             {/* Aspect ratio 3:4 dengan responsif */}
             <div className="relative w-full aspect-[3/4] overflow-hidden rounded-t-xl bg-gray-700/70" />
             <div className="p-4 space-y-3">
@@ -130,9 +152,7 @@ export function BookListSkeleton() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-
-export default List
-
+export default List;

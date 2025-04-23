@@ -9,14 +9,11 @@ import { useEffect, useRef, useState } from "react";
 //import ChapterList from "@/components/view/chapter/Chapter-details";
 import { bookInterface, bookmark } from "@/types/book";
 import { apiRequest } from "@/lib/Request";
-import ChapterPopularSkeleton from "../loading/skletonChapterpopularNovels";
+
+import ChapterpopularNovels from "@/components/view/chapter/PopularNovels";
 
 const ChapterList = dynamic(
   () => import("@/components/view/chapter/Chapter-details"),
-  { ssr: false }
-);
-const ChapterpopularNovels = dynamic(
-  () => import("@/components/view/chapter/PopularNovels"),
   { ssr: false }
 );
 
@@ -209,11 +206,9 @@ const NovelDetails: React.FC<NovelDetailsProps> = ({
         </div>
 
         <div className="space-y-4">
-          {Popular && Popular.length > 0 ? (
-            <ChapterpopularNovels Popular={Popular} />
-          ) : (
-            <ChapterPopularSkeleton />
-          )}
+          <h2 className="text-xl font-bold">Popular Novels</h2>
+            <ChapterpopularNovels Popular={Popular}/>
+        
         </div>
       </main>
     </div>

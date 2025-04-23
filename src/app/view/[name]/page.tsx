@@ -1,5 +1,3 @@
-// src/app/view/[name]/page.tsx
-
 import { getServerSession } from "next-auth";
 import { apiRequest } from "@/lib/Request";
 import { denormalizeTitle } from "@/lib/utils";
@@ -18,6 +16,8 @@ interface BookReturnType {
 interface Params {
   name: string;
 }
+
+
 
 export default async function BookPage({ params }: { params:Promise<Params> }) {
   let user: UserInterface | null = null;

@@ -33,7 +33,6 @@ export const Navbar: React.FC<{ user?: UserInterface }> = ({ user }) => {
       body:{
         username: user?.username,
       },
-
     })
     signOut()
   }
