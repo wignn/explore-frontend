@@ -29,14 +29,16 @@ function List({ books }: { books: ListProps["books"] }) {
               <div className="relative aspect-[3/4] overflow-hidden rounded-t-xl">
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-60 z-10" />
                 <Image
-                  src={book.cover || "/placeholder.svg"}
-                  alt={`cover ${book.title}`}
-                  fill
-                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  priority={index < 6}
-                  loading={index < 6 ? "eager" : "lazy"}
-                />
+  src={book.cover || "/placeholder.svg"}
+  alt={`cover ${book.title}`}
+  width={300}
+  height={400}
+  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+  className="object-cover w-full h-auto transition-transform duration-500 group-hover:scale-110"
+  priority={index < 6}
+  loading={index < 6 ? "eager" : "lazy"}
+/>
+
                 {book.chapter?.length > 0 && (
                   <div className="absolute top-2 right-2 z-20 rounded-full bg-teal-500/90 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm">
                     Ch. {book.chapter.length}
@@ -111,13 +113,11 @@ function List({ books }: { books: ListProps["books"] }) {
 export function BookListSkeleton() {
   return (
     <div className="mx-auto min-h-screen w-full">
-      {/* <Skeleton className="mb-2 h-8 w-48 rounded-lg" />
-      <Skeleton className="mb-8 h-1 w-20 rounded-full " /> */}
-
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-y-8">
-        {[...Array(10)].map((_, i) => (
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-y-8">
+        {[...Array(12)].map((_, i) => (
           <div key={i} className="flex flex-col overflow-hidden rounded-xl bg-gray-800/80 backdrop-blur-sm">
-            <Skeleton className="aspect-[3/4] w-full bg-gray-700/70" />
+            {/* Aspect ratio 3:4 dengan responsif */}
+            <div className="relative w-full aspect-[3/4] overflow-hidden rounded-t-xl bg-gray-700/70" />
             <div className="p-4 space-y-3">
               <Skeleton className="h-5 w-full rounded bg-gray-700/70" />
               <Skeleton className="h-4 w-3/4 rounded bg-gray-700/70" />
@@ -132,6 +132,7 @@ export function BookListSkeleton() {
     </div>
   )
 }
+
 
 export default List
 
