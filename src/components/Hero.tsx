@@ -259,7 +259,7 @@ const Hero: React.FC<HeroProps> = ({ user, book }) => {
                           {book.cover ? (
                             <Image
                               src={book.cover || "/placeholder.svg"}
-                              alt={book.title}
+                              alt={`cover ${book.title}`}
                               fill
                               className="object-cover"
                             />
