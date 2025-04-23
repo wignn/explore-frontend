@@ -51,7 +51,6 @@ const Hero: React.FC<HeroProps> = ({ user, book }) => {
 
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center px-3 py-1 mb-6 rounded-full bg-gray-800/50 border border-gray-700 text-cyan-400 text-sm font-medium">
               <Sparkles size={16} className="mr-2" />
@@ -147,11 +146,12 @@ const Hero: React.FC<HeroProps> = ({ user, book }) => {
                     className="w-8 h-8 rounded-full border-2 border-gray-900 overflow-hidden"
                   >
                     <Image
-                      width={200}
-                      height={200}
                       src={i.cover}
                       alt="User avatar"
-                      className="w-full h-full object-cover"
+                      width={64}
+                      height={64}
+                      sizes="(max-width: 768px) 32px, 64px"
+                      className="rounded-full object-cover"
                     />
                   </div>
                 ))}
@@ -255,7 +255,6 @@ const Hero: React.FC<HeroProps> = ({ user, book }) => {
                           key={book.id || index}
                           className="relative h-56 rounded-md overflow-hidden shadow-md group cursor-pointer"
                         >
-
                           {book.cover ? (
                             <Image
                               src={book.cover || "/placeholder.svg"}
