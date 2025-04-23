@@ -30,7 +30,7 @@ function List({ books }: { books: ListProps["books"] }) {
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-60 z-10" />
                 <Image
                   src={book.cover || "/placeholder.svg"}
-                  alt={book.title}
+                  alt={`cover ${book.title}`}
                   fill
                   sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
