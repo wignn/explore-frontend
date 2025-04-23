@@ -1,6 +1,5 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { bookInterface } from '@/types/book';
 import { UserInterface } from '@/types/user';
 import Footer from '@/components/Footer';
