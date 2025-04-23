@@ -1,32 +1,39 @@
-import NovelDetails from "@/components/book/NovelDetails";
-import Navbar from "@/components/Navbar";
-import { authOptions } from "@/lib/auth";
+// src/app/view/[name]/page.tsx
+
+import { getServerSession } from "next-auth";
 import { apiRequest } from "@/lib/Request";
 import { denormalizeTitle } from "@/lib/utils";
 import { bookInterface, bookmark } from "@/types/book";
-import {UserInterface } from "@/types/user";
-import { getServerSession } from "next-auth";
-import React from "react";
+import { UserInterface } from "@/types/user";
+import Navbar from "@/components/Navbar";
+import NovelDetails from "@/components/book/NovelDetails";
+import { authOptions } from "@/lib/auth";
+
 interface BookReturnType {
   books: bookInterface[];
   totalBooks: number;
   totalPage: number;
 }
 
-async function page({ params }: { params: Promise<{ name?: string }> }) {
+interface Params {
+  name: string;
+}
+
+export default async function BookPage({ params }: { params:Promise<Params> }) {
   let user: UserInterface | null = null;
   let book = null;
   let popular: bookInterface[] = [];
   let bookmark: bookmark | null = null;
-  let session = null;
+  let accessToken = ""
   const { name } = await params;
 
   try {
-    session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions);
+    accessToken = session?.backendTokens.accessToken as string
 
     const [detailRes, listRes] = await Promise.all([
       apiRequest<{ data: bookInterface }>({
-        endpoint: `/book/${denormalizeTitle(name as string)}`,
+        endpoint: `/book/${denormalizeTitle(name)}`,
         method: "GET",
       }),
       apiRequest<{ data: BookReturnType }>({
@@ -36,7 +43,6 @@ async function page({ params }: { params: Promise<{ name?: string }> }) {
     ]);
 
     const booklist = listRes?.data;
-
     book = detailRes?.data;
 
     if (session?.id && session?.backendTokens?.accessToken) {
@@ -61,7 +67,6 @@ async function page({ params }: { params: Promise<{ name?: string }> }) {
       bookmark = bookmarkRes?.data;
     }
 
-
     if (booklist?.books.length) {
       popular = [...booklist.books]
         .filter((book) => book.bookmark?.length > 0)
@@ -80,8 +85,8 @@ async function page({ params }: { params: Promise<{ name?: string }> }) {
           <NovelDetails
             book={book}
             Popular={popular}
-            userId={session?.id ?? ""}
-            accessToken={session?.backendTokens?.accessToken ?? ""}
+            userId={user?.id ?? ""}
+            accessToken={accessToken}
             Bookmark={bookmark}
           />
         ) : (
@@ -91,5 +96,3 @@ async function page({ params }: { params: Promise<{ name?: string }> }) {
     </div>
   );
 }
-
-export default page;

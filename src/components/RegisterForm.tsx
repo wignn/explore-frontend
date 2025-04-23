@@ -1,6 +1,6 @@
 "use client"
 
-import { register } from "@/lib/action/auth"
+import { apiRequest } from "@/lib/Request"
 import Link from "next/link"
 import type React from "react"
 import { useState } from "react"
@@ -27,14 +27,22 @@ export default function RegisterForm() {
     }
 
     try {
-      const response = await register({email, username, password })
-      console.log(response)
-      if (response === 200) {
+
+      const response = await apiRequest({
+        endpoint:'/auth/register',
+        method:"POST",
+        body:{
+          email,
+          username,
+          password
+        }
+      })
+      if (response !== null) {
         setSuccess("Registration successful!")
         setTimeout(() => {
           window.location.href = "/login"
         }, 1500)
-      } else if (response === 409) {
+      } else if (response === null) {
         setError("Registration failed. Username or email already exists")
       }
     } catch (err) {

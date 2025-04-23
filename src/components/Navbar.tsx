@@ -8,7 +8,7 @@ import { Menu, X, Home, Book, Info, Bookmark, User, Settings, LogOut } from "luc
 import { usePathname } from "next/navigation"
 import type { UserInterface } from "@/types/user"
 import { signOut } from "next-auth/react"
-import { logout } from "@/lib/action/auth"
+import { apiRequest } from "@/lib/Request"
 
 const navLinks = [
   { href: "/", label: "Home", icon: Home },
@@ -26,7 +26,15 @@ export const Navbar: React.FC<{ user?: UserInterface }> = ({ user }) => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const toggleProfileModal = () => setIsProfileModalOpen(!isProfileModalOpen)
   const handleSignOut = async () => {
-    await logout(user?.username as string, user?.token as string)
+
+    await apiRequest({
+      endpoint:'/auth/logout',
+      method:"PATCH",
+      body:{
+        username: user?.username,
+      },
+
+    })
     signOut()
   }
 

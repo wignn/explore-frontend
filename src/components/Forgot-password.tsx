@@ -1,6 +1,6 @@
 "use client"
 
-import { verify } from "@/lib/action/auth"
+import { apiRequest } from "@/lib/Request"
 import Link from "next/link"
 import type React from "react"
 import { useState } from "react"
@@ -24,8 +24,12 @@ export default function ForgotPassword() {
 
     try {
       setIsLoading(true)
-      const res = await verify(email)
-      if (res !== 200) {
+      const res = await apiRequest({
+        endpoint:`/auth/password/verify`,
+        method: "POST",
+        body: email
+      })
+      if (res !== null) {
         setError("Failed to verify email")
       } else {
         setSuccess("Password reset link sent to your email")

@@ -201,9 +201,9 @@ const Hero: React.FC<HeroProps> = ({ user, book }) => {
                             {0}% Complete
                           </div>
                         </div>
-                        <h3 className="text-white font-medium mt-2">
+                        <h2 className="text-white font-medium mt-2">
                           {currentBook.title}
-                        </h3>
+                        </h2>
                         <p className="text-gray-400 text-sm mt-1">
                           {currentBook.author}
                         </p>

@@ -4,7 +4,7 @@ import { UserInterface } from "@/types/user"
 import type React from "react"
 import Image from "next/image"
 import { useState, useEffect } from "react"
-import { updateProfile } from "@/lib/action/user"
+import { apiRequest } from "@/lib/Request"
 
 
 interface profileProps {
@@ -49,7 +49,18 @@ export default function ProfileCard({users,accessToken}:profileProps) {
         name: newName,
         profilePic: uploadData.url
       }
-      const res = updateProfile(newData, user.id, accessToken)
+      // const res = updateProfile(newData, user.id, accessToken)
+
+
+      const res = await apiRequest({
+        endpoint: `/user/${user.id}`,
+        method: "PUT",
+        body: newData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        }
+      })
+
       if(res !== null){
         console.log("Profile updated")
         setTimeout(() => {

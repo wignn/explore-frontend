@@ -1,6 +1,6 @@
 "use client"
 
-import { reset } from "@/lib/action/auth"
+import { apiRequest } from "@/lib/Request"
 import Link from "next/link"
 import type React from "react"
 import { useState } from "react"
@@ -37,8 +37,16 @@ export default function ResetPassword({ token,email }: { token: string, email: s
 
     try {
       setIsLoading(true)
-      const res = await reset(token, newPassword, email )
-      if (res !== 200) {
+      const res = await apiRequest({
+        endpoint:'/auth/password/reset',
+        method:"POST",
+        body:{
+          valToken: token,
+          password: newPassword,
+          email: decodeURIComponent(email)
+        }
+      })
+      if (res !== null) {
         setError("Failed to reset password")
         setNewPassword("")
         setConfirmPassword("")

@@ -2,7 +2,7 @@ import List, { BookListSkeleton } from "@/components/List";
 import SearchBar from "@/components/SearchBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import SekletonSearch from "@/components/loading/sekletonSearch";
+import SekletonSearch from "@/components/loading/skletonSearch";
 import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
