@@ -77,8 +77,8 @@ export default function About() {
             <div className="bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-700 hover:border-purple-500 transition-colors">
               <div className="text-center space-y-4">
                 <Users className="w-10 h-10 mx-auto text-purple-400" />
-                <h3 className="font-semibold text-xl">User & Data Management</h3>
-                <p className="text-gray-400">Mock user system with room, tenant, and finance management</p>
+                <h3 className="font-semibold text-xl">User</h3>
+                <p className="text-gray-400">User Authentication and User Management System.</p>
               </div>
             </div>
 
