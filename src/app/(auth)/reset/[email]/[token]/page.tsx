@@ -14,3 +14,9 @@ async function page({params}: {params: Promise <{token: string, email: string}>}
 }
 
 export default page
+
+export function generateMetadata() {
+  return {
+    title: "Reset Password",
+  };
+}

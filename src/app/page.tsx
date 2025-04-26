@@ -36,3 +36,9 @@ export default async function Home() {
 
   return <HomeClient user={user ?? undefined} books={books} isError={isError} />;
 }
+
+export function generateMetadata() {
+  return {
+    title: "Home",
+  };
+}

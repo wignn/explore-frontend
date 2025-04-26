@@ -1,9 +1,7 @@
-import List, { BookListSkeleton } from "@/components/List";
+import ClientListWrapper from "./ClientView";
 import SearchBar from "@/components/SearchBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import SekletonSearch from "@/components/loading/skletonSearch";
-import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import Prev from "@/components/view/Prev";
@@ -22,10 +20,7 @@ interface BookReturnType {
   totalBooks: number;
   totalPage: number;
 }
-interface SearchParams {
-  query?: string;
-  page?: number;
-}
+
 const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
   const searchParams = await props.searchParams;
   const searchQuery: string = searchParams?.query ?? "";
@@ -34,7 +29,6 @@ const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
   let user: UserInterface | undefined;
 
   const session = await getServerSession(authOptions);
-
 
   if (session?.id && session?.backendTokens?.accessToken) {
     const response = await apiRequest<{ data: UserInterface }>({
@@ -70,7 +64,7 @@ const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(0,200,200,0.05),transparent_70%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(0,200,200,0.05),transparent_70%)]" />
       </div>
-        <Navbar user={user} />
+      <Navbar user={user} />
       <main className="flex-1 relative z-10">
         <section className="relative py-8 md:py-12">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,11 +76,9 @@ const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
                 Search our collection of books and discover your next favorite story
               </p>
 
-              <Suspense fallback={<SekletonSearch />}>
-                <div className="mx-auto max-w-2xl">
-                  <SearchBar />
-                </div>
-              </Suspense>
+              <div className="mx-auto max-w-2xl">
+                <SearchBar />
+              </div>
             </div>
           </div>
         </section>
@@ -104,32 +96,31 @@ const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
               </div>
             )}
 
-            <Suspense fallback={<BookListSkeleton />}>
-              {allBooks.length > 0 ? (
-                <List books={allBooks} />
-              ) : (
-                <div className="flex flex-col items-center justify-center rounded-xl bg-gray-800/50 py-16 px-4 text-center backdrop-blur-sm">
-                  <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gray-700/50 backdrop-blur-sm">
-                    <AlertCircle className="h-10 w-10 text-gray-400" />
-                  </div>
-                  <h2 className="mb-2 text-xl font-medium text-gray-300">
-                    No books found
-                  </h2>
-                  <p className="mb-6 max-w-md text-gray-500">
-                    {searchQuery
-                      ? `We couldn't find any books matching "${searchQuery}". Try a different search term or browse our collection.`
-                      : "There are no books available at the moment. Please check back later."}
-                  </p>
-                  <Link
-                    href="/"
-                    className="flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-6 py-2 font-medium text-white shadow-lg shadow-teal-500/20 transition-all hover:shadow-xl hover:shadow-teal-500/30"
-                  >
-                    <BookOpen className="h-4 w-4" />
-                    Browse All Books
-                  </Link>
+            {/* Add loading state check here */}
+            {allBooks.length > 0 ? (
+              <ClientListWrapper books={allBooks} />
+            ) : (
+              <div className="flex flex-col items-center justify-center rounded-xl bg-gray-800/50 py-16 px-4 text-center backdrop-blur-sm">
+                <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gray-700/50 backdrop-blur-sm">
+                  <AlertCircle className="h-10 w-10 text-gray-400" />
                 </div>
-              )}
-            </Suspense>
+                <h2 className="mb-2 text-xl font-medium text-gray-300">
+                  No books found
+                </h2>
+                <p className="mb-6 max-w-md text-gray-500">
+                  {searchQuery
+                    ? `We couldn't find any books matching "${searchQuery}". Try a different search term or browse our collection.`
+                    : "There are no books available at the moment. Please check back later."}
+                </p>
+                <Link
+                  href="/"
+                  className="flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-6 py-2 font-medium text-white shadow-lg shadow-teal-500/20 transition-all hover:shadow-xl hover:shadow-teal-500/30"
+                >
+                  <BookOpen className="h-4 w-4" />
+                  Browse All Books
+                </Link>
+              </div>
+            )}
 
             {allBooks.length > 0 && (
               <div className="mt-8 flex justify-center">
@@ -146,3 +137,10 @@ const Page = async (props: { searchParams?: Promise<SearchParams> }) => {
 };
 
 export default Page;
+
+export function generateMetadata() {
+  return {
+    title: "Novel Search",
+    description: "Find your next favorite book with our search feature.",
+  };
+}

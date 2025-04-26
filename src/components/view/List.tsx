@@ -1,19 +1,15 @@
 "use client";
-
 import { timeAgo } from "@/lib/DateToHour";
 import { Book, Clock } from "lucide-react";
 import { motion } from "framer-motion";
-import { Skeleton } from "@/components/loading/skletonBook";
 import type { bookInterface } from "@/types/book";
 import Link from "next/link";
+
 import Image from "next/image";
-import { normalizeTitle } from "../lib/utils";
+import { normalizeTitle } from "@/lib/utils";
+import React from "react";
 
-interface ListProps {
-  books: bookInterface[];
-}
-
-function List({ books }: { books: ListProps["books"] }) {
+export default function List({ books }:{books: bookInterface[]}) {
   return (
     <div className="mx-auto  min-h-screen w-full">
       {books.length > 0 ? (
@@ -47,6 +43,15 @@ function List({ books }: { books: ListProps["books"] }) {
               </div>
 
               <div className="flex flex-1 flex-col justify-between p-4">
+                {/* <button
+                  onClick={() => onclick(`/view/${normalizeTitle(book.title)}`)}
+                  className="group-hover:text-teal-300"
+                  >
+                    <h2 className="line-clamp-2 font-semibold text-gray-100 transition-colors duration-200 text-sm md:text-base">
+                      {book.title}
+                    </h2>
+                    </button> */}
+ 
                 <Link
                   href={`/view/${normalizeTitle(book.title)}`}
                   className="group-hover:text-teal-300"
@@ -129,30 +134,5 @@ function List({ books }: { books: ListProps["books"] }) {
   );
 }
 
-export function BookListSkeleton() {
-  return (
-    <div className="mx-auto min-h-screen w-full">
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-y-8">
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            className="flex flex-col overflow-hidden rounded-xl bg-gray-800/80 backdrop-blur-sm"
-          >
-            {/* Aspect ratio 3:4 dengan responsif */}
-            <div className="relative w-full aspect-[3/4] overflow-hidden rounded-t-xl bg-gray-700/70" />
-            <div className="p-4 space-y-3">
-              <Skeleton className="h-5 w-full rounded bg-gray-700/70" />
-              <Skeleton className="h-4 w-3/4 rounded bg-gray-700/70" />
-              <div className="flex justify-between pt-1">
-                <Skeleton className="h-4 w-1/3 rounded bg-gray-700/70" />
-                <Skeleton className="h-4 w-1/4 rounded bg-gray-700/70" />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
-export default List;
+

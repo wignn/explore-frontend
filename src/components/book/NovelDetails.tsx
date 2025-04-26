@@ -1,21 +1,15 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { formatDate } from "@/lib/dateFormat";
 import Image from "next/image";
 import Link from "next/link";
-import type React from "react";
 import { useEffect, useRef, useState } from "react";
 //import ChapterList from "@/components/view/chapter/Chapter-details";
 import { bookInterface, bookmark } from "@/types/book";
 import { apiRequest } from "@/lib/Request";
-
 import ChapterpopularNovels from "@/components/view/chapter/PopularNovels";
+import ChapterList from "@/components/view/chapter/Chapter-details";
 
-const ChapterList = dynamic(
-  () => import("@/components/view/chapter/Chapter-details"),
-  { ssr: false }
-);
 
 interface NovelDetailsProps {
   book: bookInterface;

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import List from "./List"
+import List from "@/components/view/List"
 import { bookInterface } from "@/types/book"
 
 
@@ -34,8 +34,8 @@ function Rank({ books }: { books: bookInterface[] }) {
   }, [selectedGenre, books])
 
   return (
-    <div className="py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="py- lg:mx-12 px-4 sm:px-6 lg:px-0">
+      <div className=" mx-auto px-4 sm:px-6 lg:px-8">
         <ul className="flex flex-wrap justify-center my-6 gap-4 items-center">
           {genres.map((genre) => (
             <li key={genre}>

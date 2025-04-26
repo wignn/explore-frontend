@@ -1,5 +1,5 @@
 import Footer from "@/components/Footer";
-import List from "@/components/List";
+import ClientListWrapper from "../view/ClientView";
 import Navbar from "@/components/Navbar";
 import { authOptions } from "@/lib/auth";
 import { apiRequest } from "@/lib/Request";
@@ -104,7 +104,7 @@ async function page() {
 
         <div className="relative">
           <div className="relative z-10 backdrop-blur-sm bg-gray-900/30 rounded-2xl p-6 border border-gray-800/50 shadow-xl">
-            <List books={books} />
+            <ClientListWrapper books={books} />
           </div>
         </div>
       </main>

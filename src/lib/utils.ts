@@ -18,4 +18,3 @@ export const denormalizeTitle = (normalizedTitle: string) => {
   return decodeURIComponent(normalizedTitle.replace(/-/g, " "));
 };
 
-

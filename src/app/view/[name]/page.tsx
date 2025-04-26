@@ -96,3 +96,16 @@ export default async function BookPage({ params }: { params:Promise<Params> }) {
     </div>
   );
 }
+export async function generateMetadata({ params }: { params: Promise<Params> }) {
+  const { name } = await params;
+  const title = denormalizeTitle(name);
+  const description = `wign`;
+  return {
+    title,
+    description: `Baca sinopsis dan detail lengkap dari novel ${name}.`,
+    openGraph: {
+      title,
+      description,
+    },
+  };
+}

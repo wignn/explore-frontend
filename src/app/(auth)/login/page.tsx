@@ -10,3 +10,9 @@ function page() {
 }
 
 export default page
+
+export function generateMetadata() {
+  return {
+    title: "Login",
+  };
+}

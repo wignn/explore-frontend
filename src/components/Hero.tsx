@@ -40,8 +40,8 @@ const Hero: React.FC<HeroProps> = ({ user, book }) => {
   const recentBooks = book.slice(1, 4);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-gray-900 via-gray-800 to-gray-950 py-16 md:py-24 lg:py-12 min-h-[90vh] flex items-center">
-      {/* Background effects */}
+    <section className="relative overflow-hidden bg-gradient-to-b from-gray-900 via-gray-800 to-gray-950 py-16 md:py-24 lg:py-24 min-h-[90vh] flex items-center">
+ 
       <div className="absolute inset-0 z-0 opacity-60">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(0,200,200,0.15),transparent_70%)]"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(0,200,200,0.1),transparent_70%)]"></div>
@@ -49,7 +49,8 @@ const Hero: React.FC<HeroProps> = ({ user, book }) => {
         <div className="absolute bottom-20 right-10 w-80 h-80 bg-teal-500 rounded-full filter blur-[120px] opacity-20"></div>
       </div>
 
-      <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-12 z-10 w-full px-4 sm:px-6 lg:px-8 flex justify-center">
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center px-3 py-1 mb-6 rounded-full bg-gray-800/50 border border-gray-700 text-cyan-400 text-sm font-medium">
