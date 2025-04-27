@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import List from "@/components/view/List"
+import ClientListWrapper from "./ClientWarp/ClientListWrapper"
 import { bookInterface } from "@/types/book"
 
 
@@ -54,7 +54,7 @@ function Rank({ books }: { books: bookInterface[] }) {
         </ul>
       </div>
       {filteredBooks.length > 0 ? (
-        <List books={filteredBooks}/>
+        <ClientListWrapper books={filteredBooks}/>
       ) : (
         <div className="text-center text-gray-400 py-20">
           <p className="text-xl">No books available for {selectedGenre}</p>

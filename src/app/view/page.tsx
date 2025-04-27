@@ -1,4 +1,4 @@
-import ClientListWrapper from "./ClientView";
+import ClientListWrapper from "@/components/ClientWarp/ClientListWrapper";
 import SearchBar from "@/components/SearchBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";

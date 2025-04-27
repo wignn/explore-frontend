@@ -1,5 +1,5 @@
 import Footer from "@/components/Footer";
-import ClientListWrapper from "../view/ClientView";
+import ClientListWrapper from "@/components/ClientWarp/ClientListWrapper";
 import Navbar from "@/components/Navbar";
 import { authOptions } from "@/lib/auth";
 import { apiRequest } from "@/lib/Request";
@@ -114,3 +114,10 @@ async function page() {
 }
 
 export default page;
+
+
+export function generateMetadata() {
+  return {
+    title: "Bookmark "
+  };
+}
